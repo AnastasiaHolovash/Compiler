@@ -14,7 +14,6 @@ struct TokenStruct {
 
 // MARK: - Token
 enum Token {
-    typealias Generator = (String) -> Token?
     
     case minusOp
     case numberFloat(Float)
@@ -29,7 +28,7 @@ enum Token {
     case curlyClose
     case semicolon
     
-    static var generators: [String: Generator] {
+    static var tokenGeter: [String : (String) -> Token?] {
         return [
             "^(^0[xX][0-9a-fA-F]+)|^(^[0-9]+\\.[0-9]+)|^([0-9]+)": {
                 print($0)

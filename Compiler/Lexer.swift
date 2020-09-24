@@ -20,9 +20,9 @@ class Lexer {
     
     private static func getNextPrefix(code: String) -> (regex: String, prefix: String)? {
         
-        var keyValue: (key: String, value: Token.Generator)?
+        var keyValue: (key: String, value: ((String) -> Token?))?
         
-        for (regex, generator) in Token.generators {
+        for (regex, generator) in Token.tokenGeter {
             
             if code.getPrefix(regex: regex) != nil {
                 keyValue = (regex, generator)
@@ -57,7 +57,7 @@ class Lexer {
             code = String(code[prefix.endIndex...])
             
             
-            guard let generator = Token.generators[regex],
+            guard let generator = Token.tokenGeter[regex],
                 let token = generator(prefix) else {
                     fatalError()
             }

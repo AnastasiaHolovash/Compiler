@@ -72,7 +72,7 @@ extension Int: Node {
 extension String: Node {
     func interpret() throws -> String {
         guard identifiers[self] != nil else { 
-            throw Parser.Error.notDefined(self)
+            throw Parser.Error.unexpectedError
         }
         return self
     }

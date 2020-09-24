@@ -15,8 +15,7 @@ class Parser {
         case expectedIdentifier(Int, Int)
         case expectedExpression(Int, Int)
         case expected(String, Int, Int)
-        case notDefined(String, Int, Int)
-        case alreadyDefined(String, Int, Int)
+        case unexpectedError
         
         var errorDescription: String? {
             switch self {
@@ -40,27 +39,21 @@ class Parser {
                         Error: Extected \'\(str)\'.
                             Line: \(line)  Place: \(place)
                        """
-            case let .notDefined(str, line, place):
-                return """
-                        Error: \(str) not defined.
-                            Line: \(line)  Place: \(place)
-                       """
-            case let .alreadyDefined(str, line, place):
-                return """
-                        Error: \(str) already defined.
-                            Line: \(line)  Place: \(place)
-                       """
+            case .unexpectedError:
+                return "Error: Unexpected error."
             }
         }
     }
     
     let tokens: [Token]
+    let tokensStruct: [TokenStruct]
     
     // current location of the parsing phase
     var index = 0
     
-    init(tokens: [Token]) {
+    init(tokens: [Token], tokensStruct: [TokenStruct]) {
         self.tokens = tokens
+        self.tokensStruct = tokensStruct
     }
     
     var canPop: Bool {
@@ -76,28 +69,32 @@ class Parser {
     // A way of checking the element at the current location,
     // but ultimately incrementing the index.
     func popToken() -> Token {
-        let token = tokens[index]
+//        let token = tokens[index]
+        let token = tokensStruct[index].token
         index += 1
         return token
     }
     
     func parseIdentifier() throws -> Node {
         guard case let .identifier(name) = popToken() else {
-            throw Error.expectedIdentifier
+            let (line, place) = tokensStruct[index].position
+            throw Error.expectedIdentifier(line, place)
         }
         return name
     }
     
     func parseFloatNumber() throws -> Node {
         guard case let .numberFloat(float) = popToken() else {
-            throw Error.expectedNumber
+            let (line, place) = tokensStruct[index].position
+            throw Error.expectedNumber(line, place)
         }
         return float
     }
     
     func parseIntNumber() throws -> Node {
         guard case let .numberInt(int, _) = popToken() else {
-            throw Error.expectedNumber
+            let (line, place) = tokensStruct[index].position
+            throw Error.expectedNumber(line, place)
         }
         return int
     }
@@ -132,18 +129,9 @@ class Parser {
             return try parseIntNumber()
         case .numberFloat:
             return try parseFloatNumber()
-//        case .parensOpen:
-//            return try parseParens()
-//        case .identifier:
-//            guard let identifier = try parseIdentifier() as? String else {
-//                throw Error.expectedIdentifier
-//            }
-//            guard canPop, case .parensOpen = peek() else {
-//                return identifier
-//            }
-//            return FunctionCall(identifier: identifier)
         default:
-            throw Error.expectedExpression
+            let (line, place) = tokensStruct[index].position
+            throw Error.expectedExpression(line, place)
         }
     }
 
@@ -151,7 +139,8 @@ class Parser {
         var number : Token
         
         guard case .return = popToken() else {
-            throw Error.expected("\"return\" in function bloc")
+            let (line, place) = tokensStruct[index].position
+            throw Error.expected("\"return\" in function bloc", line, place)
         }
         
         if case let .numberInt(num, type) = popToken(){
@@ -159,11 +148,13 @@ class Parser {
         } else if case let .numberFloat(num) = popToken(){
             number = Token.numberFloat(num)
         } else {
-            throw Error.expected("number")
+            let (line, place) = tokensStruct[index].position
+            throw Error.expected("number", line, place)
         }
         
         guard case .semicolon = popToken() else {
-            throw Error.expected(";")
+            let (line, place) = tokensStruct[index].position
+            throw Error.expected(";", line, place)
         }
         return ReturnStatement(number: number)
     }
@@ -177,34 +168,42 @@ class Parser {
         } else if case .float = returnTypePopToken {
             returnType = Token.float
         } else {
-            throw Error.expected("function return type")
+            let (line, place) = tokensStruct[index].position
+            throw Error.expected("function return type", line, place)
         }
         guard case let .identifier(identifier) = popToken() else {
-            throw Error.expectedIdentifier
+            let (line, place) = tokensStruct[index].position
+            throw Error.expectedIdentifier(line, place)
         }
         guard case .parensOpen = popToken() else {
-            throw Error.expected("(")
+            let (line, place) = tokensStruct[index].position
+            throw Error.expected("(", line, place)
         }
         guard case .parensClose = popToken() else {
-            throw Error.expected(")")
+            let (line, place) = tokensStruct[index].position
+            throw Error.expected(")", line, place)
         }
         let codeBlock = try parseCurlyCodeBlock()
         
         
         guard let codeBlockBlock = codeBlock as? Block else {
-            throw Error.expected("function return block")
+            let (line, place) = tokensStruct[index].position
+            throw Error.expected("Function return block", line, place)
         }
         guard let returnStatement = codeBlockBlock.nodes[0] as? ReturnStatement else {
-            throw Error.expected("function return block")
+            let (line, place) = tokensStruct[index].position
+            throw Error.expected("Function return block", line, place)
         }
         
         if case Token.numberInt(_ , _) = returnStatement.number {
             if case .float = returnType {
-                throw Error.expected("---")
+                let (line, place) = tokensStruct[index].position
+                throw Error.expected("---", line, place)
             }
         } else if case .numberFloat(_) = returnStatement.number {
             if case .int = returnType {
-                throw Error.expected("---")
+                let (line, place) = tokensStruct[index].position
+                throw Error.expected("---", line, place)
             }
         }
                 
@@ -214,7 +213,8 @@ class Parser {
     
     func parseCurlyCodeBlock() throws -> Node {
         guard canPop, case .curlyOpen = popToken() else {
-            throw Parser.Error.expected("{")
+            let (line, place) = tokensStruct[index].position
+            throw Parser.Error.expected("{", line, place)
         }
         
         var depth = 1
@@ -242,11 +242,12 @@ class Parser {
         let endIndex = index
         
         guard canPop, case .curlyClose = popToken() else {
-            throw Error.expected("}")
+            let (line, place) = tokensStruct[index].position
+            throw Error.expected("}", line, place)
         }
         
         let tokens = Array(self.tokens[startIndex..<endIndex])
-        return try Parser(tokens: tokens).parse()
+        return try Parser(tokens: tokens, tokensStruct: tokensStruct).parse()
     }
 
 }

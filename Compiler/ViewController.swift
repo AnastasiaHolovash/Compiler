@@ -20,15 +20,15 @@ class ViewController: UIViewController {
         print(code)
         
         let tokens = Lexer(code: code).tokens
-        let some = Lexer(code: code).tokensStruct
+        let tokensStruct = Lexer(code: code).tokensStruct
         
         
-        for item in some {
+        for item in tokensStruct {
             print("\(item.token) - \(item.position.place)")
         }
         
         do {
-            let node = Parser(tokens: tokens)
+            let node = Parser(tokens: tokens, tokensStruct: tokensStruct)
             let ast = try node.parse()
             let interpret = try ast.interpret()
             
@@ -37,7 +37,7 @@ class ViewController: UIViewController {
             print(interpret)
         } catch let error {
             if let error = error as? Parser.Error {
-                print(error)
+                print(error.localizedDescription)
             }
         }
     }
