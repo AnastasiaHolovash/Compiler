@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct TokenStruct {
+    let token: Token
+    let position: (line: Int, place: Int)
+}
+
 // MARK: - Token
 enum Token {
     typealias Generator = (String) -> Token?
@@ -23,7 +28,7 @@ enum Token {
     case curlyOpen
     case curlyClose
     case semicolon
-
+    
     static var generators: [String: Generator] {
         return [
             "^(^0[xX][0-9a-fA-F]+)|^(^[0-9]+\\.[0-9]+)|^([0-9]+)": {

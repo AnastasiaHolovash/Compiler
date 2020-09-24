@@ -16,6 +16,7 @@ If a match was found, we remove the added prefix from our working code,
 */
 class Lexer {
     let tokens: [Token]
+    let tokensStruct: [TokenStruct]
     
     private static func getNextPrefix(code: String) -> (regex: String, prefix: String)? {
         
@@ -41,20 +42,35 @@ class Lexer {
     init(code: String) {
         
         var code = code
-        code.trimLeadingWhitespace()
+        var curentPlace = code.trimLeadingWhitespace()
         var tokens: [Token] = []
+        var tokensStruct: [TokenStruct] = []
         
         while let next = Lexer.getNextPrefix(code: code) {
             let (regex, prefix) = next
+            
+//            if let index = code.index(of: prefix) {
+//                let distance = code.distance(from: code.startIndex, to: index)
+//                curentPlace += distance
+//            }
+            
             code = String(code[prefix.endIndex...])
-            code.trimLeadingWhitespace()
+            
+            
             guard let generator = Token.generators[regex],
                 let token = generator(prefix) else {
                     fatalError()
             }
             
             tokens.append(token)
+            
+//            let prefixPlace = code.index(of: prefix)
+//            curentPlace += code.distanceTo(prefixPlace)
+            tokensStruct.append(TokenStruct(token: token, position: (line: 1, place: curentPlace)))
+            curentPlace += code.trimLeadingWhitespace()
+            curentPlace += prefix.count
         }
         self.tokens = tokens
+        self.tokensStruct = tokensStruct
     }
 }

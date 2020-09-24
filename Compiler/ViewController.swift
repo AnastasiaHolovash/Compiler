@@ -15,10 +15,18 @@ class ViewController: UIViewController {
         
         // Try changing the first parameter to sumOrA to 0 and back to 1
         let code = """
-                    float main(){ return 0xA2; }
+            float main(){ return 0xA2; }
         """
-
+        print(code)
+        
         let tokens = Lexer(code: code).tokens
+        let some = Lexer(code: code).tokensStruct
+        
+        
+        for item in some {
+            print("\(item.token) - \(item.position.place)")
+        }
+        
         do {
             let node = Parser(tokens: tokens)
             let ast = try node.parse()

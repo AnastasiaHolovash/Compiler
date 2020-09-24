@@ -35,10 +35,10 @@ struct Block: Node {
 
 
 
-struct FunctionCall: Node {
-    let identifier: String
-
-    func interpret() throws -> String {
+//struct FunctionCall: Node {
+//    let identifier: String
+//
+//    func interpret() throws -> String {
 //        guard let definition = identifiers[identifier],
 //            case let .function(function) = definition else {
 //                throw Parser.Error.notDefined(identifier)
@@ -66,7 +66,7 @@ struct FunctionCall: Node {
 //            identifiers.removeValue(forKey: name)
 //        }
 //        return returnValue
-        return ""
-    }
-}
+//        return ""
+//    }
+//}
 

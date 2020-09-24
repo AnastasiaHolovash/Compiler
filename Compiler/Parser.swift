@@ -10,15 +10,48 @@ import Foundation
 // MARK: - PARSER
 class Parser {
     
-    enum Error: Swift.Error {
-        case expectedNumber
-        case expectedIdentifier
-        case expectedOperator
-        case expectedExpression
-        case expected(String)
-        case notDefined(String)
-        case invalidParameters(toFunction: String)
-        case alreadyDefined(String)
+    enum Error: Swift.Error, LocalizedError {
+        case expectedNumber(Int, Int)
+        case expectedIdentifier(Int, Int)
+        case expectedExpression(Int, Int)
+        case expected(String, Int, Int)
+        case notDefined(String, Int, Int)
+        case alreadyDefined(String, Int, Int)
+        
+        var errorDescription: String? {
+            switch self {
+            case let .expectedNumber(line, place):
+                return """
+                        Error: Expected number.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .expectedIdentifier(line, place):
+                return """
+                        Error: Expected identifier.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .expectedExpression(line, place):
+                return """
+                        Error: Expression expected.
+                            Line: \(line)  Place: \(place)
+                        """
+            case let .expected(str, line, place):
+                return """
+                        Error: Extected \'\(str)\'.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .notDefined(str, line, place):
+                return """
+                        Error: \(str) not defined.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .alreadyDefined(str, line, place):
+                return """
+                        Error: \(str) already defined.
+                            Line: \(line)  Place: \(place)
+                       """
+            }
+        }
     }
     
     let tokens: [Token]
@@ -101,14 +134,14 @@ class Parser {
             return try parseFloatNumber()
 //        case .parensOpen:
 //            return try parseParens()
-        case .identifier:
-            guard let identifier = try parseIdentifier() as? String else {
-                throw Error.expectedIdentifier
-            }
-            guard canPop, case .parensOpen = peek() else {
-                return identifier
-            }
-            return FunctionCall(identifier: identifier)
+//        case .identifier:
+//            guard let identifier = try parseIdentifier() as? String else {
+//                throw Error.expectedIdentifier
+//            }
+//            guard canPop, case .parensOpen = peek() else {
+//                return identifier
+//            }
+//            return FunctionCall(identifier: identifier)
         default:
             throw Error.expectedExpression
         }
