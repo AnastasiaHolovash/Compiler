@@ -26,9 +26,9 @@ struct Block: Node {
         }
         
         guard let last = nodes.last else {
-            
             throw Parser.Error.unexpectedError
         }
+        
         codeASM += try last.interpret()
         return codeASM
     }

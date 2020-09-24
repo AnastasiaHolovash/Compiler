@@ -49,13 +49,7 @@ class Lexer {
         while let next = Lexer.getNextPrefix(code: code) {
             let (regex, prefix) = next
             
-//            if let index = code.index(of: prefix) {
-//                let distance = code.distance(from: code.startIndex, to: index)
-//                curentPlace += distance
-//            }
-            
             code = String(code[prefix.endIndex...])
-            
             
             guard let generator = Token.tokenGeter[regex],
                 let token = generator(prefix) else {
@@ -64,8 +58,6 @@ class Lexer {
             
             tokens.append(token)
             
-//            let prefixPlace = code.index(of: prefix)
-//            curentPlace += code.distanceTo(prefixPlace)
             tokensStruct.append(TokenStruct(token: token, position: (line: 1, place: curentPlace)))
             curentPlace += code.trimLeadingWhitespace()
             curentPlace += prefix.count

@@ -31,12 +31,10 @@ enum Token {
     static var tokenGeter: [String : (String) -> Token?] {
         return [
             "^(^0[xX][0-9a-fA-F]+)|^(^[0-9]+\\.[0-9]+)|^([0-9]+)": {
-                print($0)
                 if $0.contains(".") {
                     return .numberFloat(Float($0)!)
                 } else if $0.contains("x") || $0.contains("X") {
                     let some = $0.hexToDec()
-                    print(some)
                     return .numberInt(Int(some), .hex)
                 } else {
                     return .numberInt(Int($0)!, .decimal)

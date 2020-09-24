@@ -15,11 +15,11 @@ class ViewController: UIViewController {
         
         // Try changing the first parameter to sumOrA to 0 and back to 1
         let code = """
-            float main(){ return 0xA2; }
+            int main(){ return 345; }
         """
         print(code)
         
-        let tokens = Lexer(code: code).tokens
+//        let tokens = Lexer(code: code).tokens
         let tokensStruct = Lexer(code: code).tokensStruct
         
         
@@ -28,13 +28,28 @@ class ViewController: UIViewController {
         }
         
         do {
-            let node = Parser(tokens: tokens, tokensStruct: tokensStruct)
+            let node = Parser(tokensStruct: tokensStruct)
             let ast = try node.parse()
             let interpret = try ast.interpret()
             
+            let text = """
+
+
+            #include <iostream>
+            #include <string>
+            #include <stdint.h>
+            using namespace std;
+            int main()
+            {
+            \(interpret)
+            }
+            
+            """
+            
+            
             print(node)
             print(ast)
-            print(interpret)
+            print(text)
         } catch let error {
             if let error = error as? Parser.Error {
                 print(error.localizedDescription)

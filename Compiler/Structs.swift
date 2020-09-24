@@ -19,9 +19,23 @@ struct FunctionDefinition: Node {
         
         switch returnType {
         case .int:
-            return "int " + identifier + " " + codeASM
+            return
+                """
+                \tint b;
+                \t__asm {
+                \(codeASM)
+                \t}
+                \tcout << b << endl;
+                """
         case .float:
-            return "float " + identifier + " " + codeASM
+            return
+                """
+                \tfloat b;
+                \t__asm {
+                \(codeASM)
+                \t}
+                \tcout << b << endl;
+                """
         default:
             return ""
         }
@@ -35,7 +49,6 @@ struct FunctionDefinition: Node {
 
 struct ReturnStatement: Node {
     let number : Token
-//    let
     
     func interpret() throws -> String {
         var buffer = ""
@@ -51,6 +64,10 @@ struct ReturnStatement: Node {
             buffer += try num.interpret()
         }
         
-        return "return " + buffer
+        return
+            """
+            \t\tmov eax, \(buffer)
+            \t\tmov b, eax
+            """
     }
 }
