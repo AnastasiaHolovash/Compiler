@@ -192,9 +192,7 @@ class Parser {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expected("\'return\' in function bloc", line, place)
         }
-        
-        
-        
+                
         if case .numberInt(_, _) = peek().token {
             numberPosition = tokensStruct[index]
             index += 1

@@ -84,7 +84,6 @@ protocol ThrowCastingError {
 // MARK: - Token
 enum Token {
     
-    case minusOperation
     case numberFloat(Float)
     case numberInt(Int, Type)
     case int
@@ -129,7 +128,6 @@ enum Token {
                 return .identifier($0)
             },
             
-            "\\-": { _ in .minusOperation },
             "\\(": { _ in .parensOpen },
             "\\)": { _ in .parensClose },
             "\\{": { _ in .curlyOpen },
