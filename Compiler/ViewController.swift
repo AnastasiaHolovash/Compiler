@@ -20,12 +20,13 @@ class ViewController: UIViewController {
         print(code)
         
 //        let tokens = Lexer(code: code).tokens
-        let tokensStruct = Lexer(code: code).tokensStruct
+        let lexerResult = Lexer(code: code)
+        let tokensStruct = lexerResult.tokensStruct
         
-        
-        for item in tokensStruct {
-            print("\(item.token) - \(item.position.place)")
-        }
+        print(lexerResult.tokensTable)
+//        for item in tokensStruct {
+//            print("\(item.token) - \(item.position.place)")
+//        }
         
         do {
             let node = Parser(tokensStruct: tokensStruct)
