@@ -45,10 +45,6 @@ class Lexer: ThrowCastingError {
         throw Parser.Error.expectedNumber(curentPosition.line, curentPosition.place)
     }
     
-    func printingCastingPosition() {
-        print("Type reduction position: Line: \(curentPosition.line) Position: \(curentPosition.place)")
-    }
-    
     init(code: String) {
         
         Token.delegate = self

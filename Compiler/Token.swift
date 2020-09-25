@@ -14,7 +14,6 @@ struct TokenStruct {
 
 protocol ThrowCastingError {
     func throwCastingError() throws
-    func printingCastingPosition()
 }
 
 // MARK: - Token
@@ -43,14 +42,11 @@ enum Token {
                         try delegate?.throwCastingError()
                         fatalError("Not float")
                     }
-                    delegate?.printingCastingPosition()
                     return .numberFloat(num)
                 } else if $0.contains("x") || $0.contains("X") {
                     let some = $0.hexToDec()
-                    delegate?.printingCastingPosition()
                     return .numberInt(Int(some), .hex)
                 } else {
-                    delegate?.printingCastingPosition()
                     return .numberInt(Int($0)!, .decimal)
                 }
             },
