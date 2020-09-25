@@ -12,10 +12,10 @@ struct FunctionDefinition: Node {
     let identifier: String
     let block: Node
 
-    func interpret() throws -> String {
+    func generatingAsmCode() throws -> String {
         identifiers[identifier] = self
         
-        let codeASM = try block.interpret()
+        let codeASM = try block.generatingAsmCode()
         
         switch returnType {
         case .int:
@@ -50,18 +50,18 @@ struct FunctionDefinition: Node {
 struct ReturnStatement: Node {
     let number : Token
     
-    func interpret() throws -> String {
+    func generatingAsmCode() throws -> String {
         var buffer = ""
         
         if case let .numberInt(num, type) = number {
             switch type {
             case .decimal:
-                buffer += try num.interpret()
+                buffer += try num.generatingAsmCode()
             case .hex:
                 buffer += try num.decToHex()
             }
         } else if case let .numberFloat(num) = number {
-            buffer += try num.interpret()
+            buffer += try num.generatingAsmCode()
         }
         
         return

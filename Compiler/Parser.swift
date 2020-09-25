@@ -10,7 +10,9 @@ import Foundation
 // MARK: - PARSER
 class Parser {
     
+    /// Detection and derivation of Errors
     enum Error: Swift.Error, LocalizedError {
+        
         case expectedNumber(Int, Int)
         case expectedIdentifier(Int, Int)
         case expectedExpression(Int, Int)
@@ -51,14 +53,12 @@ class Parser {
         }
     }
     
-//    let tokens: [Token]
     let tokensStruct: [TokenStruct]
     
     // current location of the parsing phase
     var index = 0
     
     init(tokensStruct: [TokenStruct]) {
-//        self.tokens = tokens
         self.tokensStruct = tokensStruct
     }
     
@@ -75,7 +75,6 @@ class Parser {
     // A way of checking the element at the current location,
     // but ultimately incrementing the index.
     func popToken() -> Token {
-//        let token = tokens[index]
         let token = tokensStruct[index].token
         index += 1
         return token
@@ -144,16 +143,18 @@ class Parser {
         
         guard case .return = popToken() else {
             let (line, place) = tokensStruct[index].position
-            throw Error.expected("\"return\" in function bloc", line, place)
+            throw Error.expected("\'return\' in function bloc", line, place)
         }
         
-        if case let .numberInt(num, type) = popToken(){
+        if case let .numberInt(num, type) = peek() {
             number = Token.numberInt(num, type)
-        } else if case let .numberFloat(num) = popToken(){
+            index += 1
+        } else if case let .numberFloat(num) = peek() {
             number = Token.numberFloat(num)
+            index += 1
         } else {
             let (line, place) = tokensStruct[index].position
-            throw Error.expected("number", line, place)
+            throw Error.expectedNumber(line, place)
         }
         
         guard case .semicolon = popToken() else {
@@ -241,7 +242,6 @@ class Parser {
                 index += 1
                 continue
             }
-            
             break
         }
         

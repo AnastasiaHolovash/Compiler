@@ -12,10 +12,15 @@ struct TokenStruct {
     let position: (line: Int, place: Int)
 }
 
+protocol ThrowCastingError {
+    func throwCastingError() throws
+    func printingCastingPosition()
+}
+
 // MARK: - Token
 enum Token {
     
-    case minusOp
+    case minusOperation
     case numberFloat(Float)
     case numberInt(Int, Type)
     case int
@@ -28,18 +33,28 @@ enum Token {
     case curlyClose
     case semicolon
     
-    static var tokenGeter: [String : (String) -> Token?] {
+    static var delegate : ThrowCastingError?
+    
+    static var tokenGeter: [String : (String) throws -> Token?] {
         return [
             "^(^0[xX][0-9a-fA-F]+)|^(^[0-9]+\\.[0-9]+)|^([0-9]+)": {
                 if $0.contains(".") {
-                    return .numberFloat(Float($0)!)
+                    guard let num = Float($0) else {
+                        try delegate?.throwCastingError()
+                        fatalError("Not float")
+                    }
+                    delegate?.printingCastingPosition()
+                    return .numberFloat(num)
                 } else if $0.contains("x") || $0.contains("X") {
                     let some = $0.hexToDec()
+                    delegate?.printingCastingPosition()
                     return .numberInt(Int(some), .hex)
                 } else {
+                    delegate?.printingCastingPosition()
                     return .numberInt(Int($0)!, .decimal)
                 }
             },
+            
             "[a-zA-Z_$][a-zA-Z_$0-9]*": {
                 guard $0 != "int" else {
                     return .int
@@ -52,7 +67,8 @@ enum Token {
                 }
                 return .identifier($0)
             },
-            "\\-": { _ in .minusOp },
+            
+            "\\-": { _ in .minusOperation },
             "\\(": { _ in .parensOpen },
             "\\)": { _ in .parensClose },
             "\\{": { _ in .curlyOpen },

@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         
         // Try changing the first parameter to sumOrA to 0 and back to 1
         let code = """
-            int main(){ return 345; }
+            int main(){ return 0x18; }
         """
         print(code)
         
@@ -31,7 +31,7 @@ class ViewController: UIViewController {
         do {
             let node = Parser(tokensStruct: tokensStruct)
             let ast = try node.parse()
-            let interpret = try ast.interpret()
+            let interpret = try ast.generatingAsmCode()
             
             let text = """
 

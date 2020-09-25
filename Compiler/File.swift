@@ -10,7 +10,7 @@ import Foundation
 var identifiers: [String: FunctionDefinition] = [:]
 
 protocol Node {
-    func interpret() throws -> String
+    func generatingAsmCode() throws -> String
 }
 
 
@@ -18,18 +18,18 @@ protocol Node {
 struct Block: Node {
     let nodes: [Node]
     
-    func interpret() throws -> String {
+    func generatingAsmCode() throws -> String {
         var codeASM = ""
         
         for item in nodes[0..<(nodes.endIndex - 1)] {
-            codeASM += try item.interpret()
+            codeASM += try item.generatingAsmCode()
         }
         
         guard let last = nodes.last else {
             throw Parser.Error.unexpectedError
         }
         
-        codeASM += try last.interpret()
+        codeASM += try last.generatingAsmCode()
         return codeASM
     }
 }

@@ -51,14 +51,14 @@ extension Sequence {
 }
 
 extension Float: Node {
-    func interpret() throws -> String {
+    func generatingAsmCode() throws -> String {
         return String(self)
     }
 }
 
 extension Int: Node {
     
-    func interpret() throws -> String {
+    func generatingAsmCode() throws -> String {
         
         return String(self)
     }
@@ -70,7 +70,7 @@ extension Int: Node {
 }
 
 extension String: Node {
-    func interpret() throws -> String {
+    func generatingAsmCode() throws -> String {
         guard identifiers[self] != nil else { 
             throw Parser.Error.unexpectedError
         }
