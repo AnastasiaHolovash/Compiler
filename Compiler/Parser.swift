@@ -73,8 +73,8 @@ class Parser {
     
     // A way of checking the element at the current location
     // without incrementing the index
-    func peek() -> Token {
-        return tokensStruct[index].token
+    func peek() -> TokenStruct {
+        return tokensStruct[index]
     }
     
     
@@ -98,8 +98,8 @@ class Parser {
         let startIndex = index
         
         while canPop {
-            guard case .curlyClose = peek() else {
-                if case .curlyOpen = peek() {
+            guard case .curlyClose = peek().token else {
+                if case .curlyOpen = peek().token {
                     depth += 1
                 }
                 index += 1
@@ -189,10 +189,10 @@ class Parser {
             throw Error.expected("\'return\' in function bloc", line, place)
         }
         
-        if case .numberInt(_, _) = peek() {
+        if case .numberInt(_, _) = peek().token {
             numberPosition = tokensStruct[index]
             index += 1
-        } else if case .numberFloat(_) = peek() {
+        } else if case .numberFloat(_) = peek().token {
             numberPosition = tokensStruct[index]
             index += 1
         } else {
@@ -200,7 +200,7 @@ class Parser {
             throw Error.expectedNumber(line, place)
         }
         
-        guard case .semicolon = getNextToken() else {
+        guard canPop, case .semicolon = getNextToken() else {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expected(";", line, place)
         }
@@ -230,7 +230,7 @@ class Parser {
         var nodes: [ASTnode] = []
         while canPop {
             let token = peek()
-            switch token {
+            switch token.token {
             case .return:
                 let returning = try returningParser()
                 nodes.append(returning)
@@ -241,7 +241,8 @@ class Parser {
                 let definition = try functionParser()
                 nodes.append(definition)
             default:
-                break
+                throw Error.expected("return", token.position.line, token.position.place)
+//                break
             }
         }
         return CodeBlock(astNodes: nodes)

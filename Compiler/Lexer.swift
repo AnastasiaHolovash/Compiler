@@ -11,7 +11,7 @@ import Foundation
 class Lexer: ThrowCastingError {
     
     var tokensStruct: [TokenStruct] = []
-    var tokensTable = "\n\n______TOKENS TABLE______"
+    var tokensTable = "\n______TOKENS TABLE______"
     var curentPosition: (line: Int, place: Int) = (line: 0, place: 0)
     
     private static func getNewPrefix(code: String) -> (regex: String, prefix: String)? {
@@ -65,6 +65,6 @@ class Lexer: ThrowCastingError {
             
             curentLine += 1
         }
-        tokensTable += "\n\n"
+        tokensTable += "\n"
     }
 }

@@ -50,8 +50,8 @@ public extension String {
     }
     
     
-    func hexToDec() -> UInt8 {
-        return UInt8(self.replacingOccurrences(of: "0x", with: ""), radix: 16)!
+    func hexToDec() -> UInt16 {
+        return UInt16(self.replacingOccurrences(of: "0x", with: ""), radix: 16)!
     }
     
     

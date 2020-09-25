@@ -14,12 +14,40 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         // Try changing the first parameter to sumOrA to 0 and back to 1
-        let code = """
+        let code0 = """
         float main() {
-            return 1.8;
+             1.8;
         }
         """
-//        print(code)
+        
+        let code1 = """
+        float main() {
+            return 0xA3;
+        }
+        """
+        
+        let code2 = """
+        int main() {
+            return 0xA4C;
+        }
+        """
+        
+        let code3 = """
+        int main() {
+            return 8;
+        
+        """
+        
+        let code4 = """
+        float main() {
+            return 1.8
+        }
+        """
+        
+        let code = code0
+        
+        print("______ENTERED CODE______")
+        print(code)
         
         let lexerResult = Lexer(code: code)
         let tokensStruct = lexerResult.tokensStruct
@@ -56,7 +84,7 @@ class ViewController: UIViewController {
             """
             
             
-            print(node)
+            print("______AST STRUCT______")
             print(ast)
             print(text)
             
