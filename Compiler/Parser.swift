@@ -53,18 +53,23 @@ class Parser {
         }
     }
     
+    
     let tokensStruct: [TokenStruct]
     
-    // current location of the parsing phase
-    var index = 0
     
     init(tokensStruct: [TokenStruct]) {
         self.tokensStruct = tokensStruct
     }
     
+    
+    // current location of the parsing phase
+    var index = 0
+    
+    
     var canPop: Bool {
-        return index < tokensStruct.count
+        return index < tokensStruct.count ? true : false
     }
+    
     
     // A way of checking the element at the current location
     // without incrementing the index
@@ -72,158 +77,20 @@ class Parser {
         return tokensStruct[index].token
     }
     
+    
     // A way of checking the element at the current location,
     // but ultimately incrementing the index.
-    func popToken() -> Token {
+    func getNextToken() -> Token {
         let token = tokensStruct[index].token
         index += 1
         return token
     }
     
-    func parseIdentifier() throws -> Node {
-        guard case let .identifier(name) = popToken() else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expectedIdentifier(line, place)
-        }
-        return name
-    }
     
-    func parseFloatNumber() throws -> Node {
-        guard case let .numberFloat(float) = popToken() else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expectedNumber(line, place)
-        }
-        return float
-    }
-    
-    func parseIntNumber() throws -> Node {
-        guard case let .numberInt(int, _) = popToken() else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expectedNumber(line, place)
-        }
-        return int
-    }
-    
-    func parse() throws -> Node {
-        var nodes: [Node] = []
-        while canPop {
-            let token = peek()
-            switch token {
-            case .return:
-                let returning = try parseReturning()
-                nodes.append(returning)
-            case .int:
-                let definition = try parseFunctionDefinition()
-                nodes.append(definition)
-            case .float:
-                let definition = try parseFunctionDefinition()
-                nodes.append(definition)
-            default:
-                break
-            }
-        }
-        return Block(nodes: nodes)
-    }
-    
-    // getting either a number or a parenthesized expression.
-    func parseValue() throws -> Node {
-        switch (peek()) {
-        case .numberInt:
-            return try parseIntNumber()
-        case .numberFloat:
-            return try parseFloatNumber()
-        default:
-            let (line, place) = tokensStruct[index].position
-            throw Error.expectedExpression(line, place)
-        }
-    }
-
-    func parseReturning() throws -> Node {
-//        var number : Token
-        var numberPosition: TokenStruct
+    func codeBlockParser() throws -> ASTnode {
         
-        guard case .return = popToken() else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expected("\'return\' in function bloc", line, place)
-        }
-        
-        if case let .numberInt(num, type) = peek() {
-//            number = Token.numberInt(num, type)
-            numberPosition = tokensStruct[index]
-            index += 1
-        } else if case let .numberFloat(num) = peek() {
-//            number = Token.numberFloat(num)
-            numberPosition = tokensStruct[index]
-            index += 1
-        } else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expectedNumber(line, place)
-        }
-        
-        guard case .semicolon = popToken() else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expected(";", line, place)
-        }
-        return ReturnStatement(number: numberPosition)
-    }
-    
-    func parseFunctionDefinition() throws -> Node {
-        var returnType : Token
-        
-        let returnTypePopToken = popToken()
-        if case .int = returnTypePopToken {
-            returnType = Token.int
-        } else if case .float = returnTypePopToken {
-            returnType = Token.float
-        } else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expected("function return type", line, place)
-        }
-        guard case let .identifier(identifier) = popToken() else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expectedIdentifier(line, place)
-        }
-        guard case .parensOpen = popToken() else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expected("(", line, place)
-        }
-        guard case .parensClose = popToken() else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.expected(")", line, place)
-        }
-        
-        let possibleErrorIndex = index
-        let codeBlock = try parseCurlyCodeBlock()
-        
-        
-        guard let codeBlockBlock = codeBlock as? Block else {
-            let (line, place) = tokensStruct[possibleErrorIndex].position
-            throw Error.expected("Function return block", line, place)
-        }
-        guard let returnStatement = codeBlockBlock.nodes[0] as? ReturnStatement else {
-            let (line, place) = tokensStruct[possibleErrorIndex + 1].position
-            throw Error.expected("Function return block", line, place)
-        }
-        
-        if case Token.numberInt(_ , _) = returnStatement.number.token {
-            if case .float = returnType {
-                let (line, place) = tokensStruct[possibleErrorIndex + 2].position
-                throw Error.expectedNumberType("float", line, place)
-            }
-        } else if case .numberFloat(_) = returnStatement.number.token {
-            if case .int = returnType {
-                let (line, place) = tokensStruct[possibleErrorIndex + 2].position
-                throw Error.expectedNumberType("int", line, place)
-            }
-        }
-                
-        return FunctionDefinition(returnType: returnType, identifier: identifier,
-                                  block: codeBlock)
-    }
-    
-    func parseCurlyCodeBlock() throws -> Node {
-        guard canPop, case .curlyOpen = popToken() else {
-            let (line, place) = tokensStruct[index].position
+        guard canPop, case .curlyOpen = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
             throw Parser.Error.expected("{", line, place)
         }
         
@@ -250,13 +117,134 @@ class Parser {
         
         let endIndex = index
         
-        guard canPop, case .curlyClose = popToken() else {
-            let (line, place) = tokensStruct[index].position
+        guard canPop, case .curlyClose = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
             throw Error.expected("}", line, place)
         }
-        
         let tokens = Array(self.tokensStruct[startIndex..<endIndex])
         return try Parser(tokensStruct: tokens).parse()
     }
-
+    
+    
+    func functionParser() throws -> ASTnode {
+        var returnType : Token
+        
+        let returnTypePopToken = getNextToken()
+        if case .int = returnTypePopToken {
+            returnType = Token.int
+        } else if case .float = returnTypePopToken {
+            returnType = Token.float
+        } else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expected("function return type", line, place)
+        }
+        guard case let .identifier(identifier) = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expectedIdentifier(line, place)
+        }
+        guard case .parensOpen = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expected("(", line, place)
+        }
+        guard case .parensClose = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expected(")", line, place)
+        }
+        
+        let possibleErrorIndex = index
+        let codeBlock = try codeBlockParser()
+        
+        
+        guard let codeBlockBlock = codeBlock as? CodeBlock else {
+            let (line, place) = tokensStruct[possibleErrorIndex].position
+            throw Error.expected("Function return block", line, place)
+        }
+        guard let returnStatement = codeBlockBlock.astNodes[0] as? ReturnStatement else {
+            let (line, place) = tokensStruct[possibleErrorIndex + 1].position
+            throw Error.expected("Function return block", line, place)
+        }
+        
+        if case Token.numberInt(_ , _) = returnStatement.number.token {
+            if case .float = returnType {
+                let (line, place) = tokensStruct[possibleErrorIndex + 2].position
+                throw Error.expectedNumberType("float", line, place)
+            }
+        } else if case .numberFloat(_) = returnStatement.number.token {
+            if case .int = returnType {
+                let (line, place) = tokensStruct[possibleErrorIndex + 2].position
+                throw Error.expectedNumberType("int", line, place)
+            }
+        }
+                
+        return Function(returnType: returnType, identifier: identifier,
+                                  block: codeBlock)
+    }
+    
+    
+    func returningParser() throws -> ASTnode {
+        var numberPosition: TokenStruct
+        
+        guard case .return = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expected("\'return\' in function bloc", line, place)
+        }
+        
+        if case .numberInt(_, _) = peek() {
+            numberPosition = tokensStruct[index]
+            index += 1
+        } else if case .numberFloat(_) = peek() {
+            numberPosition = tokensStruct[index]
+            index += 1
+        } else {
+            let (line, place) = tokensStruct[index].position
+            throw Error.expectedNumber(line, place)
+        }
+        
+        guard case .semicolon = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expected(";", line, place)
+        }
+        return ReturnStatement(number: numberPosition)
+    }
+    
+    
+    func floatNumberParser() throws -> ASTnode {
+        guard case let .numberFloat(float) = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expectedNumber(line, place)
+        }
+        return float
+    }
+    
+    
+    func intNumberParser() throws -> ASTnode {
+        guard case let .numberInt(int, _) = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expectedNumber(line, place)
+        }
+        return int
+    }
+    
+    
+    func parse() throws -> ASTnode {
+        var nodes: [ASTnode] = []
+        while canPop {
+            let token = peek()
+            switch token {
+            case .return:
+                let returning = try returningParser()
+                nodes.append(returning)
+            case .int:
+                let definition = try functionParser()
+                nodes.append(definition)
+            case .float:
+                let definition = try functionParser()
+                nodes.append(definition)
+            default:
+                break
+            }
+        }
+        return CodeBlock(astNodes: nodes)
+    }
+    
 }

@@ -7,28 +7,44 @@
 
 import Foundation
 
-struct FunctionDefinition: Node {
-    let returnType: Token
-    let identifier: String
-    let block: Node
-
+// MARK: - Code Block struct
+struct CodeBlock: ASTnode {
+    let astNodes: [ASTnode]
+    
     func generatingAsmCode() throws -> String {
-        identifiers[identifier] = self
+        var codeASM = ""
         
-        let codeASM = try block.generatingAsmCode()
+        for item in astNodes[0..<(astNodes.endIndex - 1)] {
+            codeASM += try item.generatingAsmCode()
+        }
         
-        return
-            """
-            \tint b;
-            \t__asm {
-            \(codeASM)
-            \t}
-            \tcout << b << endl;
-            """
+        guard let last = astNodes.last else {
+            throw Parser.Error.unexpectedError
+        }
+        
+        codeASM += try last.generatingAsmCode()
+        return codeASM
     }
 }
 
-struct ReturnStatement: Node {
+
+// MARK: - Function struct
+struct Function: ASTnode {
+    let returnType: Token
+    let identifier: String
+    let block: ASTnode
+
+    func generatingAsmCode() throws -> String {
+        identifiers[identifier] = self
+        let codeASM = try block.generatingAsmCode()
+        
+        return codeASM
+    }
+}
+
+
+// MARK: - Return Statement struct
+struct ReturnStatement: ASTnode {
     let number : TokenStruct
     
     func generatingAsmCode() throws -> String {
@@ -48,8 +64,8 @@ struct ReturnStatement: Node {
         
         return
             """
-            \t\tmov eax, \(buffer)
-            \t\tmov b, eax
+            mov eax, \(buffer)
+            mov b, eax
             """
     }
 }

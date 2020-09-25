@@ -8,7 +8,8 @@
 import Foundation
 
 public extension String {
-    //    returns a substring matching the given regular expression, but only if that substring is a prefix of the string
+    
+    /// Returns a substring matching the given regular expression.
     func getPrefix(regex: String) -> String? {
         let expression = try! NSRegularExpression(pattern: "^\(regex)", options: [])
         
@@ -21,8 +22,10 @@ public extension String {
         }
         return nil
     }
-    //    removes all leading whitespace from a String
-    @discardableResult mutating func trimLeadingWhitespace() -> Int {
+    
+    
+    /// Removes all leading whitespace from a String.
+    @discardableResult mutating func trimWhitespace() -> Int {
         let i = startIndex
         var counter = 0
         while i < endIndex {
@@ -36,86 +39,45 @@ public extension String {
         return 0
         
     }
-}
-
-extension Sequence {
-    func count(where: (Iterator.Element) -> Bool) -> Int {
-        var cnt = 0
-        for element in self {
-            if `where`(element) {
-                cnt += 1
-            }
-        }
-        return cnt
-    }
-}
-
-extension Float: Node {
-    func generatingAsmCode() throws -> String {
-        return String(Int(self))
-    }
-}
-
-extension Int: Node {
     
-    func generatingAsmCode() throws -> String {
-        
-        return String(self)
-    }
     
-    func decToHex() throws -> String {
-        return "0x" + String(format:"%02X", self)
-    }
-    
-}
-
-extension String: Node {
+    /// Interpreter func
     func generatingAsmCode() throws -> String {
-        guard identifiers[self] != nil else { 
+        guard identifiers[self] != nil else {
             throw Parser.Error.unexpectedError
         }
         return self
     }
-}
-
-extension String {
+    
     
     func hexToDec() -> UInt8 {
         return UInt8(self.replacingOccurrences(of: "0x", with: ""), radix: 16)!
     }
     
+    
 }
 
 
-extension StringProtocol {
-    func index<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> Index? {
-        range(of: string, options: options)?.lowerBound
-    }
-    func endIndex<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> Index? {
-        range(of: string, options: options)?.upperBound
-    }
-    func indices<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> [Index] {
-        var indices: [Index] = []
-        var startIndex = self.startIndex
-        while startIndex < endIndex,
-            let range = self[startIndex...]
-                .range(of: string, options: options) {
-                indices.append(range.lowerBound)
-                startIndex = range.lowerBound < range.upperBound ? range.upperBound :
-                    index(range.lowerBound, offsetBy: 1, limitedBy: endIndex) ?? endIndex
-        }
-        return indices
-    }
-    func ranges<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> [Range<Index>] {
-        var result: [Range<Index>] = []
-        var startIndex = self.startIndex
-        while startIndex < endIndex,
-            let range = self[startIndex...]
-                .range(of: string, options: options) {
-                result.append(range)
-                startIndex = range.lowerBound < range.upperBound ? range.upperBound :
-                    index(range.lowerBound, offsetBy: 1, limitedBy: endIndex) ?? endIndex
-        }
-        return result
+extension Float: ASTnode {
+    
+    /// Interpreter func
+    func generatingAsmCode() throws -> String {
+        return String(Int(self))
     }
 }
+
+
+extension Int: ASTnode {
+    
+    /// Interpreter func
+    func generatingAsmCode() throws -> String {
+        return String(self)
+    }
+    
+    
+    /// Interpreter func
+    func decToHex() throws -> String {
+        return "0x" + String(format:"%02X", self)
+    }
+}
+

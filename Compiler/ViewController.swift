@@ -15,25 +15,26 @@ class ViewController: UIViewController {
         
         // Try changing the first parameter to sumOrA to 0 and back to 1
         let code = """
-            float main() {
-                return 1.8;
-            }
+        float main() {
+            return 1.8;
+        }
         """
-        print(code)
+//        print(code)
         
-//        let tokens = Lexer(code: code).tokens
         let lexerResult = Lexer(code: code)
         let tokensStruct = lexerResult.tokensStruct
         
         print(lexerResult.tokensTable)
-//        for item in tokensStruct {
-//            print("\(item.token) - \(item.position.place)")
-//        }
         
         do {
             let node = Parser(tokensStruct: tokensStruct)
             let ast = try node.parse()
             let interpret = try ast.generatingAsmCode()
+            
+            var lines : [String] = []
+            interpret.enumerateLines { (line, _) in
+                lines.append(line)
+            }
             
             let text = """
 
@@ -44,7 +45,12 @@ class ViewController: UIViewController {
             using namespace std;
             int main()
             {
-            \(interpret)
+                int b;
+                __asm {
+                    \(lines[0])
+                    \(lines[1])
+                }
+                cout << b << endl;
             }
             
             """
@@ -53,6 +59,8 @@ class ViewController: UIViewController {
             print(node)
             print(ast)
             print(text)
+            
+            
         } catch let error {
             if let error = error as? Parser.Error {
                 print(error.localizedDescription)

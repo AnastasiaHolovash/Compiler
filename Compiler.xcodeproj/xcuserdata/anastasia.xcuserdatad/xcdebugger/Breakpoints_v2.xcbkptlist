@@ -7,33 +7,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0CC69C45-81BA-4BAF-B8D9-AEA8765DDBE1"
-            shouldBeEnabled = "No"
+            uuid = "E45977CC-94A5-4907-8BC5-71DD7D14538F"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Compiler/Lexer.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
             landmarkName = "init(code:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "18E0B269-B8A0-4496-AD62-C7C084BED5BC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Compiler/Parser.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
-            landmarkName = "parseReturning()"
-            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E45977CC-94A5-4907-8BC5-71DD7D14538F - 1ba3b94c072369a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Compiler.Lexer.init(code: Swift.String) -&gt; Compiler.Lexer"
+                  moduleName = "Compiler"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/anastasia/Compiler/Compiler/Lexer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "57"
+                  endingLineNumber = "57"
+                  offsetFromSymbolStart = "745">
+               </Location>
+               <Location
+                  uuid = "E45977CC-94A5-4907-8BC5-71DD7D14538F - 8730abe8d8625a45"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.String, inout Swift.Bool) -&gt; () in Compiler.Lexer.init(code: Swift.String) -&gt; Compiler.Lexer"
+                  moduleName = "Compiler"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/anastasia/Compiler/Compiler/Lexer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "255">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
