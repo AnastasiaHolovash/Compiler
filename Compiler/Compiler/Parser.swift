@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol ASTnode {
+    func generatingAsmCode() throws -> String
+}
+
 // MARK: - PARSER
 class Parser {
     
@@ -188,6 +192,8 @@ class Parser {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expected("\'return\' in function bloc", line, place)
         }
+        
+        
         
         if case .numberInt(_, _) = peek().token {
             numberPosition = tokensStruct[index]

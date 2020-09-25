@@ -11,6 +11,7 @@ import Foundation
 struct CodeBlock: ASTnode {
     let astNodes: [ASTnode]
     
+    /// Interpreter func
     func generatingAsmCode() throws -> String {
         var codeASM = ""
         
@@ -34,6 +35,7 @@ struct Function: ASTnode {
     let identifier: String
     let block: ASTnode
 
+    /// Interpreter func
     func generatingAsmCode() throws -> String {
         identifiers[identifier] = self
         let codeASM = try block.generatingAsmCode()
@@ -47,6 +49,7 @@ struct Function: ASTnode {
 struct ReturnStatement: ASTnode {
     let number : TokenStruct
     
+    /// Interpreter func
     func generatingAsmCode() throws -> String {
         var buffer = ""
         
@@ -69,3 +72,5 @@ struct ReturnStatement: ASTnode {
             """
     }
 }
+
+var identifiers: [String: Function] = [:]

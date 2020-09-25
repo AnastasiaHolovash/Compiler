@@ -16,33 +16,33 @@ class ViewController: UIViewController {
         // Try changing the first parameter to sumOrA to 0 and back to 1
         let code0 = """
         float main() {
-             1.8;
+              return -1.8;
         }
         """
-        
-        let code1 = """
-        float main() {
-            return 0xA3;
-        }
-        """
-        
-        let code2 = """
-        int main() {
-            return 0xA4C;
-        }
-        """
-        
-        let code3 = """
-        int main() {
-            return 8;
-        
-        """
-        
-        let code4 = """
-        float main() {
-            return 1.8
-        }
-        """
+//
+//        let code1 = """
+//        float main() {
+//            return 0xA3;
+//        }
+//        """
+//
+//        let code2 = """
+//        int main() {
+//            return 0xA4C;
+//        }
+//        """
+//
+//        let code3 = """
+//        int main() {
+//            return 8;
+//
+//        """
+//
+//        let code4 = """
+//        float main() {
+//            return 1.8
+//        }
+//        """
         
         let code = code0
         
