@@ -17,33 +17,14 @@ struct FunctionDefinition: Node {
         
         let codeASM = try block.generatingAsmCode()
         
-        switch returnType {
-        case .int:
-            return
-                """
-                \tint b;
-                \t__asm {
-                \(codeASM)
-                \t}
-                \tcout << b << endl;
-                """
-        case .float:
-            return
-                """
-                \tfloat b;
-                \t__asm {
-                \(codeASM)
-                \t}
-                \tcout << b << endl;
-                """
-        default:
-            return ""
-        }
-    }
-    
-    func returnTypeCheck(define: Token, fact: Node) -> Bool {
-        
-        return true
+        return
+            """
+            \tint b;
+            \t__asm {
+            \(codeASM)
+            \t}
+            \tcout << b << endl;
+            """
     }
 }
 

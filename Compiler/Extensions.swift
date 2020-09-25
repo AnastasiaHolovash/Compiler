@@ -52,7 +52,7 @@ extension Sequence {
 
 extension Float: Node {
     func generatingAsmCode() throws -> String {
-        return String(self)
+        return String(Int(self))
     }
 }
 
