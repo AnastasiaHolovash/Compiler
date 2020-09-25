@@ -29,20 +29,21 @@ struct FunctionDefinition: Node {
 }
 
 struct ReturnStatement: Node {
-    let number : Token
+    let number : TokenStruct
     
     func generatingAsmCode() throws -> String {
         var buffer = ""
         
-        if case let .numberInt(num, type) = number {
+        if case let .numberInt(num, type) = number.token {
             switch type {
             case .decimal:
                 buffer += try num.generatingAsmCode()
             case .hex:
                 buffer += try num.decToHex()
             }
-        } else if case let .numberFloat(num) = number {
+        } else if case let .numberFloat(num) = number.token {
             buffer += try num.generatingAsmCode()
+            print("Type reduction position: Line: \(number.position.line)    Position: \(number.position.place)\n")
         }
         
         return

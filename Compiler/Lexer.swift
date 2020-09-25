@@ -68,13 +68,7 @@ class Lexer: ThrowCastingError {
                 tokensTable += "\n\(prefix) - \(token)"
                 
             } catch {
-                
             }
-             
-            
-
-            
-                        
             
         }
         tokensTable += "\n\n"

@@ -139,7 +139,8 @@ class Parser {
     }
 
     func parseReturning() throws -> Node {
-        var number : Token
+//        var number : Token
+        var numberPosition: TokenStruct
         
         guard case .return = popToken() else {
             let (line, place) = tokensStruct[index].position
@@ -147,10 +148,12 @@ class Parser {
         }
         
         if case let .numberInt(num, type) = peek() {
-            number = Token.numberInt(num, type)
+//            number = Token.numberInt(num, type)
+            numberPosition = tokensStruct[index]
             index += 1
         } else if case let .numberFloat(num) = peek() {
-            number = Token.numberFloat(num)
+//            number = Token.numberFloat(num)
+            numberPosition = tokensStruct[index]
             index += 1
         } else {
             let (line, place) = tokensStruct[index].position
@@ -161,7 +164,7 @@ class Parser {
             let (line, place) = tokensStruct[index].position
             throw Error.expected(";", line, place)
         }
-        return ReturnStatement(number: number)
+        return ReturnStatement(number: numberPosition)
     }
     
     func parseFunctionDefinition() throws -> Node {
@@ -202,12 +205,12 @@ class Parser {
             throw Error.expected("Function return block", line, place)
         }
         
-        if case Token.numberInt(_ , _) = returnStatement.number {
+        if case Token.numberInt(_ , _) = returnStatement.number.token {
             if case .float = returnType {
                 let (line, place) = tokensStruct[possibleErrorIndex + 2].position
                 throw Error.expectedNumberType("float", line, place)
             }
-        } else if case .numberFloat(_) = returnStatement.number {
+        } else if case .numberFloat(_) = returnStatement.number.token {
             if case .int = returnType {
                 let (line, place) = tokensStruct[possibleErrorIndex + 2].position
                 throw Error.expectedNumberType("int", line, place)
