@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         // Try changing the first parameter to sumOrA to 0 and back to 1
         let code0 = """
         float main() {
-              return -1.8;
+              return (3 / -3) / (-1.8);
         }
         """
 //
@@ -75,8 +75,8 @@ class ViewController: UIViewController {
             {
                 int b;
                 __asm {
-                    \(lines[0])
-                    \(lines[1])
+                    (lines[0])
+                    (lines[1])
                 }
                 cout << b << endl;
             }

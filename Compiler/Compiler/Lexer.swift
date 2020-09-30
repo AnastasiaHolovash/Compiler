@@ -95,6 +95,9 @@ enum Token {
     case curlyOpen
     case curlyClose
     case semicolon
+    // Lab 2 edition
+    case unaryOperation(UnaryOperator)
+    case binaryOperation(BinaryOperator)
     
     static var delegate : ThrowCastingError?
     
@@ -128,6 +131,8 @@ enum Token {
                 return .identifier($0)
             },
             
+            "\\-": { .unaryOperation(UnaryOperator(rawValue: $0)!) },
+            "\\/": { .binaryOperation(BinaryOperator(rawValue: $0)!) },
             "\\(": { _ in .parensOpen },
             "\\)": { _ in .parensClose },
             "\\{": { _ in .curlyOpen },
@@ -142,4 +147,32 @@ enum Token {
 enum Type {
     case decimal
     case hex
+}
+
+enum BinaryOperator: String {
+//    case times = "*"
+    case divideBy = "/"
+//    case plus = "+"
+//    case minus = "-"
+    
+    var precedence: Int {
+        switch self {
+        case .divideBy:
+            return 1
+        }
+    }
+}
+
+enum UnaryOperator: String {
+//    case times = "*"
+//    case divideBy = "/"
+//    case plus = "+"
+    case minus = "-"
+    
+    var precedence: Int {
+        switch self {
+        case .minus:
+            return 2
+        }
+    }
 }
