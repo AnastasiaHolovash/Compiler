@@ -18,38 +18,38 @@
             endingLineNumber = "44"
             landmarkName = "init(code:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "E45977CC-94A5-4907-8BC5-71DD7D14538F - 1ba3b94c072369a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Compiler.Lexer.init(code: Swift.String) -&gt; Compiler.Lexer"
-                  moduleName = "Compiler"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/anastasia/Compiler/Compiler/Lexer.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "57"
-                  endingLineNumber = "57"
-                  offsetFromSymbolStart = "745">
-               </Location>
-               <Location
-                  uuid = "E45977CC-94A5-4907-8BC5-71DD7D14538F - 8730abe8d8625a45"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.String, inout Swift.Bool) -&gt; () in Compiler.Lexer.init(code: Swift.String) -&gt; Compiler.Lexer"
-                  moduleName = "Compiler"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/anastasia/Compiler/Compiler/Lexer.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "54"
-                  endingLineNumber = "54"
-                  offsetFromSymbolStart = "255">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3499E408-738A-4E5B-96C0-8D7E6BFEB152"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Compiler/Compiler/Structs.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
+            landmarkName = "generatingAsmCode()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6D605025-E784-464B-8B97-3C8C4C003401"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Compiler/Compiler/Structs.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
+            landmarkName = "generatingAsmCode()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

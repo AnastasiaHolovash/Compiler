@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         // Try changing the first parameter to sumOrA to 0 and back to 1
         let code0 = """
         float main() {
-              return (3 / -3) / (-1.8);
+              return (3 / -3) / -(-2.8 / 2);
         }
         """
 //
@@ -52,12 +52,14 @@ class ViewController: UIViewController {
         let lexerResult = Lexer(code: code)
         let tokensStruct = lexerResult.tokensStruct
         
-        print(lexerResult.tokensTable)
+//        print(lexerResult.tokensTable)
         
         do {
             let node = Parser(tokensStruct: tokensStruct)
             let ast = try node.parse()
             let interpret = try ast.generatingAsmCode()
+            
+            print(interpret)
             
             var lines : [String] = []
             interpret.enumerateLines { (line, _) in
@@ -86,7 +88,7 @@ class ViewController: UIViewController {
             
             print("______AST STRUCT______")
             print(ast)
-            print(text)
+//            print(text)
             
             
         } catch let error {

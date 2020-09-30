@@ -52,26 +52,9 @@ struct ReturnStatement: ASTnode {
     
     /// Interpreter func
     func generatingAsmCode() throws -> String {
-//        var buffer = ""
-//
-//        if case let .numberInt(num, type) = number.token {
-//            switch type {
-//            case .decimal:
-//                buffer += try num.generatingAsmCode()
-//            case .hex:
-//                buffer += try num.decToHex()
-//            }
-//        } else if case let .numberFloat(num) = number.token {
-//            buffer += try num.generatingAsmCode()
-//            print("Type reduction position: Line: \(number.position.line)    Position: \(number.position.place)\n")
-//        }
-//
-//        return
-//            """
-//            mov eax, \(buffer)
-//            mov b, eax
-//            """
-        return ""
+        
+        let code = try node.generatingAsmCode()
+        return code
     }
 }
 
@@ -82,17 +65,63 @@ struct InfixOperation: ASTnode {
     let leftNode: ASTnode
     let rightNode: ASTnode
     
+    var isNegative = false
+    
     func generatingAsmCode() throws -> String {
+        
+        var code = ""
+        var popLeft = ""
+        var popRight = ""
         
         let left = try leftNode.generatingAsmCode()
         let right = try rightNode.generatingAsmCode()
         
-//        guard case let .binaryOperation(item) = operation else {
-//            throw Parser.Error.unexpectedError
-//        }
+//        guard var prefixL = leftNode as? PrefixOperation else { return "" }
+        
+        if leftNode is Int || leftNode is Float {
+            code += "mov eax, \(left)\n"
+        } else if var prefixL = leftNode as? PrefixOperation {
+//        } else if !prefixL.checkMark {
+            prefixL.sideLeft = true
+//            prefixL.change()
+            code += try prefixL.generatingAsmCode()
+        } else {
+            code += left
+//            code += "mov eax, ss : [esp]\nadd esp, 4\n"
+            popLeft += "pop eax\n"
+        }
+        
+//        guard var prefixR = rightNode as? PrefixOperation else { return "" }
+        
+        if rightNode is Int || rightNode is Float {
+            code += "mov ebx, \(right)\n"
+        } else if var prefixR = rightNode as? PrefixOperation {
+//        } else if !prefixR.checkMark {
+            prefixR.sideLeft = false
+//            prefixR.change()
+            code += try prefixR.generatingAsmCode()
+        } else {
+            code += right
+//            code += "mov ebx, ss : [esp]\nadd esp, 4\n"
+            popRight += "pop ebx\n"
+        }
+        
         
         if .divideBy == operation {
-            return left + "/" + right
+            code += popRight
+            code += popLeft
+            
+            // Dividing: eax / ebx
+            code += "cdq\nidiv ebx\n"
+            
+            // If dividing is negative
+            code += isNegative ? "neg eax\n" : ""
+    
+            // Writing dividion result to the stack
+//            code += "sub esp, 4\nmove ss : [esp], eax\n"
+            code += "push eax\n"
+            
+            return code
         } else {
             throw Parser.Error.unexpectedError
         }
@@ -102,19 +131,37 @@ struct InfixOperation: ASTnode {
 
 struct PrefixOperation: ASTnode {
     
+    var sideLeft = false
     let operation: UnaryOperator
     let item: ASTnode
+//    var checkMark = false
+    
+//    mutating func change() {
+//        checkMark.toggle()
+//    }
     
     func generatingAsmCode() throws -> String {
         
-        let some = try item.generatingAsmCode()
+        var code  = ""
         
-//        guard case let .unaryOperation(item) = operation.token else {
-//            throw Parser.Error.unexpectedError
-//        }
+        let asmCode = try item.generatingAsmCode()
+        
+        if item is Int || item is Float {
+            code += sideLeft ? "mov eax, \(asmCode)\n" : "mov ebx, \(asmCode)\n"
+            code += sideLeft ? "neg eax\n" : "neg ebx\n"
+        } else if var dividing = item as? InfixOperation {
+            dividing.isNegative = true
+            code += try dividing.generatingAsmCode()
+//            checkMark = true
+//            change()
+        } else {
+            code += asmCode
+            code += sideLeft ? "neg eax\n" : "neg ebx\n"
+        }
+        
         
         if .minus == operation {
-            return "-" + some
+            return code
         } else {
             throw Parser.Error.unexpectedError
         }

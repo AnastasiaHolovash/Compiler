@@ -246,6 +246,10 @@ class Parser {
         case .parensOpen:
             return try parensParser()
         case .unaryOperation:
+            if case .unaryOperation(_) = tokensStruct[index - 1].token {
+                let (line, place) = tokensStruct[index].position
+                throw Error.expectedNumber(line, place)
+            }
             return try prefixOperationParser()
         default:
             let (line, place) = tokensStruct[index].position
@@ -296,14 +300,15 @@ class Parser {
         return leftNode
     }
         
-        
+    
+    
     func prefixOperationParser() throws -> ASTnode {
 
         guard case let .unaryOperation(op) = getNextToken() else {
             let position = getTokenPositionInCode()
             throw Error.expected("-", position.line, position.place)
         }
-            
+        
         let rightNode = try valueParser()
 
         return PrefixOperation(operation: op, item: rightNode)
