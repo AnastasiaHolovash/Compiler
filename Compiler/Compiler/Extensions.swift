@@ -43,9 +43,9 @@ public extension String {
     
     /// Interpreter func
     func generatingAsmCode() throws -> String {
-        guard identifiers[self] != nil else {
-            throw Parser.Error.unexpectedError
-        }
+//        guard identifiers[self] != nil else {
+//            throw Parser.Error.unexpectedError
+//        }
         return self
     }
     
@@ -54,6 +54,11 @@ public extension String {
         return UInt16(self.replacingOccurrences(of: "0x", with: ""), radix: 16)!
     }
     
+    
+    func deletingSufix(_ sufix: String) -> String {
+        guard self.hasSuffix(sufix) else { return self }
+        return String(self.dropLast(sufix.count))
+    }
     
 }
 

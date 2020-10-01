@@ -37,7 +37,7 @@ struct Function: ASTnode {
 
     /// Interpreter func
     func generatingAsmCode() throws -> String {
-        identifiers[identifier] = self
+//        identifiers[identifier] = self
         let codeASM = try block.generatingAsmCode()
         
         return codeASM
@@ -54,7 +54,8 @@ struct ReturnStatement: ASTnode {
     func generatingAsmCode() throws -> String {
         
         let code = try node.generatingAsmCode()
-        return code
+        
+        return code.deletingSufix("push eax\n") + "mov b, eax\n"
     }
 }
 
@@ -71,13 +72,15 @@ struct InfixOperation: ASTnode {
     func generatingAsmCode() throws -> String {
         
         var code = ""
+        /// Write "pop eax\n" if needed and add to code in the end
         var popLeft = ""
+        /// Write "pop ebx\n" if needed and add to code in the end
         var popRight = ""
         
         let left = try leftNode.generatingAsmCode()
         let right = try rightNode.generatingAsmCode()
         
-        
+        // Left node code generation
         if leftNode is Int || leftNode is Float {
             code += "mov eax, \(left)\n"
         } else if left.hasSuffix("push eax\n") {
@@ -91,7 +94,7 @@ struct InfixOperation: ASTnode {
             code += left
         }
         
-        
+        // Right node code generation
         if rightNode is Int || rightNode is Float {
             code += "mov ebx, \(right)\n"
         } else if right.hasSuffix("push eax\n") {
@@ -131,7 +134,8 @@ struct InfixOperation: ASTnode {
 // MARK: - Prefix Operation struct
 struct PrefixOperation: ASTnode {
     
-    var sideLeft = false
+    /// Identifier of side (Left side if true, Right side if false)
+    var sideLeft = true
     let operation: UnaryOperator
     let item: ASTnode
     
@@ -162,4 +166,4 @@ struct PrefixOperation: ASTnode {
 }
 
 
-var identifiers: [String: Function] = [:]
+//var identifiers: [String: Function] = [:]
