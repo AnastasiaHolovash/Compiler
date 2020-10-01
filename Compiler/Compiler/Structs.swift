@@ -76,34 +76,47 @@ struct InfixOperation: ASTnode {
         let left = try leftNode.generatingAsmCode()
         let right = try rightNode.generatingAsmCode()
         
-//        guard var prefixL = leftNode as? PrefixOperation else { return "" }
         
         if leftNode is Int || leftNode is Float {
             code += "mov eax, \(left)\n"
+        } else if left.hasSuffix("push eax\n") {
+            code += left
+            popLeft += "pop eax\n"
         } else if var prefixL = leftNode as? PrefixOperation {
-//        } else if !prefixL.checkMark {
             prefixL.sideLeft = true
-//            prefixL.change()
             code += try prefixL.generatingAsmCode()
         } else {
-            code += left
+//            if var prefixL = leftNode as? PrefixOperation {
+//                prefixL.sideLeft = true
+//                // MARK: idea: 'ebx' -> 'eax'
+//                code += try prefixL.generatingAsmCode()
+//            } else {
+                code += left
+//            }
+            
 //            code += "mov eax, ss : [esp]\nadd esp, 4\n"
-            popLeft += "pop eax\n"
+//            popLeft += "pop eax\n"
         }
         
 //        guard var prefixR = rightNode as? PrefixOperation else { return "" }
         
         if rightNode is Int || rightNode is Float {
             code += "mov ebx, \(right)\n"
+        } else if right.hasSuffix("push eax\n") {
+            code += right
+            popRight += "pop ebx\n"
         } else if var prefixR = rightNode as? PrefixOperation {
-//        } else if !prefixR.checkMark {
             prefixR.sideLeft = false
-//            prefixR.change()
             code += try prefixR.generatingAsmCode()
         } else {
-            code += right
+//            if var prefixR = rightNode as? PrefixOperation {
+//                prefixR.sideLeft = false
+//                code += try prefixR.generatingAsmCode()
+//            } else {
+                code += right
+//            }
 //            code += "mov ebx, ss : [esp]\nadd esp, 4\n"
-            popRight += "pop ebx\n"
+//            popRight += "pop ebx\n"
         }
         
         

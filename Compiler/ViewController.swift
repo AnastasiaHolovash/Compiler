@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         // Try changing the first parameter to sumOrA to 0 and back to 1
         let code0 = """
         float main() {
-              return (3 / -3) / -(-2.8 / 2);
+              return -(3 / -3) / -(2.8 / 2) / -1;
         }
         """
 //
