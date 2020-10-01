@@ -59,6 +59,7 @@ struct ReturnStatement: ASTnode {
 }
 
 
+// MARK: - Infix Operation struct
 struct InfixOperation: ASTnode {
     
     let operation: BinaryOperator
@@ -81,42 +82,27 @@ struct InfixOperation: ASTnode {
             code += "mov eax, \(left)\n"
         } else if left.hasSuffix("push eax\n") {
             code += left
+//            code += "mov eax, ss : [esp]\nadd esp, 4\n"
             popLeft += "pop eax\n"
         } else if var prefixL = leftNode as? PrefixOperation {
             prefixL.sideLeft = true
             code += try prefixL.generatingAsmCode()
         } else {
-//            if var prefixL = leftNode as? PrefixOperation {
-//                prefixL.sideLeft = true
-//                // MARK: idea: 'ebx' -> 'eax'
-//                code += try prefixL.generatingAsmCode()
-//            } else {
-                code += left
-//            }
-            
-//            code += "mov eax, ss : [esp]\nadd esp, 4\n"
-//            popLeft += "pop eax\n"
+            code += left
         }
         
-//        guard var prefixR = rightNode as? PrefixOperation else { return "" }
         
         if rightNode is Int || rightNode is Float {
             code += "mov ebx, \(right)\n"
         } else if right.hasSuffix("push eax\n") {
             code += right
+//            code += "mov ebx, ss : [esp]\nadd esp, 4\n"
             popRight += "pop ebx\n"
         } else if var prefixR = rightNode as? PrefixOperation {
             prefixR.sideLeft = false
             code += try prefixR.generatingAsmCode()
         } else {
-//            if var prefixR = rightNode as? PrefixOperation {
-//                prefixR.sideLeft = false
-//                code += try prefixR.generatingAsmCode()
-//            } else {
-                code += right
-//            }
-//            code += "mov ebx, ss : [esp]\nadd esp, 4\n"
-//            popRight += "pop ebx\n"
+            code += right
         }
         
         
@@ -142,16 +128,12 @@ struct InfixOperation: ASTnode {
 }
 
 
+// MARK: - Prefix Operation struct
 struct PrefixOperation: ASTnode {
     
     var sideLeft = false
     let operation: UnaryOperator
     let item: ASTnode
-//    var checkMark = false
-    
-//    mutating func change() {
-//        checkMark.toggle()
-//    }
     
     func generatingAsmCode() throws -> String {
         
@@ -165,8 +147,6 @@ struct PrefixOperation: ASTnode {
         } else if var dividing = item as? InfixOperation {
             dividing.isNegative = true
             code += try dividing.generatingAsmCode()
-//            checkMark = true
-//            change()
         } else {
             code += asmCode
             code += sideLeft ? "neg eax\n" : "neg ebx\n"
