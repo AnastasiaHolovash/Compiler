@@ -47,7 +47,6 @@ struct Function: ASTnode {
 
 // MARK: - Return Statement struct
 struct ReturnStatement: ASTnode {
-//    let
     let node : ASTnode
     
     /// Interpreter func
@@ -69,6 +68,7 @@ struct InfixOperation: ASTnode {
     
     var isNegative = false
     
+    /// Interpreter func
     func generatingAsmCode() throws -> String {
         
         var code = ""
@@ -76,26 +76,39 @@ struct InfixOperation: ASTnode {
         var popLeft = ""
         /// Write "pop ebx\n" if needed and add to code in the end
         var popRight = ""
+        /// Editiion code bufer
+        var codeBufer = ""
         
         let left = try leftNode.generatingAsmCode()
         let right = try rightNode.generatingAsmCode()
         
         // Left node code generation
-        if leftNode is Int || leftNode is Float {
-            code += "mov eax, \(left)\n"
+//        if leftNode is Int || leftNode is Float {
+        if leftNode is Number {
+            if right.hasSuffix("push eax\n") {
+                codeBufer += "mov eax, \(left)\n"
+            } else {
+                code += "mov eax, \(left)\n"
+            }
         } else if left.hasSuffix("push eax\n") {
             code += left
 //            code += "mov eax, ss : [esp]\nadd esp, 4\n"
             popLeft += "pop eax\n"
         } else if var prefixL = leftNode as? PrefixOperation {
             prefixL.sideLeft = true
-            code += try prefixL.generatingAsmCode()
+            if right.hasSuffix("push eax\n") {
+                codeBufer += try prefixL.generatingAsmCode()
+            } else {
+                code += try prefixL.generatingAsmCode()
+            }
+            
         } else {
             code += left
         }
         
         // Right node code generation
-        if rightNode is Int || rightNode is Float {
+//        if rightNode is Int || rightNode is Float {
+        if rightNode is Number {
             code += "mov ebx, \(right)\n"
         } else if right.hasSuffix("push eax\n") {
             code += right
@@ -108,6 +121,7 @@ struct InfixOperation: ASTnode {
             code += right
         }
         
+        code += codeBufer
         
         if .divideBy == operation {
             code += popRight
@@ -139,13 +153,15 @@ struct PrefixOperation: ASTnode {
     let operation: UnaryOperator
     let item: ASTnode
     
+    /// Interpreter func
     func generatingAsmCode() throws -> String {
         
         var code  = ""
         
         let asmCode = try item.generatingAsmCode()
         
-        if item is Int || item is Float {
+//        if item is Int || item is Float {
+        if item is Number {
             code += sideLeft ? "mov eax, \(asmCode)\n" : "mov ebx, \(asmCode)\n"
             code += sideLeft ? "neg eax\n" : "neg ebx\n"
         } else if var dividing = item as? InfixOperation {
@@ -165,5 +181,27 @@ struct PrefixOperation: ASTnode {
     }
 }
 
+struct Number: ASTnode {
+    
+    let number: TokenStruct
+    
+    func generatingAsmCode() throws -> String {
+        var code = ""
+        
+        if case let .numberInt(num, type) = number.token {
+             switch type {
+             case .decimal:
+                 code = try num.generatingAsmCode()
+             case .hex:
+                code = try num.decToHex()
+             }
+         } else if case let .numberFloat(num) = number.token {
+            code = try num.generatingAsmCode()
+            print("Type reduction position: Line: \(number.position.line)    Position: \(number.position.place)\n")
+         }
+        
+        return code
+    }
+    
+}
 
-//var identifiers: [String: Function] = [:]

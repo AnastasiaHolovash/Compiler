@@ -23,6 +23,7 @@ class Parser {
         case expectedNumberType(String ,Int, Int)
         case expected(String, Int, Int)
         case unexpectedError
+        case unknownOperation
         
         var errorDescription: String? {
             switch self {
@@ -53,6 +54,8 @@ class Parser {
                        """
             case .unexpectedError:
                 return "Error: Unexpected error."
+            case .unknownOperation:
+                return "Error: Unknown operation."
             }
         }
     }
@@ -217,7 +220,7 @@ class Parser {
         
         guard case .parensClose = getNextToken() else {
             let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected("(", line, place)
+            throw Error.expected(")", line, place)
         }
         
         return expressionNode
@@ -317,21 +320,23 @@ class Parser {
     
     // MARK: - Float
     func floatNumberParser() throws -> ASTnode {
-        guard case let .numberFloat(float) = getNextToken() else {
+        guard case .numberFloat(_) = getNextToken() else {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expectedNumber(line, place)
         }
-        return float
+//        return float
+        return Number(number: tokensStruct[index - 1])
     }
     
     
     // MARK: - Int
     func intNumberParser() throws -> ASTnode {
-        guard case let .numberInt(int, _) = getNextToken() else {
+        guard case .numberInt(_, _) = getNextToken() else {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expectedNumber(line, place)
         }
-        return int
+//        return int
+        return Number(number: tokensStruct[index - 1])
     }
     
     

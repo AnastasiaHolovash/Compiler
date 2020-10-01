@@ -35,14 +35,17 @@ class Lexer: ThrowCastingError {
         throw Parser.Error.expectedNumber(curentPosition.line, curentPosition.place)
     }
     
-    init(code: String) {
+    init(code: String) throws {
         
         Token.delegate = self
         var curentPlace = 0
         var curentLine = 1
         
-        code.enumerateLines { (lineConstant, _) in
-            
+//        code.enumerateLines { (lineConstant, _) throws in
+        let splitedString = code.split(separator: "\n")
+        try splitedString.forEach { (subString) in
+            let lineConstant = String(subString)
+
             var line = lineConstant
             curentPlace = line.trimWhitespace()
             
@@ -52,15 +55,15 @@ class Lexer: ThrowCastingError {
                 line = String(line[prefix.endIndex...])
                 
                 self.curentPosition = (line: curentLine, place: curentPlace)
-                do {
-                    guard let tokenGeter = Token.tokenGeter[regex], let token = try tokenGeter(prefix) else {
-                            fatalError("")
-                    }
-                    self.tokensStruct.append(TokenStruct(token: token, position: (line: curentLine, place: curentPlace)))
-                    curentPlace += line.trimWhitespace()
-                    curentPlace += prefix.count
-                    self.tokensTable += "\n\(prefix) - \(token)"
-                } catch { }
+                
+                guard let tokenGeter = Token.tokenGeter[regex], let token = try tokenGeter(prefix) else {
+                        fatalError("")
+                }
+                self.tokensStruct.append(TokenStruct(token: token, position: (line: curentLine, place: curentPlace)))
+                curentPlace += line.trimWhitespace()
+                curentPlace += prefix.count
+                self.tokensTable += "\n\(prefix) - \(token)"
+                
             }
             
             curentLine += 1
@@ -131,8 +134,15 @@ enum Token {
                 return .identifier($0)
             },
             
-            "\\-": { .unaryOperation(UnaryOperator(rawValue: $0)!) },
-            "\\/": { .binaryOperation(BinaryOperator(rawValue: $0)!) },
+            "\\*|\\/|\\+|\\-": {
+                if $0 == "/" {
+                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                } else if $0 == "-" {
+                    return .unaryOperation(UnaryOperator(rawValue: $0)!)
+                } else {
+                    throw Parser.Error.unknownOperation
+                }
+            },
             "\\(": { _ in .parensOpen },
             "\\)": { _ in .parensClose },
             "\\{": { _ in .curlyOpen },
@@ -150,10 +160,8 @@ enum Type {
 }
 
 enum BinaryOperator: String {
-//    case times = "*"
+    
     case divideBy = "/"
-//    case plus = "+"
-//    case minus = "-"
     
     var precedence: Int {
         switch self {
@@ -164,9 +172,7 @@ enum BinaryOperator: String {
 }
 
 enum UnaryOperator: String {
-//    case times = "*"
-//    case divideBy = "/"
-//    case plus = "+"
+
     case minus = "-"
     
     var precedence: Int {

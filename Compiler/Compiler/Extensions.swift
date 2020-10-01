@@ -43,9 +43,6 @@ public extension String {
     
     /// Interpreter func
     func generatingAsmCode() throws -> String {
-//        guard identifiers[self] != nil else {
-//            throw Parser.Error.unexpectedError
-//        }
         return self
     }
     

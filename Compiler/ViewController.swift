@@ -14,61 +14,87 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         // Try changing the first parameter to sumOrA to 0 and back to 1
+        //  true
         let code0 = """
         float main() {
-              return (-10 / 4) / 2;
+              return ((-4 / -(8 / (2 / 2))) / 1);
         }
         """
-//
-//        let code1 = """
-//        float main() {
-//            return 0xA3;
-//        }
-//        """
-//
-//        let code2 = """
-//        int main() {
-//            return 0xA4C;
-//        }
-//        """
-//
-//        let code3 = """
-//        int main() {
-//            return 8;
-//
-//        """
-//
-//        let code4 = """
-//        float main() {
-//            return 1.8
-//        }
-//        """
+        //  true
+        let code1 = """
+        int main() {
+            return -(6 / 3) / -(2.8 / 2) / 2;
+        }
+        """
+        //  true
+        let code2 = """
+        int main() {
+            return 0xA4C / -0x2;
+        }
+        """
+
+        //  ERROR
+        let code3 = """
+        int main() {
+            return (-16 / 4) -2;
+        }
+        """
+        //  ERROR
+        let code4 = """
+        float main() {
+            return 1.8 / -2
+        }
+        """
+        //  ERROR
+        let code5 = """
+        int () {
+            return (1.8 / -2) / 1;
+        }
+        """
+        //  ERROR
+        let code6 = """
+        float main() {
+            return (1.8 / +2) / 1;
+        }
+        """
+        //  ERROR
+        let code7 = """
+        float main() {
+            return (1.8 / -2;
+        }
+        """
         
-        let code = code0
+        //  ERROR
+        let code8 = """
+        float main() {
+            return (1 / -d) / 1
+        }
+        """
+        
+        let code = code2
         
         print("______ENTERED CODE______")
         print(code)
         
-        let lexerResult = Lexer(code: code)
-        let tokensStruct = lexerResult.tokensStruct
         
-//        print(lexerResult.tokensTable)
+        
         
         do {
+            let lexerResult = try Lexer(code: code)
+            let tokensStruct = lexerResult.tokensStruct
+            
+            print(lexerResult.tokensTable)
+            
             let node = Parser(tokensStruct: tokensStruct)
             let ast = try node.parse()
             let interpret = try ast.generatingAsmCode()
             
-            print(interpret)
-            
-            var lines : [String] = []
+            var cpp : String = ""
             interpret.enumerateLines { (line, _) in
-                lines.append(line)
+                cpp += line + "\n\t"
             }
             
             let text = """
-
-
             #include <iostream>
             #include <string>
             #include <stdint.h>
@@ -77,8 +103,7 @@ class ViewController: UIViewController {
             {
                 int b;
                 __asm {
-                    (lines[0])
-                    (lines[1])
+                    \(cpp)
                 }
                 cout << b << endl;
             }
@@ -88,7 +113,10 @@ class ViewController: UIViewController {
             
             print("______AST STRUCT______")
             print(ast)
-//            print(text)
+            print("\n______ASM CODE______")
+            print(interpret)
+            print("______CPP CODE______")
+            print(text)
             
             
         } catch let error {
