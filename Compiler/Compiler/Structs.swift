@@ -83,7 +83,6 @@ struct InfixOperation: ASTnode {
         let right = try rightNode.generatingAsmCode()
         
         // Left node code generation
-//        if leftNode is Int || leftNode is Float {
         if leftNode is Number {
             if right.hasSuffix("push eax\n") {
                 codeBufer += "mov eax, \(left)\n"
@@ -92,27 +91,26 @@ struct InfixOperation: ASTnode {
             }
         } else if left.hasSuffix("push eax\n") {
             code += left
-//            code += "mov eax, ss : [esp]\nadd esp, 4\n"
             popLeft += "pop eax\n"
-        } else if var prefixL = leftNode as? PrefixOperation {
-            prefixL.sideLeft = true
+//        } else if var prefixL = leftNode as? PrefixOperation {
+        } else if leftNode is PrefixOperation {
+//            prefixL.sideLeft = true
             if right.hasSuffix("push eax\n") {
-                codeBufer += try prefixL.generatingAsmCode()
+//                codeBufer += try prefixL.generatingAsmCode()
+                codeBufer += left
             } else {
-                code += try prefixL.generatingAsmCode()
+                code += left
+//                code += try prefixL.generatingAsmCode()
             }
-            
         } else {
             code += left
         }
         
         // Right node code generation
-//        if rightNode is Int || rightNode is Float {
         if rightNode is Number {
             code += "mov ebx, \(right)\n"
         } else if right.hasSuffix("push eax\n") {
             code += right
-//            code += "mov ebx, ss : [esp]\nadd esp, 4\n"
             popRight += "pop ebx\n"
         } else if var prefixR = rightNode as? PrefixOperation {
             prefixR.sideLeft = false
@@ -134,7 +132,6 @@ struct InfixOperation: ASTnode {
             code += isNegative ? "neg eax\n" : ""
     
             // Writing dividion result to the stack
-//            code += "sub esp, 4\nmove ss : [esp], eax\n"
             code += "push eax\n"
             
             return code
@@ -181,6 +178,8 @@ struct PrefixOperation: ASTnode {
     }
 }
 
+
+// MARK: - Number struct
 struct Number: ASTnode {
     
     let number: TokenStruct
