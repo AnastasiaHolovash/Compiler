@@ -22,6 +22,8 @@ class Parser {
         case expectedExpression(Int, Int)
         case expectedNumberType(String ,Int, Int)
         case expected(String, Int, Int)
+        case incorrectDeclaration(Int, Int)
+        case noSuchIdentifier(String, Int, Int)
         case unexpectedError
         case unknownOperation
         
@@ -52,6 +54,16 @@ class Parser {
                         Error: Extected \'\(str)\'.
                             Line: \(line)  Place: \(place)
                        """
+            case let .incorrectDeclaration(line, place):
+                return """
+                        Error: Unknown declaration. Extected '=' or '()'
+                            Line: \(line)  Place: \(place)
+                        """
+            case let .noSuchIdentifier(str, line, place):
+                return """
+                        Error: No such identifier: \(str).
+                            Line: \(line)  Place: \(place)
+                       """
             case .unexpectedError:
                 return "Error: Unexpected error."
             case .unknownOperation:
@@ -77,16 +89,20 @@ class Parser {
         return index < tokensStruct.count ? true : false
     }
     
-    
-    // A way of checking the element at the current location
-    // without incrementing the index
+    /**
+     A way of checking the element at the current location without incrementing the index.
+     
+    To check WITH incrementing the index use getNextToken().
+     */
     func peek() -> TokenStruct {
         return tokensStruct[index]
     }
     
-    
-    // A way of checking the element at the current location,
-    // but ultimately incrementing the index.
+    /**
+     A way of checking the element at the current location, but ultimately incrementing the index.
+     
+    To check WITHOUT incrementing the index use peek().
+     */
     func getNextToken() -> Token {
         let token = tokensStruct[index].token
         index += 1
@@ -134,11 +150,14 @@ class Parser {
     }
     
     
-    // MARK: - Function
-    func functionParser() throws -> ASTnode {
+    // MARK: - Declaration Parser
+    func declarationParser() throws -> ASTnode {
+    
         var returnType : Token
         
         let returnTypePopToken = getNextToken()
+        
+        // Return Type
         if case .int = returnTypePopToken {
             returnType = Token.int
         } else if case .float = returnTypePopToken {
@@ -147,10 +166,48 @@ class Parser {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expected("function return type", line, place)
         }
+        
+        // Identifier
         guard case let .identifier(identifier) = getNextToken() else {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expectedIdentifier(line, place)
         }
+        
+        // Function or Variable
+        if case .parensOpen = peek().token {
+            return try functionParser(returnType: returnType, identifier: identifier)
+        } else if case .equal = peek().token {
+            return try variableDeclarationParser(returnType: returnType, identifier: identifier)
+        } else {
+            let (line, place) = tokensStruct[index].position
+            throw Error.incorrectDeclaration(line, place)
+        }
+        
+    }
+    
+    
+    // MARK: - Function
+    func functionParser(returnType: Token, identifier: String) throws -> ASTnode {
+//        var returnType : Token
+//
+//        let returnTypePopToken = getNextToken()
+//
+//        // Return Type
+//        if case .int = returnTypePopToken {
+//            returnType = Token.int
+//        } else if case .float = returnTypePopToken {
+//            returnType = Token.float
+//        } else {
+//            let (line, place) = tokensStruct[index - 1].position
+//            throw Error.expected("function return type", line, place)
+//        }
+//
+//        // Identifier
+//        guard case let .identifier(identifier) = getNextToken() else {
+//            let (line, place) = tokensStruct[index - 1].position
+//            throw Error.expectedIdentifier(line, place)
+//        }
+//
         guard case .parensOpen = getNextToken() else {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expected("(", line, place)
@@ -160,33 +217,50 @@ class Parser {
             throw Error.expected(")", line, place)
         }
         
-//        let possibleErrorIndex = index
         let codeBlock = try codeBlockParser()
-        
-        
-//        guard let codeBlockBlock = codeBlock as? CodeBlock else {
-//            let (line, place) = tokensStruct[possibleErrorIndex].position
-//            throw Error.expected("Function return block", line, place)
-//        }
-//        guard let returnStatement = codeBlockBlock.astNodes[0] as? ReturnStatement else {
-//            let (line, place) = tokensStruct[possibleErrorIndex + 1].position
-//            throw Error.expected("Function return block", line, place)
-//        }
-        
-//        if case Token.numberInt(_ , _) = returnStatement.number.token {
-//            if case .float = returnType {
-//                let (line, place) = tokensStruct[possibleErrorIndex + 2].position
-//                throw Error.expectedNumberType("float", line, place)
-//            }
-//        } else if case .numberFloat(_) = returnStatement.number.token {
-//            if case .int = returnType {
-//                let (line, place) = tokensStruct[possibleErrorIndex + 2].position
-//                throw Error.expectedNumberType("int", line, place)
-//            }
-//        }
                 
         return Function(returnType: returnType, identifier: identifier,
                                   block: codeBlock)
+    }
+    
+    
+    // MARK: - Variable Declaration
+    func variableDeclarationParser(returnType: Token, identifier: String) throws -> ASTnode {
+        
+        guard case .equal = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expected("=", line, place)
+        }
+        
+        let expression = try parseExpression()
+        
+        return VariableDeclaration(name: identifier, value: expression)
+    }
+    
+    
+    // MARK: - Variable Overriding
+    func variableOverridingParser() throws -> ASTnode {
+        
+        // Identifier
+        guard case let .identifier(identifier) = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expectedIdentifier(line, place)
+        }
+        
+        // Checking if identifier was declared
+        if identifiers[identifier] == nil {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.noSuchIdentifier(identifier, line, place)
+        }
+        
+        guard case .equal = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expected("=", line, place)
+        }
+        
+        let expression = try parseExpression()
+        
+        return VariableOverriding(name: identifier, value: expression)
     }
     
     
@@ -284,8 +358,9 @@ class Parser {
         
     func infixOperationParser(node: ASTnode, nodePrecedence: Int = 0) throws -> ASTnode {
         var leftNode = node
-
-        while let precedence = try peekPrecedence() as? Int, precedence >= nodePrecedence {
+        var precedence = try peekPrecedence()
+        
+        while precedence >= nodePrecedence {
             guard case let .binaryOperation(op) = getNextToken() else {
                 let position = getTokenPositionInCode()
                 throw Error.expected("/", position.line, position.place)
@@ -295,10 +370,15 @@ class Parser {
 
             let nextPrecedence = try peekPrecedence()
             
+            // if next operstion with higher priority
             if precedence < nextPrecedence {
+                
+                // rightNode become leftNode for operation with higher priority
                 rightNode = try infixOperationParser(node: rightNode, nodePrecedence: precedence + 1)
             }
+            
             leftNode = InfixOperation(operation: op, leftNode: leftNode, rightNode: rightNode)
+            precedence = try peekPrecedence()
         }
         return leftNode
     }
@@ -350,11 +430,14 @@ class Parser {
                 let returning = try returningParser()
                 nodes.append(returning)
             case .int:
-                let definition = try functionParser()
+                let definition = try declarationParser()
                 nodes.append(definition)
             case .float:
-                let definition = try functionParser()
+                let definition = try declarationParser()
                 nodes.append(definition)
+            case .identifier:
+                let overriding = try variableOverridingParser()
+                nodes.append(overriding)
             default:
                 throw Error.expected("return", token.position.line, token.position.place)
             }

@@ -101,6 +101,8 @@ enum Token {
     // Lab 2 edition
     case unaryOperation(UnaryOperator)
     case binaryOperation(BinaryOperator)
+    // Lab 3 edition
+    case equal
     
     static var delegate : ThrowCastingError?
     
@@ -134,8 +136,12 @@ enum Token {
                 return .identifier($0)
             },
             
-            "\\*|\\/|\\+|\\-": {
+            "\\*|\\/|\\+|\\-|\\<": {
                 if $0 == "/" {
+                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                } else if $0 == "*" {
+                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                } else if $0 == "<" {
                     return .binaryOperation(BinaryOperator(rawValue: $0)!)
                 } else if $0 == "-" {
                     return .unaryOperation(UnaryOperator(rawValue: $0)!)
@@ -143,6 +149,7 @@ enum Token {
                     throw Parser.Error.unknownOperation
                 }
             },
+            "\\=": { _ in .equal },
             "\\(": { _ in .parensOpen },
             "\\)": { _ in .parensClose },
             "\\{": { _ in .curlyOpen },
@@ -159,18 +166,28 @@ enum Type {
     case hex
 }
 
+
+// MARK: - Binary Operator
 enum BinaryOperator: String {
     
-    case divideBy = "/"
+    case divide = "/"
+    case multiply = "*"
+    case isLessThan = "<"
     
     var precedence: Int {
         switch self {
-        case .divideBy:
-            return 1
+        case .divide:
+            return 20
+        case .multiply:
+            return 20
+        case .isLessThan:
+            return 10
         }
     }
 }
 
+
+// MARK: - Unary Operator
 enum UnaryOperator: String {
 
     case minus = "-"
@@ -178,7 +195,7 @@ enum UnaryOperator: String {
     var precedence: Int {
         switch self {
         case .minus:
-            return 2
+            return 30
         }
     }
 }

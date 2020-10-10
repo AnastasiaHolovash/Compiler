@@ -71,7 +71,13 @@ class ViewController: UIViewController {
         }
         """
         
-        let code = code2
+        let code9 = """
+        int main() {
+            return 10 / 1 / 1 / 1;
+        }
+        """
+        
+        let code = code9
         
         print("______ENTERED CODE______")
         print(code)

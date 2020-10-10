@@ -7,6 +7,13 @@
 
 import Foundation
 
+var identifiers: [String : Int] = [:]
+var adres: Int = 0
+
+func nextAdres() {
+    adres += 1
+}
+
 // MARK: - Code Block struct
 struct CodeBlock: ASTnode {
     let astNodes: [ASTnode]
@@ -44,6 +51,32 @@ struct Function: ASTnode {
     }
 }
 
+
+// MARK: - Variable Declaration struct
+struct VariableDeclaration: ASTnode {
+    let name: String
+    let value: ASTnode
+    
+    /// Interpreter func
+    func generatingAsmCode() throws -> String {
+        let val = try value.generatingAsmCode()
+        identifiers[name] = adres
+        nextAdres()
+        return val
+    }
+}
+
+// MARK: - Variable Overriding struct
+struct VariableOverriding: ASTnode {
+    let name: String
+    let value: ASTnode
+    
+    /// Interpreter func
+    func generatingAsmCode() throws -> String {
+        let val = try value.generatingAsmCode()
+        return val
+    }
+}
 
 // MARK: - Return Statement struct
 struct ReturnStatement: ASTnode {
@@ -121,7 +154,7 @@ struct InfixOperation: ASTnode {
         
         code += codeBufer
         
-        if .divideBy == operation {
+        if .divide == operation {
             code += popRight
             code += popLeft
             
