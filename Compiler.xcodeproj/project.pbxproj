@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D6DA48E25320EA100B28005 /* Parser+ErrorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6DA48D25320EA100B28005 /* Parser+ErrorExtension.swift */; };
 		5DEEF69E251BBAA00060A4C2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEEF69D251BBAA00060A4C2 /* AppDelegate.swift */; };
 		5DEEF6A0251BBAA00060A4C2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEEF69F251BBAA00060A4C2 /* SceneDelegate.swift */; };
 		5DEEF6A2251BBAA00060A4C2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEEF6A1251BBAA00060A4C2 /* ViewController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5D6DA48D25320EA100B28005 /* Parser+ErrorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Parser+ErrorExtension.swift"; sourceTree = "<group>"; };
 		5DEEF69A251BBAA00060A4C2 /* Compiler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Compiler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DEEF69D251BBAA00060A4C2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5DEEF69F251BBAA00060A4C2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -50,6 +52,7 @@
 			children = (
 				5DEEF6BB251BECB10060A4C2 /* Lexer.swift */,
 				5DEEF6C2251BED880060A4C2 /* Parser.swift */,
+				5D6DA48D25320EA100B28005 /* Parser+ErrorExtension.swift */,
 				5DEEF6B5251BEB240060A4C2 /* Structs.swift */,
 				5DEEF6B8251BEB2E0060A4C2 /* Extensions.swift */,
 			);
@@ -170,6 +173,7 @@
 				5DEEF6B9251BEB2E0060A4C2 /* Extensions.swift in Sources */,
 				5DEEF6B6251BEB240060A4C2 /* Structs.swift in Sources */,
 				5DEEF6C3251BED880060A4C2 /* Parser.swift in Sources */,
+				5D6DA48E25320EA100B28005 /* Parser+ErrorExtension.swift in Sources */,
 				5DEEF69E251BBAA00060A4C2 /* AppDelegate.swift in Sources */,
 				5DEEF6A0251BBAA00060A4C2 /* SceneDelegate.swift in Sources */,
 			);

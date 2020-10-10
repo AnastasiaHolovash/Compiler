@@ -60,8 +60,8 @@ struct VariableDeclaration: ASTnode {
     /// Interpreter func
     func generatingAsmCode() throws -> String {
         let val = try value.generatingAsmCode()
-        identifiers[name] = adres
-        nextAdres()
+//        identifiers[name] = adres
+//        nextAdres()
         return val
     }
 }
@@ -101,6 +101,10 @@ struct InfixOperation: ASTnode {
     
     var isNegative = false
     
+    func rightAndLeftGeneratingCode() -> String {
+        <#function body#>
+    }
+    
     /// Interpreter func
     func generatingAsmCode() throws -> String {
         
@@ -125,15 +129,11 @@ struct InfixOperation: ASTnode {
         } else if left.hasSuffix("push eax\n") {
             code += left
             popLeft += "pop eax\n"
-//        } else if var prefixL = leftNode as? PrefixOperation {
         } else if leftNode is PrefixOperation {
-//            prefixL.sideLeft = true
             if right.hasSuffix("push eax\n") {
-//                codeBufer += try prefixL.generatingAsmCode()
                 codeBufer += left
             } else {
                 code += left
-//                code += try prefixL.generatingAsmCode()
             }
         } else {
             code += left
@@ -154,23 +154,38 @@ struct InfixOperation: ASTnode {
         
         code += codeBufer
         
+        code += popRight
+        code += popLeft
+        
         if .divide == operation {
-            code += popRight
-            code += popLeft
             
             // Dividing: eax / ebx
             code += "cdq\nidiv ebx\n"
             
-            // If dividing is negative
-            code += isNegative ? "neg eax\n" : ""
-    
-            // Writing dividion result to the stack
-            code += "push eax\n"
+//            // If dividing is negative
+//            code += isNegative ? "neg eax\n" : ""
+//
+//            // Writing dividion result to the stack
+//            code += "push eax\n"
             
-            return code
+//            return code
+            
+        } else if .multiply == operation {
+            
+            // Multipling: eax / ebx
+            code += "cdq\nimul eax ebx\n"
+            
         } else {
             throw Parser.Error.unexpectedError
         }
+        
+        // If multipling is negative
+        code += isNegative ? "neg eax\n" : ""
+
+        // Writing dividion result to the stack
+        code += "push eax\n"
+        
+        return code
     }
 }
 

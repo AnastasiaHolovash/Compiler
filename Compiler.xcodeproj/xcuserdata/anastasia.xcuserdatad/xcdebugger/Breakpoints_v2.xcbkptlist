@@ -30,8 +30,8 @@
             filePath = "Compiler/Compiler/Structs.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "188"
-            endingLineNumber = "188"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "generatingAsmCode()"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "Compiler/Compiler/Structs.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "121"
+            endingLineNumber = "121"
             landmarkName = "generatingAsmCode()"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,9 +78,25 @@
             filePath = "Compiler/Compiler/Parser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "360"
-            endingLineNumber = "360"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
             landmarkName = "infixOperationParser(node:nodePrecedence:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A4745EC8-EEC5-4F01-BB78-4D2B7885C3AE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Compiler/Compiler/Parser.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "201"
+            endingLineNumber = "201"
+            landmarkName = "variableOverridingParser()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

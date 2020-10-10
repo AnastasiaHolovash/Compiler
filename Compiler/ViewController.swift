@@ -11,69 +11,68 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        
-        // Try changing the first parameter to sumOrA to 0 and back to 1
-        //  true
-        let code0 = """
-        float main() {
-              return ((-4 / -(8 / (2 / 2))) / 1);
-        }
-        """
-        //  true
-        let code1 = """
-        int main() {
-            return -(6 / 3) / -(2.8 / 2) / 2;
-        }
-        """
-        //  true
-        let code2 = """
-        int main() {
-            return 0xA4C / -0x2;
-        }
-        """
 
-        //  ERROR
-        let code3 = """
-        int main() {
-            return (-16 / 4) -2;
-        }
-        """
-        //  ERROR
-        let code4 = """
-        float main() {
-            return 1.8 / -2
-        }
-        """
-        //  ERROR
-        let code5 = """
-        int () {
-            return (1.8 / -2) / 1;
-        }
-        """
-        //  ERROR
-        let code6 = """
-        float main() {
-            return (1.8 / +2) / 1;
-        }
-        """
-        //  ERROR
-        let code7 = """
-        float main() {
-            return (1.8 / -2;
-        }
-        """
-        
-        //  ERROR
-        let code8 = """
-        float main() {
-            return (1 / -d) / 1
-        }
-        """
+//        let code0 = """
+//        float main() {
+//              return ((-4 / -(8 / (2 / 2))) / 1);
+//        }
+//        """
+//        //  true
+//        let code1 = """
+//        int main() {
+//            return -(6 / 3) / -(2.8 / 2) / 2;
+//        }
+//        """
+//        //  true
+//        let code2 = """
+//        int main() {
+//            return 0xA4C / -0x2;
+//        }
+//        """
+//
+//        //  ERROR
+//        let code3 = """
+//        int main() {
+//            return (-16 / 4) -2;
+//        }
+//        """
+//        //  ERROR
+//        let code4 = """
+//        float main() {
+//            return 1.8 / -2
+//        }
+//        """
+//        //  ERROR
+//        let code5 = """
+//        int () {
+//            return (1.8 / -2) / 1;
+//        }
+//        """
+//        //  ERROR
+//        let code6 = """
+//        float main() {
+//            return (1.8 / +2) / 1;
+//        }
+//        """
+//        //  ERROR
+//        let code7 = """
+//        float main() {
+//            return (1.8 / -2;
+//        }
+//        """
+//
+//        //  ERROR
+//        let code8 = """
+//        float main() {
+//            return (1 / -d) / 1
+//        }
+//        """
         
         let code9 = """
         int main() {
-            return 10 / 1 / 1 / 1;
+            int years = 19;
+            years = years / 20;
+            return 10 / 1 < -years;
         }
         """
         
@@ -93,12 +92,12 @@ class ViewController: UIViewController {
             
             let node = Parser(tokensStruct: tokensStruct)
             let ast = try node.parse()
-            let interpret = try ast.generatingAsmCode()
+//            let interpret = try ast.generatingAsmCode()
             
-            var cpp : String = ""
-            interpret.enumerateLines { (line, _) in
-                cpp += line + "\n\t"
-            }
+//            var cpp : String = ""
+//            interpret.enumerateLines { (line, _) in
+//                cpp += line + "\n\t"
+//            }
             
             let text = """
             #include <iostream>
@@ -109,7 +108,7 @@ class ViewController: UIViewController {
             {
                 int b;
                 __asm {
-                    \(cpp)
+                    (cpp)
                 }
                 cout << b << endl;
             }
@@ -119,10 +118,10 @@ class ViewController: UIViewController {
             
             print("______AST STRUCT______")
             print(ast)
-            print("\n______ASM CODE______")
-            print(interpret)
-            print("______CPP CODE______")
-            print(text)
+//            print("\n______ASM CODE______")
+//            print(interpret)
+//            print("______CPP CODE______")
+//            print(text)
             
             
         } catch let error {

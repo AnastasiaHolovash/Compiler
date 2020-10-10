@@ -14,64 +14,6 @@ protocol ASTnode {
 // MARK: - PARSER
 class Parser {
     
-    /// Detection and derivation of Errors
-    enum Error: Swift.Error, LocalizedError {
-        
-        case expectedNumber(Int, Int)
-        case expectedIdentifier(Int, Int)
-        case expectedExpression(Int, Int)
-        case expectedNumberType(String ,Int, Int)
-        case expected(String, Int, Int)
-        case incorrectDeclaration(Int, Int)
-        case noSuchIdentifier(String, Int, Int)
-        case unexpectedError
-        case unknownOperation
-        
-        var errorDescription: String? {
-            switch self {
-            case let .expectedNumber(line, place):
-                return """
-                        Error: Expected number.
-                            Line: \(line)  Place: \(place)
-                       """
-            case let .expectedIdentifier(line, place):
-                return """
-                        Error: Expected identifier.
-                            Line: \(line)  Place: \(place)
-                       """
-            case let .expectedExpression(line, place):
-                return """
-                        Error: Expression expected.
-                            Line: \(line)  Place: \(place)
-                        """
-            case let .expectedNumberType(str, line, place):
-                return """
-                        Error: Extected number type \(str).
-                            Line: \(line)  Place: \(place)
-                       """
-            case let .expected(str, line, place):
-                return """
-                        Error: Extected \'\(str)\'.
-                            Line: \(line)  Place: \(place)
-                       """
-            case let .incorrectDeclaration(line, place):
-                return """
-                        Error: Unknown declaration. Extected '=' or '()'
-                            Line: \(line)  Place: \(place)
-                        """
-            case let .noSuchIdentifier(str, line, place):
-                return """
-                        Error: No such identifier: \(str).
-                            Line: \(line)  Place: \(place)
-                       """
-            case .unexpectedError:
-                return "Error: Unexpected error."
-            case .unknownOperation:
-                return "Error: Unknown operation."
-            }
-        }
-    }
-    
     
     let tokensStruct: [TokenStruct]
     
@@ -234,6 +176,14 @@ class Parser {
         
         let expression = try parseExpression()
         
+        guard canPop, case .semicolon = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expected(";", line, place)
+        }
+        
+        identifiers[identifier] = adres
+        nextAdres()
+        
         return VariableDeclaration(name: identifier, value: expression)
     }
     
@@ -259,6 +209,11 @@ class Parser {
         }
         
         let expression = try parseExpression()
+        
+        guard canPop, case .semicolon = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expected(";", line, place)
+        }
         
         return VariableOverriding(name: identifier, value: expression)
     }
@@ -328,11 +283,17 @@ class Parser {
                 throw Error.expectedNumber(line, place)
             }
             return try prefixOperationParser()
+        case let .identifier(str):
+            // Checking if identifier was declared
+            if identifiers[str] == nil {
+                let (line, place) = tokensStruct[index - 1].position
+                throw Error.noSuchIdentifier(str, line, place)
+            }
+            return try identifierParser()
         default:
             let (line, place) = tokensStruct[index].position
             throw Error.expectedNumber(line, place)
         }
-
     }
     
     func peekPrecedence() throws -> Int {
@@ -354,8 +315,9 @@ class Parser {
     func getTokenPositionInCode() -> (line: Int, place: Int) {
         return tokensStruct[index - 1].position
     }
-        
-        
+       
+    
+    // MARK: - Infix Operation
     func infixOperationParser(node: ASTnode, nodePrecedence: Int = 0) throws -> ASTnode {
         var leftNode = node
         var precedence = try peekPrecedence()
@@ -384,7 +346,7 @@ class Parser {
     }
         
     
-    
+    // MARK: - Prefix Operation
     func prefixOperationParser() throws -> ASTnode {
 
         guard case let .unaryOperation(op) = getNextToken() else {
@@ -404,7 +366,6 @@ class Parser {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expectedNumber(line, place)
         }
-//        return float
         return Number(number: tokensStruct[index - 1])
     }
     
@@ -415,8 +376,17 @@ class Parser {
             let (line, place) = tokensStruct[index - 1].position
             throw Error.expectedNumber(line, place)
         }
-//        return int
         return Number(number: tokensStruct[index - 1])
+    }
+    
+    
+    // MARK: - Identifier
+    func identifierParser() throws -> ASTnode {
+        guard case let .identifier(name) = getNextToken() else {
+            let (line, place) = tokensStruct[index - 1].position
+            throw Error.expectedIdentifier(line, place)
+        }
+        return name
     }
     
     

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension String {
+extension String: ASTnode{
     
     /// Returns a substring matching the given regular expression.
     func getPrefix(regex: String) -> String? {
