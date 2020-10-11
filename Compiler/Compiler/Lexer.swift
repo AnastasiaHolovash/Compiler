@@ -85,7 +85,7 @@ protocol ThrowCastingError {
 
 
 // MARK: - Token
-enum Token {
+enum Token: Equatable {
     
     case numberFloat(Float)
     case numberInt(Int, Type)

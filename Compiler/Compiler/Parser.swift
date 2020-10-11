@@ -14,22 +14,20 @@ protocol ASTnode {
 // MARK: - PARSER
 class Parser {
     
-    
+    /// List of tokens with.
     let tokensStruct: [TokenStruct]
-    
     
     init(tokensStruct: [TokenStruct]) {
         self.tokensStruct = tokensStruct
     }
     
-    
-    // current location of the parsing phase
+    /// Current location of the parsing phase
     var index = 0
     
-    
-    var canPop: Bool {
+    var canGet: Bool {
         return index < tokensStruct.count ? true : false
     }
+
     
     /**
      A way of checking the element at the current location without incrementing the index.
@@ -39,6 +37,7 @@ class Parser {
     func peek() -> TokenStruct {
         return tokensStruct[index]
     }
+    
     
     /**
      A way of checking the element at the current location, but ultimately incrementing the index.
@@ -55,14 +54,12 @@ class Parser {
     // MARK: - Code block
     func codeBlockParser() throws -> ASTnode {
         
-        guard canPop, case .curlyOpen = getNextToken() else {
-            throw Parser.Error.expected("{", position: getTokenPositionInCode())
-        }
-
+        try check(token: .curlyOpen)
+        
         var depth = 1
         let startIndex = index
         
-        while canPop {
+        while canGet {
             guard case .curlyClose = peek().token else {
                 if case .curlyOpen = peek().token {
                     depth += 1
@@ -81,10 +78,8 @@ class Parser {
         }
         
         let endIndex = index
-        
-        guard canPop, case .curlyClose = getNextToken() else {
-            throw Error.expected("}", position: getTokenPositionInCode())
-        }
+
+        try check(token: .curlyClose)
         let tokens = Array(self.tokensStruct[startIndex..<endIndex])
         return try Parser(tokensStruct: tokens).parse()
     }
@@ -94,7 +89,6 @@ class Parser {
     func declarationParser() throws -> ASTnode {
     
         var returnType : Token
-        
         let returnTypePopToken = getNextToken()
         
         // Return Type
@@ -114,11 +108,10 @@ class Parser {
         // Function or Variable
         if case .parensOpen = peek().token {
             return try functionParser(returnType: returnType, identifier: identifier)
-        } else if case .equal = peek().token {
+        } else if peek().token == Token.equal || peek().token  == Token.semicolon {
             return try variableDeclarationParser(returnType: returnType, identifier: identifier)
         } else {
-            let (line, place) = tokensStruct[index].position
-            throw Error.incorrectDeclaration(position: (line: line, place: place))
+            throw Error.incorrectDeclaration(position: tokensStruct[index].position)
         }
         
     }
@@ -126,35 +119,16 @@ class Parser {
     
     // MARK: - Function
     func functionParser(returnType: Token, identifier: String) throws -> ASTnode {
-//        var returnType : Token
-//
-//        let returnTypePopToken = getNextToken()
-//
-//        // Return Type
-//        if case .int = returnTypePopToken {
-//            returnType = Token.int
-//        } else if case .float = returnTypePopToken {
-//            returnType = Token.float
-//        } else {
-//
-//            throw Error.expected("function return type", line, place)
-//        }
-//
-//        // Identifier
-//        guard case let .identifier(identifier) = getNextToken() else {
-//
-//            throw Error.expectedIdentifier(line, place)
-//        }
-//
-        guard case .parensOpen = getNextToken() else {
-            throw Error.expected("(", position: getTokenPositionInCode())
-        }
-        guard case .parensClose = getNextToken() else {
-            throw Error.expected(")", position: getTokenPositionInCode())
+        try check(token: .parensOpen)
+        try check(token: .parensClose)
+        let codeBlock = try codeBlockParser()
+        
+        if let codeBlock = codeBlock as? CodeBlock {
+            if !(codeBlock.astNodes[codeBlock.astNodes.count - 1] is ReturnStatement) {
+                throw Error.expected("return", position: getTokenPositionInCode())
+            }
         }
         
-        let codeBlock = try codeBlockParser()
-                
         return Function(returnType: returnType, identifier: identifier,
                                   block: codeBlock)
     }
@@ -162,19 +136,15 @@ class Parser {
     
     // MARK: - Variable Declaration
     func variableDeclarationParser(returnType: Token, identifier: String) throws -> ASTnode {
-        
-        guard case .equal = getNextToken() else {
-            throw Error.expected("=", position: getTokenPositionInCode())
+        guard canGet, case .equal = peek().token else {
+            try check(token: .semicolon)
+            identifiers[identifier] = getNextAdres()
+            return Variable(name: identifier, value: nil)
         }
-        
+        try check(token: .equal)
         let expression = try parseExpression()
-        
-        guard canPop, case .semicolon = getNextToken() else {
-            throw Error.expected(";", position: getTokenPositionInCode())
-        }
-        
-        identifiers[identifier] = adres
-        nextAdres()
+        try check(token: .semicolon)
+        identifiers[identifier] = getNextAdres()
         
         return Variable(name: identifier, value: expression)
     }
@@ -187,21 +157,13 @@ class Parser {
         guard case let .identifier(identifier) = getNextToken() else {
             throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
-        
         // Checking if identifier was declared
         if identifiers[identifier] == nil {
             throw Error.noSuchIdentifier(identifier, position: getTokenPositionInCode())
         }
-        
-        guard case .equal = getNextToken() else {
-            throw Error.expected("=", position: getTokenPositionInCode())
-        }
-        
+        try check(token: .equal)
         let expression = try parseExpression()
-        
-        guard canPop, case .semicolon = getNextToken() else {
-            throw Error.expected(";", position: getTokenPositionInCode())
-        }
+        try check(token: .semicolon)
         
         return Variable(name: identifier, value: expression)
     }
@@ -210,32 +172,19 @@ class Parser {
     // MARK: - Returning
     func returningParser() throws -> ASTnode {
         var node: ASTnode
-        
-        guard case .return = getNextToken() else {
-            throw Error.expected("\'return\' in function bloc", position: getTokenPositionInCode())
-        }
-                
+        try check(token: .return)
         node = try parseExpression()
+        try check(token: .semicolon)
         
-        guard canPop, case .semicolon = getNextToken() else {
-            throw Error.expected(";", position: getTokenPositionInCode())
-        }
         return ReturnStatement(node: node)
     }
     
     
     // MARK:- parens ()
     func parensParser() throws -> ASTnode {
-        
-        guard case .parensOpen = getNextToken() else {
-            throw Error.expected("(", position: getTokenPositionInCode())
-        }
-        
-        let expressionNode = try parseExpression() // ADDED - was "try parse()"
-        
-        guard case .parensClose = getNextToken() else {
-            throw Error.expected(")", position: getTokenPositionInCode())
-        }
+        try check(token: .parensOpen)
+        let expressionNode = try parseExpression()
+        try check(token: .parensClose)
         
         return expressionNode
     }
@@ -243,11 +192,11 @@ class Parser {
     
     // MARK: - Expression
     func parseExpression() throws -> ASTnode {
-        guard canPop else {
+        guard canGet else {
             throw Error.expectedExpression(position: getTokenPositionInCode())
         }
-        
         let node = try valueParser()
+        
         return try infixOperationParser(node: node)
     }
     
@@ -270,7 +219,6 @@ class Parser {
         case let .identifier(str):
             // Checking if identifier was declared
             if identifiers[str] == nil {
-                
                 throw Error.noSuchIdentifier(str, position: getTokenPositionInCode())
             }
             return try identifierParser()
@@ -280,8 +228,10 @@ class Parser {
         }
     }
     
+    
+    // MARK: - Peek Precedence
     func peekPrecedence() throws -> Int {
-        if canPop {
+        if canGet {
             switch peek().token {
             case .binaryOperation(let op):
                 return op.precedence
@@ -294,11 +244,6 @@ class Parser {
             return -1
         }
     }
-        
-        
-//    func getTokenPositionInCode() -> (line: Int, place: Int) {
-//        return tokensStruct[index - 1].position
-//    }
        
     
     // MARK: - Infix Operation
@@ -310,9 +255,7 @@ class Parser {
             guard case let .binaryOperation(op) = getNextToken() else {
                 throw Error.expected("/", position: getTokenPositionInCode())
             }
-            
             var rightNode = try valueParser()
-
             let nextPrecedence = try peekPrecedence()
             
             // if next operstion with higher priority
@@ -321,7 +264,6 @@ class Parser {
                 // rightNode become leftNode for operation with higher priority
                 rightNode = try infixOperationParser(node: rightNode, nodePrecedence: precedence + 1)
             }
-            
             leftNode = InfixOperation(operation: op, leftNode: leftNode, rightNode: rightNode)
             precedence = try peekPrecedence()
         }
@@ -354,7 +296,6 @@ class Parser {
     // MARK: - Int
     func intNumberParser() throws -> ASTnode {
         guard case .numberInt(_, _) = getNextToken() else {
-            
             throw Error.expectedNumber(position: getTokenPositionInCode())
         }
         return Number(number: tokensStruct[index - 1])
@@ -364,7 +305,6 @@ class Parser {
     // MARK: - Identifier
     func identifierParser() throws -> ASTnode {
         guard case let .identifier(name) = getNextToken() else {
-            
             throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
         return name
@@ -374,7 +314,7 @@ class Parser {
     // MARK: - Parse
     func parse() throws -> ASTnode {
         var nodes: [ASTnode] = []
-        while canPop {
+        while canGet {
             let token = peek()
             switch token.token {
             case .return:
@@ -387,7 +327,7 @@ class Parser {
                 let overriding = try variableOverridingParser()
                 nodes.append(overriding)
             default:
-                throw Error.expected("return", position: (token.position.line, token.position.place))
+                throw Error.unexpectedExpresion(position: getTokenPositionInCode())
             }
         }
         return CodeBlock(astNodes: nodes)

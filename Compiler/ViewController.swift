@@ -72,21 +72,37 @@ class ViewController: UIViewController {
         int main() {
             int years = 19;
             years = years / 20;
-            return 10 / 1 < -years;
+            10 / 1 < -years;
         }
         """
         
         let code10 = """
-                    int main() {
-                        float asw = 4;
-                        int some = 3;
-                        int booool = 1;
-                        int answer = asw / (some * booool);
-                        return answer;
-                    }
-
-                    """
-        let code = code10
+        int main() {
+            float asw = 4;
+            int some = 3;
+            int booool = 1;
+            int answer = asw / (some * booool);
+            return answer;
+        }
+        """
+        let code11 = """
+        int main() {
+            int years = 40 * 2;
+            years = years / 2;
+            int denysYears;
+            return denysYears = years;
+        }
+        """
+        let code12 = """
+        int some() {
+            int var = 100 / 2;
+            int years = ((var / -(5 / (2 / 2))) * 1);
+            int denysYears;
+            return var / years;
+        }
+        """
+        
+        let code = code12
         
         print("______ENTERED CODE______")
         print(code)

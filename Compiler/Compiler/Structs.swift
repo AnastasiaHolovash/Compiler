@@ -8,10 +8,11 @@
 import Foundation
 
 var identifiers: [String : Int] = [:]
-var adres: Int = 4
+var adres: Int = 0
 
-func nextAdres() {
+func getNextAdres() -> Int {
     adres += 4
+    return adres
 }
 
 // MARK: - Code Block struct
@@ -188,7 +189,7 @@ struct InfixOperation: ASTnode {
             
         } else if .multiply == operation {
             // Multipling: eax / ebx
-            code += "cdq\nimul eax ebx\n"
+            code += "cdq\nimul eax, ebx\n"
             
         } else if .isLessThan == operation {
             // Compare: eax & ebx
