@@ -92,7 +92,7 @@ class ViewController: UIViewController {
             
             let node = Parser(tokensStruct: tokensStruct)
             let ast = try node.parse()
-//            let interpret = try ast.generatingAsmCode()
+            let interpret = try ast.generatingAsmCode()
             
 //            var cpp : String = ""
 //            interpret.enumerateLines { (line, _) in
@@ -118,8 +118,12 @@ class ViewController: UIViewController {
             
             print("______AST STRUCT______")
             print(ast)
-//            print("\n______ASM CODE______")
-//            print(interpret)
+            
+            print("______ENTERED CODE______")
+            print(code)
+            
+            print("\n______ASM CODE______")
+            print(interpret)
 //            print("______CPP CODE______")
 //            print(text)
             

@@ -8,10 +8,10 @@
 import Foundation
 
 var identifiers: [String : Int] = [:]
-var adres: Int = 0
+var adres: Int = 4
 
 func nextAdres() {
-    adres += 1
+    adres += 4
 }
 
 // MARK: - Code Block struct
@@ -55,14 +55,42 @@ struct Function: ASTnode {
 // MARK: - Variable Declaration struct
 struct VariableDeclaration: ASTnode {
     let name: String
-    let value: ASTnode
+    let value: ASTnode?
     
     /// Interpreter func
     func generatingAsmCode() throws -> String {
-        let val = try value.generatingAsmCode()
-//        identifiers[name] = adres
-//        nextAdres()
-        return val
+        
+        var code = ""
+        
+        let val = try value?.generatingAsmCode()
+        
+        if value is Number || value is String {
+            code += """
+                    mov eax, \(val ?? "?")\n
+                    """
+//                    mov[ebp + \(identifiers[name] ?? 0)], eax
+//                    xor eax, eax\n
+//                    """
+        } else if value == nil {
+            // Initialization of an empty variable.
+            code += """
+                    mov eax, 0\n
+                    """
+//                    mov[ebp + \(identifiers[name] ?? 0)], eax
+//                    xor eax, eax\n
+//                    """
+        } else {
+            code += val ?? ""
+            code = code.deletingSufix("push eax\n")
+        }
+        
+        // Writing variable value to dedicated space in the stack.
+        code += """
+                mov[ebp + \(identifiers[name] ?? 0)], eax
+                xor eax, eax\n
+                """
+        
+        return code
     }
 }
 
@@ -101,12 +129,7 @@ struct InfixOperation: ASTnode {
     
     var isNegative = false
     
-    func rightAndLeftGeneratingCode() -> String {
-        <#function body#>
-    }
-    
-    /// Interpreter func
-    func generatingAsmCode() throws -> String {
+    func rightAndLeftGeneratingCode() throws -> String {
         
         var code = ""
         /// Write "pop eax\n" if needed and add to code in the end
@@ -120,7 +143,7 @@ struct InfixOperation: ASTnode {
         let right = try rightNode.generatingAsmCode()
         
         // Left node code generation
-        if leftNode is Number {
+        if leftNode is Number || leftNode is String {
             if right.hasSuffix("push eax\n") {
                 codeBufer += "mov eax, \(left)\n"
             } else {
@@ -140,7 +163,7 @@ struct InfixOperation: ASTnode {
         }
         
         // Right node code generation
-        if rightNode is Number {
+        if rightNode is Number || rightNode is String {
             code += "mov ebx, \(right)\n"
         } else if right.hasSuffix("push eax\n") {
             code += right
@@ -156,37 +179,40 @@ struct InfixOperation: ASTnode {
         
         code += popRight
         code += popLeft
+        return code
+    }
+    
+    
+    /// Interpreter func
+    func generatingAsmCode() throws -> String {
+        
+        var code = try rightAndLeftGeneratingCode()
         
         if .divide == operation {
-            
             // Dividing: eax / ebx
             code += "cdq\nidiv ebx\n"
             
-//            // If dividing is negative
-//            code += isNegative ? "neg eax\n" : ""
-//
-//            // Writing dividion result to the stack
-//            code += "push eax\n"
-            
-//            return code
-            
         } else if .multiply == operation {
-            
             // Multipling: eax / ebx
             code += "cdq\nimul eax ebx\n"
+            
+        } else if .isLessThan == operation {
+            // Compare: eax & ebx
+            code += "cmp eax, ebx\nmov eax, 0\nset al\n"
             
         } else {
             throw Parser.Error.unexpectedError
         }
         
-        // If multipling is negative
+        // If operation is negative
         code += isNegative ? "neg eax\n" : ""
 
-        // Writing dividion result to the stack
+        // Writing result to the stack
         code += "push eax\n"
         
         return code
     }
+    
 }
 
 
@@ -205,8 +231,7 @@ struct PrefixOperation: ASTnode {
         
         let asmCode = try item.generatingAsmCode()
         
-//        if item is Int || item is Float {
-        if item is Number {
+        if item is Number || item is String {
             code += sideLeft ? "mov eax, \(asmCode)\n" : "mov ebx, \(asmCode)\n"
             code += sideLeft ? "neg eax\n" : "neg ebx\n"
         } else if var dividing = item as? InfixOperation {
