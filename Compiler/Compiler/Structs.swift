@@ -44,16 +44,27 @@ struct Function: ASTnode {
 
     /// Interpreter func
     func generatingAsmCode() throws -> String {
-//        identifiers[identifier] = self
-        let codeASM = try block.generatingAsmCode()
+
+        var code =  """
+                    push ebp
+                    mov ebp, esp\n\n
+                    """
         
-        return codeASM
+        code += try block.generatingAsmCode()
+        
+        code += """
+                \nmov esp, ebp
+                pop ebp
+                mov b, eax\n
+                """
+        
+        return code
     }
 }
 
 
-// MARK: - Variable Declaration struct
-struct VariableDeclaration: ASTnode {
+// MARK: - Variable struct
+struct Variable: ASTnode {
     let name: String
     let value: ASTnode?
     
@@ -68,17 +79,11 @@ struct VariableDeclaration: ASTnode {
             code += """
                     mov eax, \(val ?? "?")\n
                     """
-//                    mov[ebp + \(identifiers[name] ?? 0)], eax
-//                    xor eax, eax\n
-//                    """
         } else if value == nil {
             // Initialization of an empty variable.
             code += """
                     mov eax, 0\n
                     """
-//                    mov[ebp + \(identifiers[name] ?? 0)], eax
-//                    xor eax, eax\n
-//                    """
         } else {
             code += val ?? ""
             code = code.deletingSufix("push eax\n")
@@ -94,17 +99,6 @@ struct VariableDeclaration: ASTnode {
     }
 }
 
-// MARK: - Variable Overriding struct
-struct VariableOverriding: ASTnode {
-    let name: String
-    let value: ASTnode
-    
-    /// Interpreter func
-    func generatingAsmCode() throws -> String {
-        let val = try value.generatingAsmCode()
-        return val
-    }
-}
 
 // MARK: - Return Statement struct
 struct ReturnStatement: ASTnode {
@@ -115,7 +109,7 @@ struct ReturnStatement: ASTnode {
         
         let code = try node.generatingAsmCode()
         
-        return code.deletingSufix("push eax\n") + "mov b, eax\n"
+        return code.deletingSufix("push eax\n")
     }
 }
 
@@ -198,7 +192,7 @@ struct InfixOperation: ASTnode {
             
         } else if .isLessThan == operation {
             // Compare: eax & ebx
-            code += "cmp eax, ebx\nmov eax, 0\nset al\n"
+            code += "cmp eax, ebx\nmov eax, 0\nsetl al\nmovzx eax, al\n"
             
         } else {
             throw Parser.Error.unexpectedError

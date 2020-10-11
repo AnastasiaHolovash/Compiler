@@ -184,7 +184,7 @@ class Parser {
         identifiers[identifier] = adres
         nextAdres()
         
-        return VariableDeclaration(name: identifier, value: expression)
+        return Variable(name: identifier, value: expression)
     }
     
     
@@ -215,7 +215,7 @@ class Parser {
             throw Error.expected(";", line, place)
         }
         
-        return VariableOverriding(name: identifier, value: expression)
+        return Variable(name: identifier, value: expression)
     }
     
     
@@ -399,10 +399,7 @@ class Parser {
             case .return:
                 let returning = try returningParser()
                 nodes.append(returning)
-            case .int:
-                let definition = try declarationParser()
-                nodes.append(definition)
-            case .float:
+            case .int, .float:
                 let definition = try declarationParser()
                 nodes.append(definition)
             case .identifier:

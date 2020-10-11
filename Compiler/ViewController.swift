@@ -76,7 +76,17 @@ class ViewController: UIViewController {
         }
         """
         
-        let code = code9
+        let code10 = """
+                    int main() {
+                        float asw = 4;
+                        int some = 3;
+                        int booool = 1;
+                        int answer = asw / (some * booool);
+                        return answer;
+                    }
+
+                    """
+        let code = code10
         
         print("______ENTERED CODE______")
         print(code)
