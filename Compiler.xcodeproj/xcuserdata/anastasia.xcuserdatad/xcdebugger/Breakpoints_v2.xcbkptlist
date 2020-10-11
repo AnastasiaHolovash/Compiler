@@ -62,8 +62,8 @@
             filePath = "Compiler/Compiler/Parser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "322"
-            endingLineNumber = "322"
+            startingLineNumber = "306"
+            endingLineNumber = "306"
             landmarkName = "infixOperationParser(node:nodePrecedence:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,8 +78,8 @@
             filePath = "Compiler/Compiler/Parser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
             landmarkName = "variableOverridingParser()"
             landmarkType = "7">
          </BreakpointContent>

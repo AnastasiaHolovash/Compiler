@@ -56,10 +56,9 @@ class Parser {
     func codeBlockParser() throws -> ASTnode {
         
         guard canPop, case .curlyOpen = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Parser.Error.expected("{", line, place)
+            throw Parser.Error.expected("{", position: getTokenPositionInCode())
         }
-        
+
         var depth = 1
         let startIndex = index
         
@@ -84,8 +83,7 @@ class Parser {
         let endIndex = index
         
         guard canPop, case .curlyClose = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected("}", line, place)
+            throw Error.expected("}", position: getTokenPositionInCode())
         }
         let tokens = Array(self.tokensStruct[startIndex..<endIndex])
         return try Parser(tokensStruct: tokens).parse()
@@ -105,14 +103,12 @@ class Parser {
         } else if case .float = returnTypePopToken {
             returnType = Token.float
         } else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected("function return type", line, place)
+            throw Error.expected("function return type", position: getTokenPositionInCode())
         }
         
         // Identifier
         guard case let .identifier(identifier) = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expectedIdentifier(line, place)
+            throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
         
         // Function or Variable
@@ -122,7 +118,7 @@ class Parser {
             return try variableDeclarationParser(returnType: returnType, identifier: identifier)
         } else {
             let (line, place) = tokensStruct[index].position
-            throw Error.incorrectDeclaration(line, place)
+            throw Error.incorrectDeclaration(position: (line: line, place: place))
         }
         
     }
@@ -140,23 +136,21 @@ class Parser {
 //        } else if case .float = returnTypePopToken {
 //            returnType = Token.float
 //        } else {
-//            let (line, place) = tokensStruct[index - 1].position
+//
 //            throw Error.expected("function return type", line, place)
 //        }
 //
 //        // Identifier
 //        guard case let .identifier(identifier) = getNextToken() else {
-//            let (line, place) = tokensStruct[index - 1].position
+//
 //            throw Error.expectedIdentifier(line, place)
 //        }
 //
         guard case .parensOpen = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected("(", line, place)
+            throw Error.expected("(", position: getTokenPositionInCode())
         }
         guard case .parensClose = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected(")", line, place)
+            throw Error.expected(")", position: getTokenPositionInCode())
         }
         
         let codeBlock = try codeBlockParser()
@@ -170,15 +164,13 @@ class Parser {
     func variableDeclarationParser(returnType: Token, identifier: String) throws -> ASTnode {
         
         guard case .equal = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected("=", line, place)
+            throw Error.expected("=", position: getTokenPositionInCode())
         }
         
         let expression = try parseExpression()
         
         guard canPop, case .semicolon = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected(";", line, place)
+            throw Error.expected(";", position: getTokenPositionInCode())
         }
         
         identifiers[identifier] = adres
@@ -193,26 +185,22 @@ class Parser {
         
         // Identifier
         guard case let .identifier(identifier) = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expectedIdentifier(line, place)
+            throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
         
         // Checking if identifier was declared
         if identifiers[identifier] == nil {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.noSuchIdentifier(identifier, line, place)
+            throw Error.noSuchIdentifier(identifier, position: getTokenPositionInCode())
         }
         
         guard case .equal = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected("=", line, place)
+            throw Error.expected("=", position: getTokenPositionInCode())
         }
         
         let expression = try parseExpression()
         
         guard canPop, case .semicolon = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected(";", line, place)
+            throw Error.expected(";", position: getTokenPositionInCode())
         }
         
         return Variable(name: identifier, value: expression)
@@ -224,15 +212,13 @@ class Parser {
         var node: ASTnode
         
         guard case .return = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected("\'return\' in function bloc", line, place)
+            throw Error.expected("\'return\' in function bloc", position: getTokenPositionInCode())
         }
                 
         node = try parseExpression()
         
         guard canPop, case .semicolon = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected(";", line, place)
+            throw Error.expected(";", position: getTokenPositionInCode())
         }
         return ReturnStatement(node: node)
     }
@@ -240,16 +226,15 @@ class Parser {
     
     // MARK:- parens ()
     func parensParser() throws -> ASTnode {
+        
         guard case .parensOpen = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected("(", line, place)
+            throw Error.expected("(", position: getTokenPositionInCode())
         }
         
         let expressionNode = try parseExpression() // ADDED - was "try parse()"
         
         guard case .parensClose = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expected(")", line, place)
+            throw Error.expected(")", position: getTokenPositionInCode())
         }
         
         return expressionNode
@@ -259,8 +244,7 @@ class Parser {
     // MARK: - Expression
     func parseExpression() throws -> ASTnode {
         guard canPop else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expectedExpression(line, place)
+            throw Error.expectedExpression(position: getTokenPositionInCode())
         }
         
         let node = try valueParser()
@@ -280,19 +264,19 @@ class Parser {
         case .unaryOperation:
             if case .unaryOperation(_) = tokensStruct[index - 1].token {
                 let (line, place) = tokensStruct[index].position
-                throw Error.expectedNumber(line, place)
+                throw Error.expectedNumber(position: (line: line, place: place))
             }
             return try prefixOperationParser()
         case let .identifier(str):
             // Checking if identifier was declared
             if identifiers[str] == nil {
-                let (line, place) = tokensStruct[index - 1].position
-                throw Error.noSuchIdentifier(str, line, place)
+                
+                throw Error.noSuchIdentifier(str, position: getTokenPositionInCode())
             }
             return try identifierParser()
         default:
             let (line, place) = tokensStruct[index].position
-            throw Error.expectedNumber(line, place)
+            throw Error.expectedNumber(position:(line: line, place: place))
         }
     }
     
@@ -312,9 +296,9 @@ class Parser {
     }
         
         
-    func getTokenPositionInCode() -> (line: Int, place: Int) {
-        return tokensStruct[index - 1].position
-    }
+//    func getTokenPositionInCode() -> (line: Int, place: Int) {
+//        return tokensStruct[index - 1].position
+//    }
        
     
     // MARK: - Infix Operation
@@ -324,8 +308,7 @@ class Parser {
         
         while precedence >= nodePrecedence {
             guard case let .binaryOperation(op) = getNextToken() else {
-                let position = getTokenPositionInCode()
-                throw Error.expected("/", position.line, position.place)
+                throw Error.expected("/", position: getTokenPositionInCode())
             }
             
             var rightNode = try valueParser()
@@ -350,8 +333,7 @@ class Parser {
     func prefixOperationParser() throws -> ASTnode {
 
         guard case let .unaryOperation(op) = getNextToken() else {
-            let position = getTokenPositionInCode()
-            throw Error.expected("-", position.line, position.place)
+            throw Error.expected("-", position: getTokenPositionInCode())
         }
         
         let rightNode = try valueParser()
@@ -363,8 +345,7 @@ class Parser {
     // MARK: - Float
     func floatNumberParser() throws -> ASTnode {
         guard case .numberFloat(_) = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expectedNumber(line, place)
+            throw Error.expectedNumber(position: getTokenPositionInCode())
         }
         return Number(number: tokensStruct[index - 1])
     }
@@ -373,8 +354,8 @@ class Parser {
     // MARK: - Int
     func intNumberParser() throws -> ASTnode {
         guard case .numberInt(_, _) = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expectedNumber(line, place)
+            
+            throw Error.expectedNumber(position: getTokenPositionInCode())
         }
         return Number(number: tokensStruct[index - 1])
     }
@@ -383,8 +364,8 @@ class Parser {
     // MARK: - Identifier
     func identifierParser() throws -> ASTnode {
         guard case let .identifier(name) = getNextToken() else {
-            let (line, place) = tokensStruct[index - 1].position
-            throw Error.expectedIdentifier(line, place)
+            
+            throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
         return name
     }
@@ -406,7 +387,7 @@ class Parser {
                 let overriding = try variableOverridingParser()
                 nodes.append(overriding)
             default:
-                throw Error.expected("return", token.position.line, token.position.place)
+                throw Error.expected("return", position: (token.position.line, token.position.place))
             }
         }
         return CodeBlock(astNodes: nodes)

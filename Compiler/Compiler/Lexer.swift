@@ -32,7 +32,7 @@ class Lexer: ThrowCastingError {
     
     /// ThrowCastingError delegate func
     func throwCastingError() throws {
-        throw Parser.Error.expectedNumber(curentPosition.line, curentPosition.place)
+        throw Parser.Error.expectedNumber(position: (curentPosition.line, curentPosition.place))
     }
     
     init(code: String) throws {
