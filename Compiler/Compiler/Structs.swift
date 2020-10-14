@@ -48,8 +48,9 @@ struct Function: ASTnode {
 
         var code =  """
                     push ebp
-                    mov ebp, esp\n\n
+                    mov ebp, esp\n
                     """
+        code += getNextAdres() > 4 ? "sub esp, \(getNextAdres())\n\n" : "\n"
         
         code += try block.generatingAsmCode()
         
@@ -93,7 +94,7 @@ struct Variable: ASTnode {
         
         // Writing variable value to dedicated space in the stack.
         code += """
-                mov[ebp + \(identifiers[name] ?? 0)], eax
+                mov[ebp - \(identifiers[name] ?? 0)], eax
                 xor eax, eax\n
                 """
         
