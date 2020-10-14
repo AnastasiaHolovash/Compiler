@@ -28,11 +28,13 @@ float main() {
       return 8;
 
 """
+//  true
 let code14 = """
 float main() {
       return 0xA4c;
 }
 """
+//  true
 let code15 = """
 float main() {
       return 1.8;
@@ -40,6 +42,7 @@ float main() {
 """
 
 // MARK: - Lab2
+//  true
 let code20 = """
 float main() {
       return ((-4 / -(8 / (2 / 2))) / 1);
@@ -193,7 +196,7 @@ int some() {
 """
 
 // TRUE 1
-let code49 = """
+let code39 = """
 int main() {
     float first = 8.5;
     int second = 2 * first / 4;

@@ -22,7 +22,7 @@ extension Parser {
         case unexpectedExpresion(position: (line: Int, place: Int))
         case variableAlreadyExist(String ,position: (line: Int, place: Int))
         case unexpectedError
-        case unknownOperation
+        case unknownOperation(String ,position: (line: Int, place: Int))
         
         var errorDescription: String? {
             switch self {
@@ -73,8 +73,11 @@ extension Parser {
                        """
             case .unexpectedError:
                 return "Error: Unexpected error."
-            case .unknownOperation:
-                return "Error: Unknown operation."
+            case let .unknownOperation(str, position: (line: line, place: place)):
+                return """
+                        Error: Unknown operation: \'\(str)\'.
+                            Line: \(line)  Place: \(place)
+                       """
             }
         }
     }

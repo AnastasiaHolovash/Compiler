@@ -30,9 +30,12 @@ class Lexer: ThrowCastingError {
         return (regex, code.getPrefix(regex: regex)!)
     }
     
-    /// ThrowCastingError delegate func
+    /// ThrowCastingError delegate funcs
     func throwCastingError() throws {
-        throw Parser.Error.expectedNumber(position: (curentPosition.line, curentPosition.place))
+        throw Parser.Error.expectedNumber(position: curentPosition)
+    }
+    func unknownOperation(op: String) throws {
+        throw Parser.Error.unknownOperation(op, position: curentPosition)
     }
     
     init(code: String) throws {
@@ -81,6 +84,7 @@ struct TokenStruct {
 
 protocol ThrowCastingError {
     func throwCastingError() throws
+    func unknownOperation(op: String) throws
 }
 
 
@@ -112,7 +116,7 @@ enum Token: Equatable {
                 if $0.contains(".") {
                     guard let num = Float($0) else {
                         try delegate?.throwCastingError()
-                        fatalError("Not float")
+                        throw Parser.Error.unexpectedError
                     }
                     return .numberFloat(num)
                 } else if $0.contains("x") || $0.contains("X") {
@@ -146,7 +150,8 @@ enum Token: Equatable {
                 } else if $0 == "-" {
                     return .unaryOperation(UnaryOperator(rawValue: $0)!)
                 } else {
-                    throw Parser.Error.unknownOperation
+                    try delegate?.unknownOperation(op: $0)
+                    throw Parser.Error.unexpectedError
                 }
             },
             "\\=": { _ in .equal },

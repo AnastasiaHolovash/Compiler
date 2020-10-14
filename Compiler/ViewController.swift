@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let code = code10
+        let code = code39
 
         compiler(code: code)
         

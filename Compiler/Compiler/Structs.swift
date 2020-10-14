@@ -111,7 +111,7 @@ struct ReturnStatement: ASTnode {
         
 //        let code = "mov eax, \(try node.generatingAsmCode())"
         var code = ""
-        if node is String {
+        if node is String || node is Number {
             code = "mov eax, \(try node.generatingAsmCode())"
         } else {
             code = try node.generatingAsmCode()

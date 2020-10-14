@@ -260,7 +260,7 @@ class Parser {
         
         while precedence >= nodePrecedence {
             guard case let .binaryOperation(op) = getNextToken() else {
-                throw Error.expected("/", position: getTokenPositionInCode())
+                throw Error.expected("binary operation", position: getTokenPositionInCode())
             }
             var rightNode = try valueParser()
             let nextPrecedence = try peekPrecedence()
@@ -334,7 +334,7 @@ class Parser {
                 let overriding = try variableOverridingParser()
                 nodes.append(overriding)
             default:
-                throw Error.unexpectedExpresion(position: getTokenPositionInCode())
+                throw Error.unexpectedExpresion(position: token.position)
             }
         }
         return CodeBlock(astNodes: nodes)
