@@ -20,6 +20,7 @@ extension Parser {
         case incorrectDeclaration(position: (line: Int, place: Int))
         case noSuchIdentifier(String, position: (line: Int, place: Int))
         case unexpectedExpresion(position: (line: Int, place: Int))
+        case variableAlreadyExist(String ,position: (line: Int, place: Int))
         case unexpectedError
         case unknownOperation
         
@@ -57,12 +58,17 @@ extension Parser {
                         """
             case let .noSuchIdentifier(str, position: (line: line, place: place)):
                 return """
-                        Error: No such identifier: \(str).
+                        Error: No such identifier: \'\(str)\'.
                             Line: \(line)  Place: \(place)
                        """
             case let .unexpectedExpresion(position: (line: line, place: place)):
                 return """
                         Error: Unexpected expresion found.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .variableAlreadyExist(str, position: (line: line, place: place)):
+                return """
+                        Error: A variable with name \'\(str)\' already exist.
                             Line: \(line)  Place: \(place)
                        """
             case .unexpectedError:

@@ -64,6 +64,7 @@ struct Function: ASTnode {
 }
 
 
+
 // MARK: - Variable struct
 struct Variable: ASTnode {
     let name: String
@@ -108,8 +109,14 @@ struct ReturnStatement: ASTnode {
     /// Interpreter func
     func generatingAsmCode() throws -> String {
         
-        let code = try node.generatingAsmCode()
-        
+//        let code = "mov eax, \(try node.generatingAsmCode())"
+        var code = ""
+        if node is String {
+            code = "mov eax, \(try node.generatingAsmCode())"
+        } else {
+            code = try node.generatingAsmCode()
+        }
+
         return code.deletingSufix("push eax\n")
     }
 }

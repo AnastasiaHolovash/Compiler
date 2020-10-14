@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ASTnode {
+protocol ASTnode: PrintableTreeNode {
     func generatingAsmCode() throws -> String
 }
 
@@ -124,7 +124,7 @@ class Parser {
         let codeBlock = try codeBlockParser()
         
         if let codeBlock = codeBlock as? CodeBlock {
-            if !(codeBlock.astNodes[codeBlock.astNodes.count - 1] is ReturnStatement) {
+            if !(codeBlock.astNodes.last is ReturnStatement) {
                 throw Error.expected("return", position: getTokenPositionInCode())
             }
         }
@@ -138,12 +138,19 @@ class Parser {
     func variableDeclarationParser(returnType: Token, identifier: String) throws -> ASTnode {
         guard canGet, case .equal = peek().token else {
             try check(token: .semicolon)
+            if identifiers[identifier] != nil {
+                throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
+            }
             identifiers[identifier] = getNextAdres()
             return Variable(name: identifier, value: nil)
         }
         try check(token: .equal)
         let expression = try parseExpression()
         try check(token: .semicolon)
+        
+        if identifiers[identifier] != nil {
+            throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
+        }
         identifiers[identifier] = getNextAdres()
         
         return Variable(name: identifier, value: expression)
