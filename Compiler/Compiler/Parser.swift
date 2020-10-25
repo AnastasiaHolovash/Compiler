@@ -85,7 +85,7 @@ class Parser {
     }
     
     
-    // MARK: - Declaration Parser
+    // MARK: - Declaration
     func declarationParser() throws -> ASTnode {
     
         var returnType : Token
@@ -131,6 +131,27 @@ class Parser {
         
         return Function(returnType: returnType, identifier: identifier,
                                   block: codeBlock)
+    }
+    
+    
+    // MARK: - If statement
+    func ifStatementParser() throws -> ASTnode {
+        try check(token: .if)
+        try check(token: .parensOpen)
+        let expression = try parseExpression()
+        try check(token: .parensClose)
+        
+        // TODO: - code block or expresion
+        
+        let firstBlock = try codeBlockParser()
+            
+        do {
+            try check(token: .else)
+            let secondBlock = try codeBlockParser()
+            return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
+        } catch {
+            return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: nil)
+        }
     }
     
     
@@ -333,6 +354,9 @@ class Parser {
             case .identifier:
                 let overriding = try variableOverridingParser()
                 nodes.append(overriding)
+            case .if:
+                let ifStatement = try ifStatementParser()
+                nodes.append(ifStatement)
             default:
                 throw Error.unexpectedExpresion(position: token.position)
             }

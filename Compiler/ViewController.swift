@@ -12,7 +12,16 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let code = code39
+        
+        let code =
+"""
+int main() {
+    if (1) {
+        int a = 1;
+    }
+    return 2;
+}
+"""
 
         compiler(code: code)
         
@@ -57,7 +66,6 @@ class ViewController: UIViewController {
             
             
             print("______AST STRUCT______")
-//            print(ast)
             let treePrinter = TreePrinter()
             let result = treePrinter.printTree(startingFrom: ast)
             print(result)

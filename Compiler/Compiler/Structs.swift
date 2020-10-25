@@ -64,7 +64,17 @@ struct Function: ASTnode {
     }
 }
 
-
+// MARK: - If else struct
+struct IfStatement: ASTnode {
+    
+    let condition: ASTnode
+    let firstBlock: ASTnode
+    let secondBlock: ASTnode?
+    
+    func generatingAsmCode() throws -> String {
+        return "if statement"
+    }
+}
 
 // MARK: - Variable struct
 struct Variable: ASTnode {

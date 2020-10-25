@@ -11,6 +11,7 @@
 		5D2C045425366A130053C525 /* Testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2C045325366A130053C525 /* Testing.swift */; };
 		5D6DA48E25320EA100B28005 /* Parser+ErrorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6DA48D25320EA100B28005 /* Parser+ErrorExtension.swift */; };
 		5D6DA491253351E100B28005 /* Parser+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6DA490253351E100B28005 /* Parser+Helpers.swift */; };
+		5D96890725460B3E002CB86A /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D96890625460B3E002CB86A /* Token.swift */; };
 		5DEEF69E251BBAA00060A4C2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEEF69D251BBAA00060A4C2 /* AppDelegate.swift */; };
 		5DEEF6A0251BBAA00060A4C2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEEF69F251BBAA00060A4C2 /* SceneDelegate.swift */; };
 		5DEEF6A2251BBAA00060A4C2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEEF6A1251BBAA00060A4C2 /* ViewController.swift */; };
@@ -28,6 +29,7 @@
 		5D2C045325366A130053C525 /* Testing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Testing.swift; sourceTree = "<group>"; };
 		5D6DA48D25320EA100B28005 /* Parser+ErrorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Parser+ErrorExtension.swift"; sourceTree = "<group>"; };
 		5D6DA490253351E100B28005 /* Parser+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Parser+Helpers.swift"; sourceTree = "<group>"; };
+		5D96890625460B3E002CB86A /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		5DEEF69A251BBAA00060A4C2 /* Compiler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Compiler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DEEF69D251BBAA00060A4C2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5DEEF69F251BBAA00060A4C2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				5DEEF6BB251BECB10060A4C2 /* Lexer.swift */,
+				5D96890625460B3E002CB86A /* Token.swift */,
 				5DEEF6C2251BED880060A4C2 /* Parser.swift */,
 				5D6DA48D25320EA100B28005 /* Parser+ErrorExtension.swift */,
 				5D6DA490253351E100B28005 /* Parser+Helpers.swift */,
@@ -180,6 +183,7 @@
 				5DEEF6A2251BBAA00060A4C2 /* ViewController.swift in Sources */,
 				5DEEF6BC251BECB10060A4C2 /* Lexer.swift in Sources */,
 				5D6DA491253351E100B28005 /* Parser+Helpers.swift in Sources */,
+				5D96890725460B3E002CB86A /* Token.swift in Sources */,
 				5DEEF6B9251BEB2E0060A4C2 /* Extensions.swift in Sources */,
 				5DEEF6B6251BEB240060A4C2 /* Structs.swift in Sources */,
 				5DEEF6C3251BED880060A4C2 /* Parser.swift in Sources */,

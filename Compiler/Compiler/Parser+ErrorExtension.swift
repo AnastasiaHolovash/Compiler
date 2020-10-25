@@ -85,4 +85,6 @@ extension Parser {
     func getTokenPositionInCode() -> (line: Int, place: Int) {
         return tokensStruct[index - 1].position
     }
+    
+    // TODO: - implement one more getTokenPositionInCode for [index]
 }

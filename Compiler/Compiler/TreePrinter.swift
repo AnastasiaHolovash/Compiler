@@ -69,6 +69,21 @@ extension Function {
     
 }
 
+extension IfStatement {
+    
+    var childs: [PrintableTreeNode] {
+        if let secondBlock = secondBlock {
+            return [firstBlock, secondBlock]
+        } else {
+            return [firstBlock]
+        }
+    }
+    
+    var content: String {
+        "if"
+    }
+}
+
 extension Variable {
     var childs: [PrintableTreeNode] {
         return [value ?? "indefinite"]

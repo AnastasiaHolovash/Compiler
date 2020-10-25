@@ -28,6 +28,10 @@ extension Parser {
                 sign = ";"
             case .return:
                 sign = "\'return\' in function bloc"
+            case .if:
+                sign = "\'if\'"
+            case .else:
+                sign = "\'else\'"
             default:
                 throw Error.unexpectedError
             }
@@ -35,4 +39,5 @@ extension Parser {
         }
         
     }
+    
 }
