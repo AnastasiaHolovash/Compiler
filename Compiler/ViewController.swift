@@ -16,10 +16,24 @@ class ViewController: UIViewController {
         let code =
 """
 int main() {
-    if (1) {
-        int a = 1;
+    int a;
+    {
+        a = 100;
     }
-    return 2;
+    if (1 < 5) {
+        if (0) {
+            a = 1;
+        } else {
+            a = 500 / 10;
+        }
+    } else if (3 < 4) {
+        a = 5;
+    } else if (4 < 5) {
+        a = 6;
+    } else if (5 < 6) {
+        a = 7;
+    }
+    return a;
 }
 """
 
@@ -37,7 +51,7 @@ int main() {
             let lexerResult = try Lexer(code: code)
             let tokensStruct = lexerResult.tokensStruct
             
-            print(lexerResult.tokensTable)
+//            print(lexerResult.tokensTable)
             
             let node = Parser(tokensStruct: tokensStruct)
             let ast = try node.parse()

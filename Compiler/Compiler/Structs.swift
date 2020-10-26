@@ -70,6 +70,7 @@ struct IfStatement: ASTnode {
     let condition: ASTnode
     let firstBlock: ASTnode
     let secondBlock: ASTnode?
+//    let blocks: [ASTnode]
     
     func generatingAsmCode() throws -> String {
         return "if statement"

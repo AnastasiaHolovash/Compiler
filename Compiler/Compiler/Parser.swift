@@ -145,11 +145,19 @@ class Parser {
         
         let firstBlock = try codeBlockParser()
             
-        do {
+        
+        if canGet, case .else = peek().token {
             try check(token: .else)
+            
+            // else if(){} converting to else { if(){} }
+            if canGet, case .if = peek().token {
+                let secondBlock = try ifStatementParser()
+                return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
+            }
+            
             let secondBlock = try codeBlockParser()
             return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
-        } catch {
+        } else {
             return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: nil)
         }
     }
@@ -357,6 +365,9 @@ class Parser {
             case .if:
                 let ifStatement = try ifStatementParser()
                 nodes.append(ifStatement)
+            case .curlyOpen:
+                let block = try codeBlockParser()
+                nodes.append(block)
             default:
                 throw Error.unexpectedExpresion(position: token.position)
             }
