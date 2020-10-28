@@ -148,34 +148,42 @@ class Parser {
         try check(token: .parensClose)
         
         // TODO: - code block or expresion
-        
-        guard var firstBlock = try codeBlockParser() as? CodeBlock else {
-            throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
-        }
-        firstBlock.type = " if"
-        
-        if canGet, case .else = peek().token {
-            try check(token: .else)
-            
-            // else if(){} converting to else { if(){} }
-            if canGet, case .if = peek().token {
-//                guard var secondBlock = try ifStatementParser() as? CodeBlock else {
-//                    throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
-//                }
-//                secondBlock.type = " if"
-                let secondBlock = try ifStatementParser()
-                return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
+        if canGet {
+            switch peek().token {
+            case .return:
+                let statement = try returningParser()
+                return IfStatement(condition: expression, firstBlock: statement, secondBlock: nil)
+            case .identifier:
+                let statement = try variableOverridingParser()
+                return IfStatement(condition: expression, firstBlock: statement, secondBlock: nil)
+            default:
+                // if-block parsing
+                guard var firstBlock = try codeBlockParser() as? CodeBlock else {
+                    throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
+                }
+                firstBlock.type = " if"
+                
+                // if else-block exist
+                if canGet, case .else = peek().token {
+                    try check(token: .else)
+                    
+                    // [ else if(){} ] construction converting to [ else { if(){} } ]
+                    if canGet, case .if = peek().token {
+                        let secondBlock = try ifStatementParser()
+                        return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
+                    }
+                    
+                    guard var secondBlock = try codeBlockParser() as? CodeBlock else {
+                        throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
+                    }
+                    secondBlock.type = " else"
+                    return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
+                } else {
+                    return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: nil)
+                }
             }
-            
-            guard var secondBlock = try codeBlockParser() as? CodeBlock else {
-                throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
-            }
-            secondBlock.type = " else"
-//            let secondBlock = try codeBlockParser()
-            return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
-        } else {
-            return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: nil)
         }
+        throw Error.incorrectIfStatement(position: getTokenPositionInCode())
     }
     
     
@@ -224,14 +232,8 @@ class Parser {
                 return Variable(name: identifier, value: expression, position: position)
             }
         }
-//        if identifiers[depth]?[identifier] == nil {
         throw Error.noSuchIdentifier(identifier, position: getTokenPositionInCode())
-//        }
-//        try check(token: .equal)
-//        let expression = try parseExpression()
-//        try check(token: .semicolon)
-//
-//        return Variable(name: identifier, value: expression)
+
     }
     
     

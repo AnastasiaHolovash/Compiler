@@ -53,6 +53,15 @@ int main() {
     return a;
 }
 """
+        let code1 =
+"""
+int main() {
+    int a = 7;
+    if (1) a = 10;
+    if (3 < 8) return 100;
+    return a;
+}
+"""
         compiler(code: code)
         
     }

@@ -80,7 +80,7 @@ extension IfStatement {
     }
     
     var content: String {
-        ""
+        "Сondition"
     }
 }
 
