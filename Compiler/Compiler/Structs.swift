@@ -74,9 +74,10 @@ struct IfStatement: ASTnode {
 
 // MARK: - Variable struct
 struct Variable: ASTnode {
-    let block: Int
+//    let block: Int
     let name: String
     let value: ASTnode?
+    let position: Int
     
     /// Interpreter func
     func generatingAsmCode() throws -> String {
@@ -101,7 +102,7 @@ struct Variable: ASTnode {
         
         // Writing variable value to dedicated space in the stack.
         code += """
-                mov[ebp - \(identifiers[block]?[name] ?? 0)], eax
+                mov[ebp - \(position)], eax
                 xor eax, eax\n
                 """
         

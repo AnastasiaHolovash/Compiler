@@ -43,7 +43,8 @@ extension String: ASTnode{
     
     /// Interpreter func
     func generatingAsmCode() throws -> String {
-        return "[ebp - \(identifiers[self] ?? 0)]"
+//        return "[ebp - \(identifiers[self] ?? 0)]"
+        return "[ ]"
     }
     
     

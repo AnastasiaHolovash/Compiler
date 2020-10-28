@@ -17,14 +17,16 @@ class Parser {
     /// List of tokens with.
     let tokensStruct: [TokenStruct]
     
-    init(tokensStruct: [TokenStruct]) {
+    var blockDepth: Int
+    
+    init(tokensStruct: [TokenStruct], blockDepth: Int = 0) {
         self.tokensStruct = tokensStruct
+        self.blockDepth = blockDepth
     }
     
     /// Current location of the parsing phase
     var index = 0
     
-    var depth = 0
     
     var canGet: Bool {
         return index < tokensStruct.count ? true : false
@@ -58,8 +60,8 @@ class Parser {
         
         try check(token: .curlyOpen)
         
-        depth = 1
-//        var depth = 1
+//        depth = 1
+        var depth = 1
         let startIndex = index
         
         while canGet {
@@ -84,7 +86,8 @@ class Parser {
 
         try check(token: .curlyClose)
         let tokens = Array(self.tokensStruct[startIndex..<endIndex])
-        return try Parser(tokensStruct: tokens).parse()
+        identifiers[blockDepth + 1] = [:]
+        return try Parser(tokensStruct: tokens, blockDepth: blockDepth + 1).parse()
     }
     
     
@@ -173,11 +176,11 @@ class Parser {
         guard canGet, case .equal = peek().token else {
             try check(token: .semicolon)
             // If not exist in curent block
-            if identifiers[depth]?[identifier] != nil {
+            if identifiers[blockDepth]?[identifier] != nil {
                 throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
             }
-            identifiers[depth]?[identifier] = getNextAdres()
-            return Variable(block: depth, name: identifier, value: nil)
+            identifiers[blockDepth]?[identifier] = getNextAdres()
+            return Variable(name: identifier, value: nil, position: adres)
         }
         
         // If it goes equal after identifier
@@ -185,11 +188,11 @@ class Parser {
         let expression = try parseExpression()
         try check(token: .semicolon)
         // If not exist in curent block
-        if identifiers[depth]?[identifier] != nil {
+        if identifiers[blockDepth]?[identifier] != nil {
             throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
         }
-        identifiers[depth]?[identifier] = getNextAdres()
-        return Variable(block: depth, name: identifier, value: expression)
+        identifiers[blockDepth]?[identifier] = getNextAdres()
+        return Variable(name: identifier, value: expression, position: adres)
     }
     
     
@@ -202,13 +205,13 @@ class Parser {
         }
         
         // Checking if identifier was declared
-        for value in stride(from: depth, through: 1, by: 1) {
-            if identifiers[value]?[identifier] != nil {
+        for value in stride(from: blockDepth, through: 1, by: -1) {
+            if let position = identifiers[value]?[identifier] {
                 try check(token: .equal)
                 let expression = try parseExpression()
                 try check(token: .semicolon)
                 
-                return Variable(block: depth, name: identifier, value: expression)
+                return Variable(name: identifier, value: expression, position: position)
             }
         }
 //        if identifiers[depth]?[identifier] == nil {
@@ -272,7 +275,7 @@ class Parser {
         case let .identifier(identifier):
             
             // Checking if identifier was declared
-            for value in stride(from: depth, through: 1, by: 1) {
+            for value in stride(from: blockDepth, through: 1, by: 1) {
                 if identifiers[value]?[identifier] != nil {
                     return try identifierParser()
                 }
@@ -390,6 +393,7 @@ class Parser {
                 nodes.append(ifStatement)
             case .curlyOpen:
                 let block = try codeBlockParser()
+                identifiers[blockDepth + 1] = nil
                 nodes.append(block)
             default:
                 throw Error.unexpectedExpresion(position: token.position)
