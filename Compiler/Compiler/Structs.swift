@@ -7,16 +7,11 @@
 
 import Foundation
 
-var identifiers: [String : Int] = [:]
-var adres: Int = 0
-
-func getNextAdres() -> Int {
-    adres += 4
-    return adres
-}
 
 // MARK: - Code Block struct
 struct CodeBlock: ASTnode {
+    
+    let firtAdres = getFirstBlockAdres()
     let astNodes: [ASTnode]
     
     /// Interpreter func
@@ -79,6 +74,7 @@ struct IfStatement: ASTnode {
 
 // MARK: - Variable struct
 struct Variable: ASTnode {
+    let block: Int
     let name: String
     let value: ASTnode?
     
@@ -105,7 +101,7 @@ struct Variable: ASTnode {
         
         // Writing variable value to dedicated space in the stack.
         code += """
-                mov[ebp - \(identifiers[name] ?? 0)], eax
+                mov[ebp - \(identifiers[block]?[name] ?? 0)], eax
                 xor eax, eax\n
                 """
         
@@ -290,4 +286,5 @@ struct Number: ASTnode {
     }
     
 }
+
 

@@ -36,8 +36,24 @@ int main() {
     return a;
 }
 """
-
-        compiler(code: code)
+        let code0 =
+"""
+int main() {
+    int a;
+    {
+        int test;
+        int a;
+        {
+            a = 100;
+        }
+    }
+    {
+        int beta = 77;
+    }
+    return a;
+}
+"""
+        compiler(code: code0)
         
     }
 
@@ -46,6 +62,7 @@ int main() {
         
         print("______ENTERED CODE______")
         print(code)
+        
         
         do {
             let lexerResult = try Lexer(code: code)

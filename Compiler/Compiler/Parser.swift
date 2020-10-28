@@ -24,6 +24,8 @@ class Parser {
     /// Current location of the parsing phase
     var index = 0
     
+    var depth = 0
+    
     var canGet: Bool {
         return index < tokensStruct.count ? true : false
     }
@@ -56,7 +58,8 @@ class Parser {
         
         try check(token: .curlyOpen)
         
-        var depth = 1
+        depth = 1
+//        var depth = 1
         let startIndex = index
         
         while canGet {
@@ -165,43 +168,57 @@ class Parser {
     
     // MARK: - Variable Declaration
     func variableDeclarationParser(returnType: Token, identifier: String) throws -> ASTnode {
+        
+        // If it goes semicolon after identifier
         guard canGet, case .equal = peek().token else {
             try check(token: .semicolon)
-            if identifiers[identifier] != nil {
+            // If not exist in curent block
+            if identifiers[depth]?[identifier] != nil {
                 throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
             }
-            identifiers[identifier] = getNextAdres()
-            return Variable(name: identifier, value: nil)
+            identifiers[depth]?[identifier] = getNextAdres()
+            return Variable(block: depth, name: identifier, value: nil)
         }
+        
+        // If it goes equal after identifier
         try check(token: .equal)
         let expression = try parseExpression()
         try check(token: .semicolon)
-        
-        if identifiers[identifier] != nil {
+        // If not exist in curent block
+        if identifiers[depth]?[identifier] != nil {
             throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
         }
-        identifiers[identifier] = getNextAdres()
-        
-        return Variable(name: identifier, value: expression)
+        identifiers[depth]?[identifier] = getNextAdres()
+        return Variable(block: depth, name: identifier, value: expression)
     }
     
     
     // MARK: - Variable Overriding
     func variableOverridingParser() throws -> ASTnode {
         
-        // Identifier
+        // Geting identifier
         guard case let .identifier(identifier) = getNextToken() else {
             throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
-        // Checking if identifier was declared
-        if identifiers[identifier] == nil {
-            throw Error.noSuchIdentifier(identifier, position: getTokenPositionInCode())
-        }
-        try check(token: .equal)
-        let expression = try parseExpression()
-        try check(token: .semicolon)
         
-        return Variable(name: identifier, value: expression)
+        // Checking if identifier was declared
+        for value in stride(from: depth, through: 1, by: 1) {
+            if identifiers[value]?[identifier] != nil {
+                try check(token: .equal)
+                let expression = try parseExpression()
+                try check(token: .semicolon)
+                
+                return Variable(block: depth, name: identifier, value: expression)
+            }
+        }
+//        if identifiers[depth]?[identifier] == nil {
+        throw Error.noSuchIdentifier(identifier, position: getTokenPositionInCode())
+//        }
+//        try check(token: .equal)
+//        let expression = try parseExpression()
+//        try check(token: .semicolon)
+//
+//        return Variable(name: identifier, value: expression)
     }
     
     
@@ -252,12 +269,18 @@ class Parser {
                 throw Error.expectedNumber(position: (line: line, place: place))
             }
             return try prefixOperationParser()
-        case let .identifier(str):
+        case let .identifier(identifier):
+            
             // Checking if identifier was declared
-            if identifiers[str] == nil {
-                throw Error.noSuchIdentifier(str, position: getTokenPositionInCode())
+            for value in stride(from: depth, through: 1, by: 1) {
+                if identifiers[value]?[identifier] != nil {
+                    return try identifierParser()
+                }
             }
-            return try identifierParser()
+//            if identifiers[str] == nil {
+                throw Error.noSuchIdentifier(identifier, position: getTokenPositionInCode())
+//            }
+//            return try identifierParser()
         default:
             let (line, place) = tokensStruct[index].position
             throw Error.expectedNumber(position:(line: line, place: place))
