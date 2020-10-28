@@ -12,57 +12,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
-        let code =
-"""
-int main() {
-    int a;
-    {
-        a = 100;
-    }
-    if (1 < 5) {
-        if (0) {
-            a = 1;
-        } else {
-            a = 500 / 10;
+        for test in testsLab3 {
+            compiler(code: test)
         }
-    } else if (3 < 4) {
-        a = 5;
-    } else if (4 < 5) {
-        a = 6;
-    } else if (5 < 6) {
-        a = 7;
-    }
-    return a;
-}
-"""
-        let code0 =
-"""
-int main() {
-    int a = 7;
-    {
-        int test;
-        int a;
-        {
-            a = 100;
-        }
-    }
-    {
-        int beta = 77 / a;
-    }
-    return a;
-}
-"""
-        let code1 =
-"""
-int main() {
-    int a = 7;
-    if (1) a = 10;
-    if (3 < 8) return 100;
-    return a;
-}
-"""
-        compiler(code: code1)
+//        compiler(code: code47)
         
     }
 
@@ -110,8 +63,8 @@ int main() {
             let result = treePrinter.printTree(startingFrom: ast)
             print(result)
             
-            print("______ENTERED CODE______")
-            print(code)
+//            print("______ENTERED CODE______")
+//            print(code)
             
 //            print("\n______ASM CODE______")
 //            print(interpret)

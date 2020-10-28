@@ -70,7 +70,7 @@ struct IfStatement: ASTnode {
     
     func generatingAsmCode() throws -> String {
         var result = ""
-        
+        let newFlag = getNextFlag()
         if condition is Number || condition is Identifier {
             let number = try condition.generatingAsmCode()
             result += "mov eax, \(number)\n"
@@ -83,20 +83,20 @@ struct IfStatement: ASTnode {
         result += "cmp eax, 0\n"
         
         if elseBlock == nil {
-            result += "je _post_conditional_\(getNextFlag())\n"
+            result += "je _post_conditional_\(newFlag)\n"
         } else {
-            result += "je _else_\(getNextFlag())\n"
+            result += "je _else_\(newFlag)\n"
         }
         
         result += try ifBlock.generatingAsmCode()
         
         if let elseBlock = elseBlock {
-            result += "jmp _post_conditional_\(flagsName)\n"
-            result += "_else_\(flagsName):\n"
+            result += "jmp _post_conditional_\(newFlag)\n"
+            result += "_else_\(newFlag):\n"
             result += try elseBlock.generatingAsmCode()
         }
         
-        result += "_post_conditional_\(flagsName):\n"
+        result += "_post_conditional_\(newFlag):\n"
         
         return result
     }

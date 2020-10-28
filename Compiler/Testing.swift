@@ -8,6 +8,9 @@
 import Foundation
 
 // MARK: - Lab1
+
+let testsLab1 = [code10, code11, code12, code13, code14, code15]
+
 let code10 = """
 float main() {
       return 0xA3;
@@ -41,7 +44,11 @@ float main() {
 }
 """
 
+
 // MARK: - Lab2
+
+let testsLab2 = [code20, code21, code22, code23, code24, code25, code26, code27, code28]
+
 //  true
 let code20 = """
 float main() {
@@ -103,6 +110,8 @@ float main() {
 
 
 // MARK: - Lab3
+
+let testsLab3 = [code30, code31, code32, code33, code34, code35, code36, code37, code38, code39]
 
 //        Error: Unexpected expresion found.
 //            Line: 3  Place: 22
@@ -203,5 +212,142 @@ int main() {
     int third = 0x2 * -second;
     int answer = (third / 2) / -2 * 5 < 1;
     return answer;
+}
+"""
+
+
+// MARK: - Lab4
+
+// TRUE 50
+let code40 =
+"""
+int main() {
+    int a;
+    {
+        a = -100;
+    }
+    if (10 < 5) {
+        a = 5;
+    } else if (3 < 4) {
+        if (0) {
+            a = 1;
+        } else {
+            a = 0x1 * 500 / 10;
+        }
+    } else if (4 < 5) {
+        a = 6;
+    } else if (5 < 6) {
+        a = 7;
+    }
+    return a;
+}
+"""
+
+// TRUE 110
+let code41 =
+"""
+int main() {
+    int a = 7;
+    {
+        int test;
+        int a;
+        {
+            if (a) a = 100;
+        }
+    }
+    {
+        int beta = 770 / a;
+        return beta;
+    }
+    return a;
+}
+"""
+
+// TRUE -25
+let code42 =
+"""
+int main() {
+    int a = 7;
+    if (1) a = 10;
+    if (3 < 0xA) {
+        return -(100 / -a) * 5 / -2;
+    } else {
+        return a * a;
+    }
+    return a;
+}
+"""
+
+//Error: A variable with name 'test' already exist.
+//    Line: 8  Place: 17
+let code43 =
+"""
+int main() {
+    int test = 7;
+    if (3 < 0xA) {
+        return -2;
+    } else {
+        return test * test;
+    }
+    int test = 29;
+    return test;
+}
+"""
+
+//Error: Extected '('.
+//    Line: 3  Place: 7
+let code44 =
+"""
+int main() {
+    int some = 7;
+    if 3 < 0xA
+        return -2;
+    return some;
+}
+"""
+
+//Error: Extected '{'.
+//    Line: 4  Place: 8
+let code45 =
+"""
+int main() {
+    int some = 7;
+    if (3 < 0xA)
+        int mewVar = 33;
+    return some;
+}
+"""
+
+//Error: Extected '}'.
+//    Line: 12  Place: 0
+let code46 =
+"""
+int main() {
+    int some = 7;
+    if (3 < 0xA) {
+        int mewVar = 33;
+        {
+            int some = 7;
+            {
+                int some = 7;
+            }
+        }
+    return some;
+}
+"""
+
+//Error: No such identifier: 'mewVar'.
+//    Line: 7  Place: 13
+let code47 =
+"""
+int main() {
+    int some = 7;
+    if (33) {
+        {
+            int mewVar = 33;
+        }
+        some = mewVar / 3;
+    }
+    return some;
 }
 """
