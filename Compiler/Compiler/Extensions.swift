@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension String: ASTnode{
+extension String {
     
     /// Returns a substring matching the given regular expression.
     func getPrefix(regex: String) -> String? {
@@ -42,10 +42,10 @@ extension String: ASTnode{
     
     
     /// Interpreter func
-    func generatingAsmCode() throws -> String {
-//        return "[ebp - \(identifiers[self] ?? 0)]"
-        return "[ ]"
-    }
+//    func generatingAsmCode() throws -> String {
+////        return "[ebp - \(identifiers[self] ?? 0)]"
+//        return "[ ]"
+//    }
     
     
     func hexToDec() -> UInt16 {

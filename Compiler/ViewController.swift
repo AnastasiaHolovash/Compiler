@@ -39,7 +39,7 @@ int main() {
         let code0 =
 """
 int main() {
-    int a;
+    int a = 7;
     {
         int test;
         int a;
@@ -48,12 +48,12 @@ int main() {
         }
     }
     {
-        int beta = 77;
+        int beta = 77 / a;
     }
     return a;
 }
 """
-        compiler(code: code0)
+        compiler(code: code)
         
     }
 

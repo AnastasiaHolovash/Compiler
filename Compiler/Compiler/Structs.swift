@@ -11,7 +11,8 @@ import Foundation
 // MARK: - Code Block struct
 struct CodeBlock: ASTnode {
     
-    let firtAdres = getFirstBlockAdres()
+//    let firtAdres = getFirstBlockAdres()
+    var type = ""
     let astNodes: [ASTnode]
     
     /// Interpreter func
@@ -86,7 +87,11 @@ struct Variable: ASTnode {
         
         let val = try value?.generatingAsmCode()
         
-        if value is Number || value is String {
+        if value is Variable {
+            code += """
+                    mov eax, [ebp - \(position)]\n
+                    """
+        } else if value is Number {
             code += """
                     mov eax, \(val ?? "?")\n
                     """
@@ -120,7 +125,10 @@ struct ReturnStatement: ASTnode {
         
 //        let code = "mov eax, \(try node.generatingAsmCode())"
         var code = ""
-        if node is String || node is Number {
+        
+        if node is Variable {
+            code += try node.generatingAsmCode()
+        } else if node is Number {
             code = "mov eax, \(try node.generatingAsmCode())"
         } else {
             code = try node.generatingAsmCode()
@@ -154,7 +162,13 @@ struct InfixOperation: ASTnode {
         let right = try rightNode.generatingAsmCode()
         
         // Left node code generation
-        if leftNode is Number || leftNode is String {
+        if leftNode is Variable {
+            if right.hasSuffix("push eax\n") {
+                codeBufer += left
+            } else {
+                code += left
+            }
+        } else if leftNode is Number {
             if right.hasSuffix("push eax\n") {
                 codeBufer += "mov eax, \(left)\n"
             } else {
@@ -174,7 +188,9 @@ struct InfixOperation: ASTnode {
         }
         
         // Right node code generation
-        if rightNode is Number || rightNode is String {
+        if let rightNode = rightNode as? Variable {
+            code += "mov ebx, [ebp - \(rightNode.position)]\n"
+        } else if rightNode is Number {
             code += "mov ebx, \(right)\n"
         } else if right.hasSuffix("push eax\n") {
             code += right
@@ -242,7 +258,10 @@ struct PrefixOperation: ASTnode {
         
         let asmCode = try item.generatingAsmCode()
         
-        if item is Number || item is String {
+        if let variable = item as? Variable {
+            code += sideLeft ? "mov eax, [ebp - \(variable.position)]\n" : "mov ebx, [ebp - \(variable.position)]\n"
+            code += sideLeft ? "neg eax\n" : "neg ebx\n"
+        } else if item is Number{
             code += sideLeft ? "mov eax, \(asmCode)\n" : "mov ebx, \(asmCode)\n"
             code += sideLeft ? "neg eax\n" : "neg ebx\n"
         } else if var dividing = item as? InfixOperation {
@@ -285,7 +304,8 @@ struct Number: ASTnode {
         
         return code
     }
-    
 }
 
-
+//struct Identifier: ASTnode {
+//    <#fields#>
+//}

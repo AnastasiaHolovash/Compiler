@@ -149,19 +149,29 @@ class Parser {
         
         // TODO: - code block or expresion
         
-        let firstBlock = try codeBlockParser()
-            
+        guard var firstBlock = try codeBlockParser() as? CodeBlock else {
+            throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
+        }
+        firstBlock.type = " if"
         
         if canGet, case .else = peek().token {
             try check(token: .else)
             
             // else if(){} converting to else { if(){} }
             if canGet, case .if = peek().token {
+//                guard var secondBlock = try ifStatementParser() as? CodeBlock else {
+//                    throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
+//                }
+//                secondBlock.type = " if"
                 let secondBlock = try ifStatementParser()
                 return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
             }
             
-            let secondBlock = try codeBlockParser()
+            guard var secondBlock = try codeBlockParser() as? CodeBlock else {
+                throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
+            }
+            secondBlock.type = " else"
+//            let secondBlock = try codeBlockParser()
             return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
         } else {
             return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: nil)
@@ -275,9 +285,9 @@ class Parser {
         case let .identifier(identifier):
             
             // Checking if identifier was declared
-            for value in stride(from: blockDepth, through: 1, by: 1) {
-                if identifiers[value]?[identifier] != nil {
-                    return try identifierParser()
+            for value in stride(from: blockDepth, through: 1, by: -1) {
+                if let position = identifiers[value]?[identifier] {
+                    return try identifierParser(position: position)
                 }
             }
 //            if identifiers[str] == nil {
@@ -365,11 +375,11 @@ class Parser {
     
     
     // MARK: - Identifier
-    func identifierParser() throws -> ASTnode {
+    func identifierParser(position: Int) throws -> ASTnode {
         guard case let .identifier(name) = getNextToken() else {
             throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
-        return name
+        return Variable(name: name, value: nil, position: position)
     }
     
     

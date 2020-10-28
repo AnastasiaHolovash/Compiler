@@ -53,7 +53,7 @@ extension CodeBlock {
     }
     
     var content: String {
-        return "Block"
+        return "Block" + type
     }
     
 }
@@ -80,7 +80,7 @@ extension IfStatement {
     }
     
     var content: String {
-        "if"
+        ""
     }
 }
 
@@ -155,16 +155,26 @@ extension Number {
     
 }
 
-extension String {
+extension String: PrintableTreeNode {
     public var childs: [PrintableTreeNode] {
         return []
     }
-    public   
+    public
     var content: String {
         return self
     }
-    
+
 }
+
+//extension Identifier {
+//    public var childs: [PrintableTreeNode] {
+//        return []
+//    }
+//    public
+//    var content: String {
+//        return self
+//    }
+//}
 
 extension Float {
     public var childs: [PrintableTreeNode] {

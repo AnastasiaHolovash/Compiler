@@ -65,10 +65,10 @@
 				5DEEF6C2251BED880060A4C2 /* Parser.swift */,
 				5D6DA48D25320EA100B28005 /* Parser+ErrorExtension.swift */,
 				5D6DA490253351E100B28005 /* Parser+Helpers.swift */,
-				5D2C045025363CE30053C525 /* TreePrinter.swift */,
 				5DEEF6B5251BEB240060A4C2 /* Structs.swift */,
 				5DEEF6B8251BEB2E0060A4C2 /* Extensions.swift */,
 				5D61C46C2548A453008A6058 /* Variables.swift */,
+				5D2C045025363CE30053C525 /* TreePrinter.swift */,
 			);
 			path = Compiler;
 			sourceTree = "<group>";
