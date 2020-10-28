@@ -90,7 +90,7 @@ extension Variable {
     }
     
     var content: String {
-        return "Var: \"\(name)\""
+        return "Var: \"\(identifier.name)\""
     }
     
 }
@@ -166,15 +166,15 @@ extension String: PrintableTreeNode {
 
 }
 
-//extension Identifier {
-//    public var childs: [PrintableTreeNode] {
-//        return []
-//    }
-//    public
-//    var content: String {
-//        return self
-//    }
-//}
+extension Identifier {
+    public var childs: [PrintableTreeNode] {
+        return []
+    }
+    public
+    var content: String {
+        return "Var: \"\(name)\""
+    }
+}
 
 extension Float {
     public var childs: [PrintableTreeNode] {

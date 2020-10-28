@@ -198,7 +198,7 @@ class Parser {
                 throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
             }
             identifiers[blockDepth]?[identifier] = getNextAdres()
-            return Variable(name: identifier, value: nil, position: adres)
+            return Variable(identifier: Identifier(name: identifier, position: adres), value: nil)
         }
         
         // If it goes equal after identifier
@@ -210,7 +210,7 @@ class Parser {
             throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
         }
         identifiers[blockDepth]?[identifier] = getNextAdres()
-        return Variable(name: identifier, value: expression, position: adres)
+        return Variable(identifier: Identifier(name: identifier, position: adres), value: expression)
     }
     
     
@@ -229,7 +229,7 @@ class Parser {
                 let expression = try parseExpression()
                 try check(token: .semicolon)
                 
-                return Variable(name: identifier, value: expression, position: position)
+                return Variable(identifier: Identifier(name: identifier, position: position), value: expression)
             }
         }
         throw Error.noSuchIdentifier(identifier, position: getTokenPositionInCode())
@@ -381,7 +381,7 @@ class Parser {
         guard case let .identifier(name) = getNextToken() else {
             throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
-        return Variable(name: name, value: nil, position: position)
+        return Identifier(name: name, position: position)
     }
     
     

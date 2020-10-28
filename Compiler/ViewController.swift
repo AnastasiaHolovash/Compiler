@@ -113,8 +113,8 @@ int main() {
             print("______ENTERED CODE______")
             print(code)
             
-            print("\n______ASM CODE______")
-            print(interpret)
+//            print("\n______ASM CODE______")
+//            print(interpret)
             print("______CPP CODE______")
             print(text)
             
