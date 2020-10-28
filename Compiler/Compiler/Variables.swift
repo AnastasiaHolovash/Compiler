@@ -13,7 +13,12 @@ import Foundation
 //    let adress: Int
 //}
 
+var flagsName = 0
 
+func getNextFlag() -> Int {
+    flagsName += 1
+    return flagsName
+}
 
 var identifiers: [Int : [String : Int]] = [:]
 var adres: Int = 0

@@ -152,10 +152,10 @@ class Parser {
             switch peek().token {
             case .return:
                 let statement = try returningParser()
-                return IfStatement(condition: expression, firstBlock: statement, secondBlock: nil)
+                return IfStatement(condition: expression, ifBlock: statement, elseBlock: nil)
             case .identifier:
                 let statement = try variableOverridingParser()
-                return IfStatement(condition: expression, firstBlock: statement, secondBlock: nil)
+                return IfStatement(condition: expression, ifBlock: statement, elseBlock: nil)
             default:
                 // if-block parsing
                 guard var firstBlock = try codeBlockParser() as? CodeBlock else {
@@ -170,16 +170,16 @@ class Parser {
                     // [ else if(){} ] construction converting to [ else { if(){} } ]
                     if canGet, case .if = peek().token {
                         let secondBlock = try ifStatementParser()
-                        return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
+                        return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: secondBlock)
                     }
                     
                     guard var secondBlock = try codeBlockParser() as? CodeBlock else {
                         throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
                     }
                     secondBlock.type = " else"
-                    return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: secondBlock)
+                    return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: secondBlock)
                 } else {
-                    return IfStatement(condition: expression, firstBlock: firstBlock, secondBlock: nil)
+                    return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: nil)
                 }
             }
         }

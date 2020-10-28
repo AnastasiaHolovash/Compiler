@@ -72,10 +72,10 @@ extension Function {
 extension IfStatement {
     
     var childs: [PrintableTreeNode] {
-        if let secondBlock = secondBlock {
-            return [firstBlock, secondBlock]
+        if let secondBlock = elseBlock {
+            return [ifBlock, secondBlock]
         } else {
-            return [firstBlock]
+            return [ifBlock]
         }
     }
     

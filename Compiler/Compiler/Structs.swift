@@ -64,12 +64,26 @@ struct Function: ASTnode {
 struct IfStatement: ASTnode {
     
     let condition: ASTnode
-    let firstBlock: ASTnode
-    let secondBlock: ASTnode?
-//    let blocks: [ASTnode]
+    let ifBlock: ASTnode
+    let elseBlock: ASTnode?
     
     func generatingAsmCode() throws -> String {
-        return "if statement"
+        var result = ""
+        result += try condition.generatingAsmCode()
+        result = result.deletingSufix("push eax\n")
+        
+        result += "cmp eax, 0\n"
+        result += "je _else_\(getNextFlag())\n"
+        
+        result += try ifBlock.generatingAsmCode()
+        
+        result += "jmp _post_conditional_\(flagsName)\n"
+        result += "_else_\(flagsName):\n"
+        
+        result += try (elseBlock?.generatingAsmCode() ?? "")
+        result += "_post_conditional_\(flagsName):\n"
+        
+        return result
     }
 }
 
@@ -129,7 +143,7 @@ struct ReturnStatement: ASTnode {
         if node is Variable {
             code += try node.generatingAsmCode()
         } else if node is Number {
-            code = "mov eax, \(try node.generatingAsmCode())"
+            code = "mov eax, \(try node.generatingAsmCode())\n"
         } else {
             code = try node.generatingAsmCode()
         }

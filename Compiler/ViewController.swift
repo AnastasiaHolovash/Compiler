@@ -62,7 +62,7 @@ int main() {
     return a;
 }
 """
-        compiler(code: code)
+        compiler(code: code1)
         
     }
 
