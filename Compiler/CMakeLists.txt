@@ -14,7 +14,6 @@ target_sources(4-05-Swift-IV-82-Holovash PRIVATE
   Compiler/Parser/DeclarationParser.swift
   Compiler/Parser/IfStatementParser.swift
   Compiler/Parser/ExpressionParser.swift
-  Compiler/Parser/CodeBlockParesr.swift
   Compiler/Parser/Parser+ErrorExtension.swift
   Compiler/Parser/Parser+Helpers.swift
   

@@ -206,7 +206,7 @@ int some() {
 }
 """
 
-// TRUE 1
+// TRUE 0
 let code39 = """
 int main() {
     float first = 8.5;

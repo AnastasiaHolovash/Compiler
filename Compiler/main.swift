@@ -8,10 +8,13 @@
 #if DEBUG
 import Foundation
 
-for test in testsLab1 {
-    compiler(code: test)
-    adres = 0
-}
+//for test in testsLab1 {
+//    compiler(code: test)
+//    adres = 0
+//}
+
+compiler(code: code40)
+
 #endif
 
 
@@ -23,29 +26,49 @@ import let WinSDK.CW_USEDEFAULT
 final class AppDelegate: ApplicationDelegate {
     
     func application(_ application: Application, didFinishLaunchingWithOptions launchOptions: [Application.LaunchOptionsKey: Any]?) -> Bool {
-        
-        let code = try String(contentsOfFile: "4-07-Swift-IV-82-Danyliuk.txt", encoding: String.Encoding.windowsCP1251)
-        compile(code: code)
+        do {
+            let code = try String(contentsOfFile: "4-05-Swift-IV-82-Holovash.txt", encoding: String.Encoding.utf8)
+            let cppCode = compiler(code: code)
+            try cppCode.write(toFile: "4-05-Swift-IV-82-Holovash.cpp", atomically: false, encoding: String.Encoding.utf8)
+        } catch let error {
+            print(error.localizedDescription)
+        }
         return true
     }
 }
 #endif
 
 
-func compiler(code: String) {
+func compiler(code: String) -> String {
+    
+    var cppCode = String()
     
     print("______ENTERED CODE______")
     print(code)
     
-    
     do {
+        /**
+        Lexing
+        */
         let lexerResult = try Lexer(code: code)
         let tokensStruct = lexerResult.tokensStruct
         
-//            print(lexerResult.tokensTable)
+        print(lexerResult.tokensTable)
         
+        /**
+         Parsing
+         */
         let node = Parser(tokensStruct: tokensStruct)
         let ast = try node.parse()
+        
+        print("______AST STRUCT______")
+        let treePrinter = TreePrinter()
+        let result = treePrinter.printTree(startingFrom: ast)
+        print(result)
+        
+        /**
+         Interpreting
+         */
         let interpret = try ast.generatingAsmCode()
         
         var cpp : String = ""
@@ -53,7 +76,7 @@ func compiler(code: String) {
             cpp += "\n        " + line
         }
         
-        let text = """
+        cppCode = """
         #include <iostream>
         #include <string>
         #include <stdint.h>
@@ -69,24 +92,13 @@ func compiler(code: String) {
         
         """
         
-        
-        print("______AST STRUCT______")
-        let treePrinter = TreePrinter()
-        let result = treePrinter.printTree(startingFrom: ast)
-        print(result)
-        
-//            print("______ENTERED CODE______")
-//            print(code)
-        
-//            print("\n______ASM CODE______")
-//            print(interpret)
         print("______CPP CODE______")
-        print(text)
-        
+        print(cppCode)
         
     } catch let error {
         if let error = error as? Parser.Error {
             print(error.localizedDescription)
         }
     }
+    return cppCode
 }
