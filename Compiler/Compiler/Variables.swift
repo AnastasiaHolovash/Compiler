@@ -7,12 +7,6 @@
 
 import Foundation
 
-//struct Variables {
-//    let depth: Int
-//    let name: String
-//    let adress: Int
-//}
-
 var flagsName = 0
 
 func getNextFlag() -> Int {

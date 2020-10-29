@@ -28,7 +28,10 @@ struct Function: ASTnode {
         
         code += """
                 _return:
-                \nmov esp, ebp
+                """
+        
+        code += """
+                \n\nmov esp, ebp
                 pop ebp
                 mov b, eax\n
                 """
