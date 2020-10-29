@@ -45,6 +45,7 @@ float main() {
 """
 
 
+
 // MARK: - Lab2
 
 let testsLab2 = [code20, code21, code22, code23, code24, code25, code26, code27, code28]
@@ -107,6 +108,7 @@ float main() {
     return (1 / -d) / 1
 }
 """
+
 
 
 // MARK: - Lab3
@@ -216,7 +218,10 @@ int main() {
 """
 
 
+
 // MARK: - Lab4
+
+let testsLab4 = [code40, code41, code42, code43, code44, code45, code46, code47]
 
 // TRUE 50
 let code40 =

@@ -41,13 +41,6 @@ extension String {
     }
     
     
-    /// Interpreter func
-//    func generatingAsmCode() throws -> String {
-////        return "[ebp - \(identifiers[self] ?? 0)]"
-//        return "[ ]"
-//    }
-    
-    
     func hexToDec() -> UInt16 {
         return UInt16(self.replacingOccurrences(of: "0x", with: ""), radix: 16)!
     }
