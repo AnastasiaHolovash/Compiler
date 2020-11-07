@@ -67,7 +67,7 @@ class Parser {
             case .return:
                 let returning = try returningParser()
                 nodes.append(returning)
-            case .int, .float:
+            case .type:
                 let definition = try declarationParser()
                 nodes.append(definition)
             case .identifier:

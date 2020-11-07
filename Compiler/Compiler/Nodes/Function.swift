@@ -11,7 +11,8 @@ import Foundation
 // MARK: - Function struct
 
 struct Function: ASTnode {
-    let returnType: Token
+    let returnType: Type
+    let arguments: [(String, Type)]
     let identifier: String
     let block: ASTnode
 

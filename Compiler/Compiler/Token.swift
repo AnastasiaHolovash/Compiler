@@ -24,9 +24,10 @@ protocol ThrowCastingError {
 enum Token: Equatable {
     
     case numberFloat(Float)
-    case numberInt(Int, Type)
-    case int
-    case float
+    case numberInt(Int, NunberType)
+//    case int
+//    case float
+    case type(Type)
     case identifier(String)
     case parensOpen
     case parensClose
@@ -64,10 +65,10 @@ enum Token: Equatable {
             
             "[a-zA-Z_$][a-zA-Z_$0-9]*": {
                 guard $0 != "int" else {
-                    return .int
+                    return .type(.int)
                 }
                 guard $0 != "float" else {
-                    return .float
+                    return .type(.float)
                 }
                 guard $0 != "return" else {
                     return .return
@@ -107,9 +108,15 @@ enum Token: Equatable {
     }
 }
 
-
 // MARK: - Type
 enum Type {
+    case int
+    case float
+}
+
+
+// MARK: - Nunber Type
+enum NunberType {
     case decimal
     case hex
 }

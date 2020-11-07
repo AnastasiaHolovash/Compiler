@@ -30,6 +30,7 @@
 		5D8F1C9E254AE24D00BA90A7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8F1C88254AE24D00BA90A7 /* Extensions.swift */; };
 		5D8F1C9F254AE24D00BA90A7 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8F1C89254AE24D00BA90A7 /* Token.swift */; };
 		5D8F1CA0254AE24D00BA90A7 /* Testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8F1C8A254AE24D00BA90A7 /* Testing.swift */; };
+		5DDD4651255765710014A69D /* Argument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDD4650255765710014A69D /* Argument.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -70,6 +71,7 @@
 		5D8F1C89254AE24D00BA90A7 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		5D8F1C8A254AE24D00BA90A7 /* Testing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Testing.swift; sourceTree = "<group>"; };
 		5D8F1CA3254AE36800BA90A7 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		5DDD4650255765710014A69D /* Argument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Argument.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +138,7 @@
 				5D8F1C7C254AE24D00BA90A7 /* Variable.swift */,
 				5D8F1C79254AE24D00BA90A7 /* Number.swift */,
 				5D8F1C7E254AE24D00BA90A7 /* Identifier.swift */,
+				5DDD4650255765710014A69D /* Argument.swift */,
 			);
 			path = Nodes;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 				5D8F1C9D254AE24D00BA90A7 /* Parser+ErrorExtension.swift in Sources */,
 				5D8F1C8F254AE24D00BA90A7 /* CodeBlock.swift in Sources */,
 				5D8F1C90254AE24D00BA90A7 /* Number.swift in Sources */,
+				5DDD4651255765710014A69D /* Argument.swift in Sources */,
 				5D8F1C8E254AE24D00BA90A7 /* InfixOperation.swift in Sources */,
 				5D8F1C92254AE24D00BA90A7 /* IfStatement.swift in Sources */,
 				5D8F1C99254AE24D00BA90A7 /* DeclarationParser.swift in Sources */,

@@ -60,6 +60,7 @@ extension CodeBlock {
 
 extension Function {
     var childs: [PrintableTreeNode] {
+        // TODO: - Add arguments to array
         return [block]
     }
     

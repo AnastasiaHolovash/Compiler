@@ -12,17 +12,27 @@ extension Parser {
     // MARK: - Declaration
     func declarationParser() throws -> ASTnode {
     
-        var returnType : Token
-        let returnTypePopToken = getNextToken()
-        
-        // Return Type
-        if case .int = returnTypePopToken {
-            returnType = Token.int
-        } else if case .float = returnTypePopToken {
-            returnType = Token.float
-        } else {
+//        var returnType : Type
+//        let returnTypePopToken = getNextToken()
+        guard canGet, case let .type(returnType) = getNextToken() else {
             throw Error.expected("function return type", position: getTokenPositionInCode())
         }
+        
+//        switch type {
+//        case .int:
+//            returnType = .int
+//        case .float:
+//
+//        }
+//
+//        // Return Type
+//        if case .type = returnTypePopToken {
+//            returnType = .int
+//        } else if case .type = returnTypePopToken {
+//            returnType = .float
+//        } else {
+//            throw Error.expected("function return type", position: getTokenPositionInCode())
+//        }
         
         // Identifier
         guard case let .identifier(identifier) = getNextToken() else {
@@ -31,7 +41,7 @@ extension Parser {
         
         // Function or Variable
         if case .parensOpen = peek().token {
-            return try functionParser(returnType: returnType, identifier: identifier)
+            return try functionDefinitionParser(returnType: returnType, identifier: identifier)
         } else if peek().token == Token.equal || peek().token  == Token.semicolon {
             return try variableDeclarationParser(returnType: returnType, identifier: identifier)
         } else {
@@ -42,7 +52,9 @@ extension Parser {
     
     
     // MARK: - Function Declaration
-    func functionParser(returnType: Token, identifier: String) throws -> ASTnode {
+    
+    // MARK: - Function Definition
+    func functionDefinitionParser(returnType: Type, identifier: String) throws -> ASTnode {
         try check(token: .parensOpen)
         try check(token: .parensClose)
         let codeBlock = try codeBlockParser()
@@ -53,13 +65,13 @@ extension Parser {
             }
         }
         
-        return Function(returnType: returnType, identifier: identifier,
+        return Function(returnType: returnType, arguments: [], identifier: identifier,
                                   block: codeBlock)
     }
     
     
     // MARK: - Variable Declaration
-    func variableDeclarationParser(returnType: Token, identifier: String) throws -> ASTnode {
+    func variableDeclarationParser(returnType: Type, identifier: String) throws -> ASTnode {
         
         // If it goes semicolon after identifier
         guard canGet, case .equal = peek().token else {
