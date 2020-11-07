@@ -66,18 +66,27 @@ extension Parser {
     func variableOverridingParser() throws -> ASTnode {
         
         // Geting identifier
-        guard case let .identifier(identifier) = getNextToken() else {
+        guard case let .identifier(identifier) = peek().token else {
             throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
         
         // Checking if identifier was declared
         for value in stride(from: blockDepth, through: 1, by: -1) {
             if let position = identifiers[value]?[identifier] {
-                try check(token: .equal)
-                let expression = try parseExpression()
-                try check(token: .semicolon)
-                
-                return Variable(identifier: Identifier(name: identifier, position: position), value: expression)
+                if canGet {
+                    if case let .binaryOperation(op) = peek().token {
+                        guard case .divideEqual = op else {
+                            throw Error.expected("\\/= operation", position: getTokenPositionInCode())
+                        }
+                    } else {
+                        _ = getNextToken()
+                        try check(token: .equal)
+                    }
+                    let expression = try parseExpression()
+                    try check(token: .semicolon)
+                    
+                    return Variable(identifier: Identifier(name: identifier, position: position), value: expression)
+                }
             }
         }
         throw Error.noSuchIdentifier(identifier, position: getTokenPositionInCode())

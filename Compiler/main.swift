@@ -13,7 +13,16 @@ import Foundation
 //    adres = 0
 //}
 
-compiler(code: code40)
+let code =
+"""
+int main() {
+    int b = 10;
+    b = b / 5;
+    return b;
+}
+"""
+
+compiler(code: code)
 
 #endif
 

@@ -65,7 +65,6 @@ struct InfixOperation: ASTnode {
         }
         
         code += codeBufer
-        
         code += popRight
         code += popLeft
         return code
@@ -77,20 +76,19 @@ struct InfixOperation: ASTnode {
         
         var code = try rightAndLeftGeneratingCode()
         
-        if .divide == operation {
+        switch operation {
+        case .divide:
             // Dividing: eax / ebx
             code += "cdq\nidiv ebx\n"
-            
-        } else if .multiply == operation {
+        case .multiply:
             // Multipling: eax / ebx
             code += "cdq\nimul eax, ebx\n"
-            
-        } else if .isLessThan == operation {
+        case .isLessThan:
             // Compare: eax & ebx
             code += "cmp eax, ebx\nsetl al\nmovzx eax, al\n"
-            
-        } else {
-            throw Parser.Error.unexpectedError
+        case .divideEqual:
+            // Dividing: eax / ebx
+            code += "cdq\nidiv ebx\n"
         }
         
         // If operation is negative
