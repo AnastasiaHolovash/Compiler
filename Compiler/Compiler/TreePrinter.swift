@@ -108,7 +108,11 @@ extension ReturnStatement {
 
 extension InfixOperation {
     var childs: [PrintableTreeNode] {
-        return [leftNode, rightNode]
+        if operation.rawValue == "/=" {
+            return [rightNode]
+        } else {
+            return [leftNode, rightNode]
+        }
     }
     
     var content: String {

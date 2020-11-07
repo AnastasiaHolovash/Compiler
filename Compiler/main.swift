@@ -22,7 +22,7 @@ int main() {
 }
 """
 
-compiler(code: code)
+_ = compiler(code: code)
 
 #endif
 
