@@ -48,7 +48,7 @@ struct Argument: ASTnode {
 struct FunctionCall: ASTnode {
     
     let name: String
-    let arguments: [Number]
+    let arguments: [ASTnode]
     
     func generatingAsmCode() throws -> String {
         var code = ""

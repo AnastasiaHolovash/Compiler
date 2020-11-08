@@ -39,11 +39,11 @@ extension Parser {
         
         try check(token: .parensOpen)
         while .parensClose != peek().token {
-            guard case let .identifier(identifier) = getNextToken() else {
-                throw Error.expectedIdentifier(position: getTokenPositionInCode())
-            }
             guard case let .type(type) = getNextToken() else {
                 throw Error.expected("type", position: getTokenPositionInCode())
+            }
+            guard case let .identifier(identifier) = getNextToken() else {
+                throw Error.expectedIdentifier(position: getTokenPositionInCode())
             }
             if .comma != peek().token {
                 if .parensClose != peek().token {
@@ -117,11 +117,48 @@ extension Parser {
     
     
     // MARK: - Identifier
-    func identifierParser(position: Int) throws -> ASTnode {
+    func variableIdentifierParser() throws -> ASTnode {
+        
         guard case let .identifier(name) = getNextToken() else {
             throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
-        return VariableIdentifier(name: name, position: position)
+        
+        // Checking if identifier was declared
+        for value in stride(from: blockDepth, through: 1, by: -1) {
+            if let position = Parser.variablesIdentifiers[value]?[name] {
+                return VariableIdentifier(name: name, position: position)
+            }
+        }
+        throw Error.noSuchIdentifier(name, position: getTokenPositionInCode())
     }
     
+    
+    // MARK: - Identifier
+    func functionCallParser() throws -> ASTnode {
+        var args: [ASTnode] = []
+        guard case let .identifier(name) = getNextToken() else {
+            throw Error.expectedIdentifier(position: getTokenPositionInCode())
+        }
+        
+        try check(token: .parensOpen)
+        while .parensClose != peek().token {
+            let expresion = try parseExpression()
+            if .comma != peek().token {
+                if .parensClose != peek().token {
+                    try check(token: .comma)
+                }
+            } else {
+                try check(token: .comma)
+            }
+            args.append(expresion)
+        }
+        try check(token: .parensClose)
+        
+        for item in Parser.functionDeclaredIdentifiers {
+            if name == item.name && args.count == item.arguments.count {
+                return FunctionCall(name: name, arguments: args)
+            }
+        }
+        throw Error.
+    }
 }

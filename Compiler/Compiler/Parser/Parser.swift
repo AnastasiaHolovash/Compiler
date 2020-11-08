@@ -68,6 +68,9 @@ class Parser {
         return tokensStruct[index]
     }
     
+    func peekThroughOne() -> TokenStruct {
+        return tokensStruct[index + 1]
+    }
     
     /**
      A way of checking the element at the current location, but ultimately incrementing the index.

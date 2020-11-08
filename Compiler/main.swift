@@ -15,6 +15,13 @@ import Foundation
 
 let code =
 """
+int SOME(float b, int a);
+
+int SOME(float b, int a) {
+    int c;
+    return 2;
+}
+
 int main() {
     int b = 10;
     b = b / 5;

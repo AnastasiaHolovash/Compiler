@@ -22,7 +22,7 @@ extension Parser {
     
     // MARK: - Value
     func valueParser() throws -> ASTnode {
-        switch (peek().token) {
+        switch peek().token {
         case .numberInt:
             return try intNumberParser()
         case .numberFloat:
@@ -35,15 +35,8 @@ extension Parser {
                 throw Error.expectedNumber(position: (line: line, place: place))
             }
             return try prefixOperationParser()
-        case let .identifier(identifier):
-            
-            // Checking if identifier was declared
-            for value in stride(from: blockDepth, through: 1, by: -1) {
-                if let position = Parser.variablesIdentifiers[value]?[identifier] {
-                    return try identifierParser(position: position)
-                }
-            }
-            throw Error.noSuchIdentifier(identifier, position: getTokenPositionInCode())
+        case .identifier:
+            return .parensOpen == peekThroughOne().token ? try functionCallParser() : try variableIdentifierParser()
         default:
             let (line, place) = tokensStruct[index].position
             throw Error.expectedNumber(position:(line: line, place: place))

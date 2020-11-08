@@ -24,6 +24,9 @@ extension Parser {
         case unexpectedError
         case unknownOperation(String ,position: (line: Int, place: Int))
         case incorrectIfStatement(position: (line: Int, place: Int))
+        case invalidFunctionCall(position: (line: Int, place: Int))
+        case functionWasntDeclar(String, position: (line: Int, place: Int))
+        case functionWasntDefine(String, position: (line: Int, place: Int))
         
         var errorDescription: String? {
             switch self {
@@ -82,6 +85,21 @@ extension Parser {
             case let .incorrectIfStatement(position: (line: line, place: place)):
                 return """
                         Error: Incorrect if statement.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .invalidFunctionCall(position: (line: line, place: place)):
+                return """
+                        Error: Invalid function call.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .functionWasntDeclar(str, position: (line: line, place: place)):
+                return """
+                        Error: Function \(str) was not declar.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .functionWasntDefine(str, position: (line: line, place: place)):
+                return """
+                        Error: Function \(str) was not define.
                             Line: \(line)  Place: \(place)
                        """
             }

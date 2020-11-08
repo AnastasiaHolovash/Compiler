@@ -60,12 +60,13 @@ extension CodeBlock {
 
 extension Function {
     var childs: [PrintableTreeNode] {
-        // TODO: - Add arguments to array
-        return [block]
+        var result: [PrintableTreeNode] = arguments
+        result.append(block)
+        return result
     }
     
     var content: String {
-        return "Func: \"\(identifier)\""
+        return "Defined: \(returnType) \(identifier)"
     }
     
 }
@@ -187,7 +188,7 @@ extension FunctionIdentifier {
     }
     public
     var content: String {
-        return "Declar func: \(type) \"\(name)\""
+        return "Declared: \(type) \"\(name)\""
     }
 }
 
@@ -197,7 +198,7 @@ extension Argument {
     }
     public
     var content: String {
-        return "\"\(name)\" : \(type)"
+        return "Argument: \(type) \(name)"
     }
 }
 
@@ -207,7 +208,7 @@ extension FunctionCall {
     }
     public
     var content: String {
-        return "Call func: \"\(name)\""
+        return "Called: \"\(name)\""
     }
 }
 
