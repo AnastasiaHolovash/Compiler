@@ -12,7 +12,7 @@ import Foundation
 
 struct Function: ASTnode {
     let returnType: Type
-    let arguments: [(String, Type)]
+    let arguments: [Argument]
     let identifier: String
     let block: ASTnode
 

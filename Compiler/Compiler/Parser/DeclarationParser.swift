@@ -11,28 +11,10 @@ extension Parser {
     
     // MARK: - Declaration
     func declarationParser() throws -> ASTnode {
-    
-//        var returnType : Type
-//        let returnTypePopToken = getNextToken()
+
         guard canGet, case let .type(returnType) = getNextToken() else {
             throw Error.expected("function return type", position: getTokenPositionInCode())
         }
-        
-//        switch type {
-//        case .int:
-//            returnType = .int
-//        case .float:
-//
-//        }
-//
-//        // Return Type
-//        if case .type = returnTypePopToken {
-//            returnType = .int
-//        } else if case .type = returnTypePopToken {
-//            returnType = .float
-//        } else {
-//            throw Error.expected("function return type", position: getTokenPositionInCode())
-//        }
         
         // Identifier
         guard case let .identifier(identifier) = getNextToken() else {
@@ -49,24 +31,60 @@ extension Parser {
         }
         
     }
+
     
+    // MARK: - Function Arguments
+    func functionArgumentsParser() throws -> [Argument] {
+        var args: [Argument] = []
+        
+        try check(token: .parensOpen)
+        while .parensClose != peek().token {
+            guard case let .identifier(identifier) = getNextToken() else {
+                throw Error.expectedIdentifier(position: getTokenPositionInCode())
+            }
+            guard case let .type(type) = getNextToken() else {
+                throw Error.expected("type", position: getTokenPositionInCode())
+            }
+            if .comma != peek().token {
+                if .parensClose != peek().token {
+                    try check(token: .comma)
+                }
+            } else {
+                try check(token: .comma)
+            }
+            args.append(Argument(name: identifier, type: type))
+        }
+        try check(token: .parensClose)
+        
+        return args
+    }
     
-    // MARK: - Function Declaration
     
     // MARK: - Function Definition
     func functionDefinitionParser(returnType: Type, identifier: String) throws -> ASTnode {
-        try check(token: .parensOpen)
-        try check(token: .parensClose)
-        let codeBlock = try codeBlockParser()
+    
+        let args = try functionArgumentsParser()
+        let funcIdentifier = FunctionIdentifier(type: returnType, name: identifier, arguments: args)
         
-        if let codeBlock = codeBlock as? CodeBlock {
-            if !(codeBlock.astNodes.last is ReturnStatement) {
-                throw Error.expected("return", position: getTokenPositionInCode())
+        if .semicolon == peek().token {
+            try check(token: .semicolon)
+            
+            Parser.functionDeclaredIdentifiers.append(funcIdentifier)
+            return funcIdentifier
+        } else {
+            let codeBlock = try codeBlockParser()
+            
+            if let codeBlock = codeBlock as? CodeBlock {
+                if !(codeBlock.astNodes.last is ReturnStatement) {
+                    throw Error.expected("return", position: getTokenPositionInCode())
+                }
             }
+            
+            Parser.functionDeclaredIdentifiers.append(funcIdentifier)
+            Parser.functionDefinedIdentifiers.append(funcIdentifier)
+            return Function(returnType: returnType, arguments: args, identifier: identifier,
+                                      block: codeBlock)
         }
-        
-        return Function(returnType: returnType, arguments: [], identifier: identifier,
-                                  block: codeBlock)
     }
     
     
@@ -88,6 +106,7 @@ extension Parser {
         try check(token: .equal)
         let expression = try parseExpression()
         try check(token: .semicolon)
+        
         // If not exist in curent block
         if Parser.variablesIdentifiers[blockDepth]?[identifier] != nil {
             throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())

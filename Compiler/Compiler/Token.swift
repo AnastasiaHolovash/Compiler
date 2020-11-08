@@ -43,6 +43,8 @@ enum Token: Equatable {
     // Lab 4 edition
     case `if`
     case `else`
+    // Lab 5 edition
+    case comma
     
     static var delegate : ThrowCastingError?
     
@@ -103,7 +105,8 @@ enum Token: Equatable {
             "\\)": { _ in .parensClose },
             "\\{": { _ in .curlyOpen },
             "\\}": { _ in .curlyClose },
-            "\\;": { _ in .semicolon }
+            "\\;": { _ in .semicolon },
+            "\\,": { _ in .comma }
         ]
     }
 }
