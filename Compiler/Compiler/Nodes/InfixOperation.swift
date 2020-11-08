@@ -32,7 +32,7 @@ struct InfixOperation: ASTnode {
         let right = try rightNode.generatingAsmCode()
         
         // Left node code generation
-        if leftNode is Number || leftNode is Identifier {
+        if leftNode is Number || leftNode is VariableIdentifier {
             if right.hasSuffix("push eax\n") {
                 codeBufer += "mov eax, \(left)\n"
             } else {
@@ -52,7 +52,7 @@ struct InfixOperation: ASTnode {
         }
         
         // Right node code generation
-        if rightNode is Number || rightNode is Identifier {
+        if rightNode is Number || rightNode is VariableIdentifier {
             code += "mov ebx, \(right)\n"
         } else if right.hasSuffix("push eax\n") {
             code += right

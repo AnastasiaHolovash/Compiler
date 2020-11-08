@@ -77,11 +77,11 @@ extension Parser {
         guard canGet, case .equal = peek().token else {
             try check(token: .semicolon)
             // If not exist in curent block
-            if identifiers[blockDepth]?[identifier] != nil {
+            if Parser.variablesIdentifiers[blockDepth]?[identifier] != nil {
                 throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
             }
-            identifiers[blockDepth]?[identifier] = getNextAdres()
-            return Variable(identifier: Identifier(name: identifier, position: adres), value: nil)
+            Parser.variablesIdentifiers[blockDepth]?[identifier] = Parser.getNextAdres()
+            return Variable(identifier: VariableIdentifier(name: identifier, position: Parser.adres), value: nil)
         }
         
         // If it goes equal after identifier
@@ -89,11 +89,11 @@ extension Parser {
         let expression = try parseExpression()
         try check(token: .semicolon)
         // If not exist in curent block
-        if identifiers[blockDepth]?[identifier] != nil {
+        if Parser.variablesIdentifiers[blockDepth]?[identifier] != nil {
             throw Error.variableAlreadyExist(identifier, position: getTokenPositionInCode())
         }
-        identifiers[blockDepth]?[identifier] = getNextAdres()
-        return Variable(identifier: Identifier(name: identifier, position: adres), value: expression)
+        Parser.variablesIdentifiers[blockDepth]?[identifier] = Parser.getNextAdres()
+        return Variable(identifier: VariableIdentifier(name: identifier, position: Parser.adres), value: expression)
     }
     
     
@@ -102,7 +102,7 @@ extension Parser {
         guard case let .identifier(name) = getNextToken() else {
             throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
-        return Identifier(name: name, position: position)
+        return VariableIdentifier(name: name, position: position)
     }
     
 }

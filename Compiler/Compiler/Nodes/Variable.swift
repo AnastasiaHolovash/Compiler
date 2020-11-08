@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Variable struct
 struct Variable: ASTnode {
-    let identifier: Identifier
+    let identifier: VariableIdentifier
     let value: ASTnode?
     
     /// Interpreter func
@@ -20,7 +20,7 @@ struct Variable: ASTnode {
         
         let val = try value?.generatingAsmCode()
         
-        if value is Number || value is Identifier {
+        if value is Number || value is VariableIdentifier {
             code += """
                     mov eax, \(val ?? "?")\n
                     """

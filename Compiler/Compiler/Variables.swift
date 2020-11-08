@@ -7,21 +7,8 @@
 
 import Foundation
 
-var flagsName = 0
-
-func getNextFlag() -> Int {
-    flagsName += 1
-    return flagsName
+extension ASTnode {
+    
 }
 
-var identifiers: [Int : [String : Int]] = [:]
-var adres: Int = 0
 
-func getNextAdres() -> Int {
-    adres += 4
-    return adres
-}
-
-func getFirstBlockAdres() -> Int {
-    return adres + 4
-}

@@ -18,7 +18,7 @@ struct ReturnStatement: ASTnode {
         
         var code = ""
         
-        if node is Number || node is Identifier {
+        if node is Number || node is VariableIdentifier {
             code = "mov eax, \(try node.generatingAsmCode())\n"
         } else {
             code = try node.generatingAsmCode()

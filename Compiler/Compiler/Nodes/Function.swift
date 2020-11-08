@@ -20,10 +20,11 @@ struct Function: ASTnode {
     func generatingAsmCode() throws -> String {
 
         var code =  """
+                    \n_\(identifier):
                     push ebp
                     mov ebp, esp\n
                     """
-        code += getNextAdres() > 4 ? "sub esp, \(getNextAdres())\n\n" : "\n"
+        code += Parser.getNextAdres() > 4 ? "sub esp, \(Parser.adres)\n\n" : "\n"
         
         code += try block.generatingAsmCode()
         

@@ -39,7 +39,7 @@ extension Parser {
             
             // Checking if identifier was declared
             for value in stride(from: blockDepth, through: 1, by: -1) {
-                if let position = identifiers[value]?[identifier] {
+                if let position = Parser.variablesIdentifiers[value]?[identifier] {
                     return try identifierParser(position: position)
                 }
             }
@@ -72,7 +72,7 @@ extension Parser {
         
         // Checking if identifier was declared
         for value in stride(from: blockDepth, through: 1, by: -1) {
-            if let position = identifiers[value]?[identifier] {
+            if let position = Parser.variablesIdentifiers[value]?[identifier] {
                 if canGet {
                     if case let .binaryOperation(op) = peek().token {
                         guard case .divideEqual = op else {
@@ -85,7 +85,7 @@ extension Parser {
                     let expression = try parseExpression()
                     try check(token: .semicolon)
                     
-                    return Variable(identifier: Identifier(name: identifier, position: position), value: expression)
+                    return Variable(identifier: VariableIdentifier(name: identifier, position: position), value: expression)
                 }
             }
         }

@@ -11,8 +11,9 @@ protocol ASTnode: PrintableTreeNode {
     func generatingAsmCode() throws -> String
 }
 
-// MARK: - PARSER
 class Parser {
+
+    // MARK:- Init
     
     /// List of tokens with.
     let tokensStruct: [TokenStruct]
@@ -25,7 +26,29 @@ class Parser {
         self.tokensStruct = tokensStruct
         self.blockDepth = blockDepth
     }
+
     
+    // MARK:- Statics
+    
+    static var flagsName = 0
+    static var adres: Int = 0
+    
+    static var variablesIdentifiers: [Int : [String : Int]] = [:]
+    static var functionDeclaredIdentifiers: [FunctionIdentifier] = []
+    static var functionDefinedIdentifiers: [FunctionIdentifier] = []
+    
+    static func getNextFlag() -> Int {
+        Parser.flagsName += 1
+        return Parser.flagsName
+    }
+    
+    static func getNextAdres() -> Int {
+        Parser.adres += 4
+        return Parser.adres
+    }
+    
+    
+    // MARK: - Instanc`s
     
     /// Current location of the parsing phase
     var index = 0
@@ -34,7 +57,7 @@ class Parser {
     var canGet: Bool {
         return index < tokensStruct.count ? true : false
     }
-
+    
     
     /**
      A way of checking the element at the current location without incrementing the index.
@@ -56,7 +79,7 @@ class Parser {
         index += 1
         return token
     }
-    
+
     
     // MARK: - Parse
     func parse() throws -> ASTnode {
@@ -78,7 +101,7 @@ class Parser {
                 nodes.append(ifStatement)
             case .curlyOpen:
                 let block = try codeBlockParser()
-                identifiers[blockDepth + 1] = nil
+                Parser.variablesIdentifiers[blockDepth + 1] = nil
                 nodes.append(block)
             default:
                 throw Error.unexpectedExpresion(position: token.position)

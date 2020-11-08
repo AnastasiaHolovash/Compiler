@@ -171,13 +171,43 @@ extension String: PrintableTreeNode {
 
 }
 
-extension Identifier {
+extension VariableIdentifier {
     public var childs: [PrintableTreeNode] {
         return []
     }
     public
     var content: String {
         return "Var: \"\(name)\""
+    }
+}
+
+extension FunctionIdentifier {
+    public var childs: [PrintableTreeNode] {
+        return arguments
+    }
+    public
+    var content: String {
+        return "Declar func: \(type) \"\(name)\""
+    }
+}
+
+extension Argument {
+    public var childs: [PrintableTreeNode] {
+        return []
+    }
+    public
+    var content: String {
+        return "\"\(name)\" : \(type)"
+    }
+}
+
+extension FunctionCall {
+    public var childs: [PrintableTreeNode] {
+        return arguments
+    }
+    public
+    var content: String {
+        return "Call func: \"\(name)\""
     }
 }
 

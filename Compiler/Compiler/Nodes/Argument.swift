@@ -10,10 +10,10 @@ import Foundation
 // MARK: - Argument struct
 
 //struct Argument: ASTnode {
-//    
+//
 //    let name: String
 //    let type: Type
-//    
+//
 //    func generatingAsmCode() throws -> String {
 //        return ""
 //    }

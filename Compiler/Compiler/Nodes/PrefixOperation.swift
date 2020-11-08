@@ -25,7 +25,7 @@ struct PrefixOperation: ASTnode {
         let asmCode = try item.generatingAsmCode()
 
         
-        if item is Number || item is Identifier {
+        if item is Number || item is VariableIdentifier {
             code += sideLeft ? "mov eax, \(asmCode)\n" : "mov ebx, \(asmCode)\n"
             code += sideLeft ? "neg eax\n" : "neg ebx\n"
         } else if var dividing = item as? InfixOperation {
