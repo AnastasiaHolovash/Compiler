@@ -27,6 +27,7 @@ extension Parser {
         case invalidFunctionCall(position: (line: Int, place: Int))
         case functionWasntDeclar(String, position: (line: Int, place: Int))
         case functionWasntDefine(String, position: (line: Int, place: Int))
+        case functionWasDefineBefore(String, position: (line: Int, place: Int))
         
         var errorDescription: String? {
             switch self {
@@ -100,6 +101,11 @@ extension Parser {
             case let .functionWasntDefine(str, position: (line: line, place: place)):
                 return """
                         Error: Function \(str) was not define.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .functionWasDefineBefore(str, position: (line: line, place: place)):
+                return """
+                        Error: Function \(str) was define before.
                             Line: \(line)  Place: \(place)
                        """
             }

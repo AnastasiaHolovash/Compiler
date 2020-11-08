@@ -41,6 +41,7 @@ extension Parser {
         try check(token: .curlyClose)
         let tokens = Array(self.tokensStruct[startIndex..<endIndex])
         Parser.variablesIdentifiers[blockDepth + 1] = [:]
+        Parser.functionDeclaredIdentifiers[blockDepth + 1] = []
         return try Parser(tokensStruct: tokens, blockDepth: blockDepth + 1).parse()
     }
     

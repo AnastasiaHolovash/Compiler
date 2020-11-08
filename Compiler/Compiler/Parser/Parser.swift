@@ -34,7 +34,7 @@ class Parser {
     static var adres: Int = 0
     
     static var variablesIdentifiers: [Int : [String : Int]] = [:]
-    static var functionDeclaredIdentifiers: [FunctionIdentifier] = []
+    static var functionDeclaredIdentifiers: [Int : [FunctionIdentifier]] = [:]
     static var functionDefinedIdentifiers: [FunctionIdentifier] = []
     
     static func getNextFlag() -> Int {
@@ -105,11 +105,13 @@ class Parser {
             case .curlyOpen:
                 let block = try codeBlockParser()
                 Parser.variablesIdentifiers[blockDepth + 1] = nil
+                Parser.functionDeclaredIdentifiers[blockDepth + 1] = nil
                 nodes.append(block)
             default:
                 throw Error.unexpectedExpresion(position: token.position)
             }
         }
+        
         return CodeBlock(astNodes: nodes)
     }
     

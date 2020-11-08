@@ -23,7 +23,7 @@ extension Parser {
         
         // Function or Variable
         if case .parensOpen = peek().token {
-            return try functionDefinitionParser(returnType: returnType, identifier: identifier)
+            return try functionParser(returnType: returnType, identifier: identifier)
         } else if peek().token == Token.equal || peek().token  == Token.semicolon {
             return try variableDeclarationParser(returnType: returnType, identifier: identifier)
         } else {
@@ -60,18 +60,32 @@ extension Parser {
     }
     
     
-    // MARK: - Function Definition
-    func functionDefinitionParser(returnType: Type, identifier: String) throws -> ASTnode {
+    // MARK: - Function
+    func functionParser(returnType: Type, identifier: String) throws -> ASTnode {
     
         let args = try functionArgumentsParser()
         let funcIdentifier = FunctionIdentifier(type: returnType, name: identifier, arguments: args)
         
+        // Declaration
         if .semicolon == peek().token {
             try check(token: .semicolon)
             
-            Parser.functionDeclaredIdentifiers.append(funcIdentifier)
+            // Append funcIdentifier to functionDeclaredIdentifiers with blockDepth
+            var array = Parser.functionDeclaredIdentifiers[blockDepth]
+            array?.append(funcIdentifier)
+            Parser.functionDeclaredIdentifiers[blockDepth] = array
+            
             return funcIdentifier
         } else {
+            // Definition
+            
+            // Chacking if func was Define
+            for item in Parser.functionDefinedIdentifiers {
+                if identifier == item.name {
+                    throw Error.invalidFunctionCall(position: getTokenPositionInCode())
+                }
+            }
+            
             let codeBlock = try codeBlockParser()
             
             if let codeBlock = codeBlock as? CodeBlock {
@@ -80,7 +94,13 @@ extension Parser {
                 }
             }
             
-            Parser.functionDeclaredIdentifiers.append(funcIdentifier)
+            
+            
+            // Append funcIdentifier to functionDeclaredIdentifiers with blockDepth
+            var array = Parser.functionDeclaredIdentifiers[blockDepth]
+            array?.append(funcIdentifier)
+            Parser.functionDeclaredIdentifiers[blockDepth] = array
+            
             Parser.functionDefinedIdentifiers.append(funcIdentifier)
             return Function(returnType: returnType, arguments: args, identifier: identifier,
                                       block: codeBlock)
@@ -139,6 +159,7 @@ extension Parser {
         guard case let .identifier(name) = getNextToken() else {
             throw Error.expectedIdentifier(position: getTokenPositionInCode())
         }
+        let namePosition = getTokenPositionInCode()
         
         try check(token: .parensOpen)
         while .parensClose != peek().token {
@@ -154,11 +175,16 @@ extension Parser {
         }
         try check(token: .parensClose)
         
-        for item in Parser.functionDeclaredIdentifiers {
-            if name == item.name && args.count == item.arguments.count {
-                return FunctionCall(name: name, arguments: args)
+        for arr in Parser.functionDeclaredIdentifiers.values {
+            for item in arr {
+                if name == item.name {
+                    if args.count == item.arguments.count {
+                        return FunctionCall(name: name, arguments: args)
+                    }
+                    throw Error.invalidFunctionCall(position: getTokenPositionInCode())
+                }
             }
         }
-        throw Error.
+        throw Error.functionWasntDeclar(name, position: namePosition)
     }
 }
