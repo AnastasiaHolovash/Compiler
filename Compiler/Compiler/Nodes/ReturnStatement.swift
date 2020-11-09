@@ -12,7 +12,7 @@ import Foundation
 
 struct ReturnStatement: ASTnode {
     let node : ASTnode
-    
+    let funcIdentifier: String
     /// Interpreter func
     func generatingAsmCode() throws -> String {
         
@@ -24,7 +24,7 @@ struct ReturnStatement: ASTnode {
             code = try node.generatingAsmCode()
         }
         code = code.deletingSufix("push eax\n")
-        code += "jmp _return\n"
+        code += "jmp _\(funcIdentifier)_return\n"
         return code
     }
 }

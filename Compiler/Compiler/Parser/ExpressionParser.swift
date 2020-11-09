@@ -51,7 +51,11 @@ extension Parser {
         node = try parseExpression()
         try check(token: .semicolon)
         
-        return ReturnStatement(node: node)
+        guard let funcIdentifier = Parser.currentFuncScope else {
+            throw Error.unexpectedError
+        }
+        
+        return ReturnStatement(node: node, funcIdentifier: funcIdentifier)
     }
     
     

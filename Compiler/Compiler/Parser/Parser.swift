@@ -37,6 +37,7 @@ class Parser {
     static var functionDeclaredIdentifiers: [Int : [FunctionIdentifier]] = [:]
     static var functionDefinedIdentifiers: [FunctionIdentifier] = []
     static var functionCalledIdentifiers: [(identifier: FunctionIdentifier, position: (line: Int, place: Int))] = []
+    static var currentFuncScope: String?
     
     static func getNextFlag() -> Int {
         Parser.flagsName += 1
@@ -44,7 +45,7 @@ class Parser {
     }
     
     static func getNextAdres() -> Int {
-        Parser.adres += 4
+        Parser.adres -= 4
         return Parser.adres
     }
     
@@ -98,6 +99,9 @@ class Parser {
                 nodes.append(returning)
             case .type:
                 let definition = try declarationParser()
+                if definition is Function {
+                    Parser.adres = 0
+                }
                 nodes.append(definition)
             case .identifier:
                 let overriding = try variableOverridingParser()

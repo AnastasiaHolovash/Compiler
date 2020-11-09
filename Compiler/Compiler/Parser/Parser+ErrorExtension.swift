@@ -24,7 +24,7 @@ extension Parser {
         case unexpectedError
         case unknownOperation(String ,position: (line: Int, place: Int))
         case incorrectIfStatement(position: (line: Int, place: Int))
-        case invalidFunctionCall(position: (line: Int, place: Int))
+        case invalidFunctionCall(String, previousDeclaration: String, position: (line: Int, place: Int))
         case functionWasntDeclar(String, position: (line: Int, place: Int))
         case functionWasntDefine(String, position: (line: Int, place: Int))
         case functionWasDefineBefore(String, position: (line: Int, place: Int))
@@ -91,10 +91,12 @@ extension Parser {
                         Error: Incorrect if statement.
                             Line: \(line)  Place: \(place)
                        """
-            case let .invalidFunctionCall(position: (line: line, place: place)):
+            case let .invalidFunctionCall(str, previousDeclaration, position: (line: line, place: place)):
                 return """
-                        Error: Invalid function call.
+                        Error: Invalid call for function \'\(str)\'.
                             Line: \(line)  Place: \(place)
+                        NOTE: declaration was:
+                            \'\(previousDeclaration)\'
                        """
             case let .functionWasntDeclar(str, position: (line: line, place: place)):
                 return """
@@ -115,14 +117,14 @@ extension Parser {
                 return """
                         Error: Conflicting arguments types for \'\(str)\'.
                             Line: \(line)  Place: \(place)
-                        NOTE: previous declaration of \'\(str)\' was:
+                        Note: previous declaration of \'\(str)\' was:
                             \'\(previousDeclaration)\'
                        """
             case let .conflictingReturnTypesFor(str, previousDeclaration, position: (line: line, place: place)):
                 return """
                         Error: Conflicting return types for \'\(str)\'.
                             Line: \(line)  Place: \(place)
-                        NOTE: previous declaration of \'\(str)\' was:
+                        Note: previous declaration of \'\(str)\' was:
                             \'\(previousDeclaration)\'
                        """
             case .funcMainMustBeDefine:

@@ -62,7 +62,8 @@ extension Parser {
     
     // MARK: - Function
     func functionParser(returnType: Type, identifier: String) throws -> ASTnode {
-    
+        let namePosition = getTokenPositionInCode()
+        
         let args = try functionArgumentsParser()
         let funcIdentifier = FunctionIdentifier(type: returnType, name: identifier, arguments: args)
         
@@ -71,7 +72,7 @@ extension Parser {
             try check(token: .semicolon)
             
             // Chacking if func was Declare, if YES - with the same args
-            try chackIfFuncWasDeclare(funcIdentifier: funcIdentifier)
+            try chackIfFuncWasDeclare(funcIdentifier: funcIdentifier, position: namePosition)
             
             // Append funcIdentifier to functionDeclaredIdentifiers with blockDepth
             var array = Parser.functionDeclaredIdentifiers[blockDepth]
@@ -89,7 +90,10 @@ extension Parser {
                 }
             }
             // Chacking if func was Declare, if YES - with the same args
-            try chackIfFuncWasDeclare(funcIdentifier: funcIdentifier)
+            try chackIfFuncWasDeclare(funcIdentifier: funcIdentifier, position: namePosition)
+            
+            Parser.currentFuncScope = identifier
+            Parser.variablesIdentifiers[blockDepth + 1] = createArgsDict(args: args)
             
             let codeBlock = try codeBlockParser()
             
@@ -98,6 +102,8 @@ extension Parser {
                     throw Error.expected("return", position: getTokenPositionInCode())
                 }
             }
+            
+            Parser.currentFuncScope = nil
             
             // Append funcIdentifier to functionDeclaredIdentifiers with blockDepth
             var array = Parser.functionDeclaredIdentifiers[blockDepth]
@@ -110,22 +116,31 @@ extension Parser {
         }
     }
     
+    func createArgsDict(args: [Argument]) -> [String: Int] {
+        var argsDict: [String: Int] = [:]
+        var adres = 8
+        for arg in args {
+            argsDict[arg.name] = adres
+            adres += 4
+        }
+        return argsDict
+    }
     
     /**
      Chacking if func was Declare, if YES - with the same return type,  with the same args.
      */
-    func chackIfFuncWasDeclare(funcIdentifier: FunctionIdentifier) throws {
+    func chackIfFuncWasDeclare(funcIdentifier: FunctionIdentifier, position: (line: Int, place: Int)) throws {
         for arr in Parser.functionDeclaredIdentifiers.values {
             for item in arr {
                 // If func was Declare
                 if funcIdentifier.name == item.name{
                     // with other return type
                     guard funcIdentifier.type == item.type else {
-                        throw Error.conflictingReturnTypesFor(funcIdentifier.name, previousDeclaration: item.getDeclarString(), position: getTokenPositionInCode())
+                        throw Error.conflictingReturnTypesFor(funcIdentifier.name, previousDeclaration: item.getDeclarString(), position: position)
                     }
                     // with other args
                     guard funcIdentifier.arguments == item.arguments else {
-                        throw Error.conflictingArgumentsTypesFor(funcIdentifier.name, previousDeclaration: item.getDeclarString(), position: getTokenPositionInCode())
+                        throw Error.conflictingArgumentsTypesFor(funcIdentifier.name, previousDeclaration: item.getDeclarString(), position: position)
                     }
                 }
             }
@@ -199,6 +214,8 @@ extension Parser {
         }
         try check(token: .parensClose)
         
+//        let functionCall =
+        
         for arr in Parser.functionDeclaredIdentifiers.values {
             for item in arr {
                 if name == item.name {
@@ -206,7 +223,7 @@ extension Parser {
                         Parser.functionCalledIdentifiers.append((item, namePosition))
                         return FunctionCall(name: name, arguments: args)
                     }
-                    throw Error.invalidFunctionCall(position: getTokenPositionInCode())
+                    throw Error.invalidFunctionCall(name, previousDeclaration: item.getDeclarString(), position: getTokenPositionInCode())
                 }
             }
         }

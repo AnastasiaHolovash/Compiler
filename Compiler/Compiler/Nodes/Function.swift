@@ -21,6 +21,7 @@ struct Function: ASTnode {
 
         var code =  """
                     \n_\(identifier):
+                    ; Stack frame for \(identifier)
                     push ebp
                     mov ebp, esp\n
                     """
@@ -29,15 +30,77 @@ struct Function: ASTnode {
         code += try block.generatingAsmCode()
         
         code += """
-                _return:
+                \n_\(identifier)_return:
                 """
         
         code += """
-                \n\nmov esp, ebp
+                \n\n; Restore old EBP for \(identifier)
+                mov esp, ebp
                 pop ebp
-                mov b, eax\n
+                ret
                 """
         
         return code
+    }
+}
+
+
+// MARK: - Function identifier
+
+/// For Function declaration
+struct FunctionIdentifier: ASTnode, Equatable {
+    
+    let type: Type
+    let name: String
+    let arguments: [Argument]
+    
+    func generatingAsmCode() throws -> String {
+        return ""
+    }
+    
+    func getDeclarString() -> String {
+        var str = "\(type) \(name)("
+        for item in arguments {
+            str += "\(item.type) \(item.name), "
+        }
+        str = str.deletingSufix(", ") + ");"
+        return str
+    }
+}
+
+
+// MARK: - Argument
+
+/// Func argument for Function declaration and definition
+struct Argument: ASTnode, Equatable {
+    let name: String
+    let type: Type
+    
+    /// Is compared only type because argument can has different names in C
+    static func == (lhs: Argument, rhs: Argument) -> Bool {
+        return lhs.type == rhs.type ? true : false
+    }
+    
+    func generatingAsmCode() throws -> String {
+        return ""
+    }
+}
+
+
+// MARK: - Function call
+
+struct FunctionCall: ASTnode {
+    
+    let name: String
+    let arguments: [ASTnode]
+    
+    func generatingAsmCode() throws -> String {
+        var code = ""
+        for arg in arguments {
+            let number = try arg.generatingAsmCode()
+            code += "push \(number)\n"
+        }
+        code += "call _\(name)\n"
+        return code + "add esp, \(arguments.count)\n"
     }
 }

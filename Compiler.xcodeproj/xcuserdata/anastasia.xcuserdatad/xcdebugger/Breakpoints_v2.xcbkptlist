@@ -8,14 +8,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "8922A9CF-3B13-4410-AF26-40192FD5E1D6"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Compiler/Compiler/Parser/DeclarationParser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
             landmarkName = "functionCallParser()"
             landmarkType = "7">
          </BreakpointContent>
@@ -23,32 +23,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "443806A1-0458-4A86-AA20-46759ADFEE58"
-            shouldBeEnabled = "Yes"
+            uuid = "7696A533-4858-4E82-B06B-B35F4C1E2434"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Compiler/Compiler/Parser/DeclarationParser.swift"
+            filePath = "Compiler/Compiler/Parser/CodeBlockParesr.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "functionParser(returnType:identifier:)"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "codeBlockParser()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7696A533-4858-4E82-B06B-B35F4C1E2434"
+            uuid = "E110270F-9DE4-4E48-A6CE-28B78F4C0166"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Compiler/Compiler/Parser/CodeBlockParesr.swift"
+            filePath = "Compiler/Compiler/Nodes/Function.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "codeBlockParser()"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
+            landmarkName = "Function"
+            landmarkType = "14">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2002D592-37D1-4479-938C-3DE8AF3B2E43"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Compiler/Compiler/Parser/DeclarationParser.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "functionParser(returnType:identifier:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -17,19 +17,44 @@ let code =
 """
 int SOME(float b, int a);
 
-int maine() {
-    int b = 10;
-    b = SOME(1, 5) / 5;
-    return SOME(1, 1);
+int main() {
+    
+    int simple();
+    
+    int b = simple();
+    b /= 5;
+    b = SOME(6 / 3, 0) / 5;
+    return b;
 }
 
 int SOME(float b, int a) {
     int c;
     return 2;
 }
+
+int simple() {
+    return 1;
+}
 """
 
-_ = compiler(code: code)
+let code1 =
+"""
+int SOME(float b, int a);
+int main() {
+    
+    int simple(int a);
+    
+    int b = 100;
+    return simple(b);
+}
+
+int simple(int a) {
+    int b = 33;
+    return b < a;
+}
+"""
+
+_ = compiler(code: code1)
 
 #endif
 
@@ -69,7 +94,7 @@ func compiler(code: String) -> String {
         let lexerResult = try Lexer(code: code)
         let tokensStruct = lexerResult.tokensStruct
         
-        print(lexerResult.tokensTable)
+//        print(lexerResult.tokensTable)
         
         /**
          Parsing
@@ -101,7 +126,13 @@ func compiler(code: String) -> String {
         {
             int b;
             _asm {
-        \(cpp)
+                call _main
+                jmp _return
+
+            \(cpp)
+
+                _return:
+                mov b, eax\n
             }
             cout << "Answer: " << b << endl;
         }
