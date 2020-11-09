@@ -13,8 +13,6 @@ extension Parser {
     func codeBlockParser() throws -> ASTnode {
         
         try check(token: .curlyOpen)
-        
-//        depth = 1
         var depth = 1
         let startIndex = index
         

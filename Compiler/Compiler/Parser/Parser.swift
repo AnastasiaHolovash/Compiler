@@ -36,6 +36,7 @@ class Parser {
     static var variablesIdentifiers: [Int : [String : Int]] = [:]
     static var functionDeclaredIdentifiers: [Int : [FunctionIdentifier]] = [:]
     static var functionDefinedIdentifiers: [FunctionIdentifier] = []
+    static var functionCalledIdentifiers: [(identifier: FunctionIdentifier, position: (line: Int, place: Int))] = []
     
     static func getNextFlag() -> Int {
         Parser.flagsName += 1
@@ -87,6 +88,8 @@ class Parser {
     // MARK: - Parse
     func parse() throws -> ASTnode {
         var nodes: [ASTnode] = []
+        Parser.functionDeclaredIdentifiers[blockDepth] = []
+
         while canGet {
             let token = peek()
             switch token.token {
@@ -111,8 +114,26 @@ class Parser {
                 throw Error.unexpectedExpresion(position: token.position)
             }
         }
+
+        if blockDepth == 0 {
+            try Parser.chackIfAllCalledFuncsWasDefine()
+        }
         
         return CodeBlock(astNodes: nodes)
+    }
+    
+    
+    static func chackIfAllCalledFuncsWasDefine() throws {
+        
+        for item in Parser.functionCalledIdentifiers {
+            if !Parser.functionDefinedIdentifiers.contains(item.identifier) {
+                throw Error.functionWasntDefine(item.identifier.name, position: item.position)
+            }
+        }
+        
+        if !Parser.functionDefinedIdentifiers.contains(FunctionIdentifier(type: .float, name: "main", arguments: [])) && !Parser.functionDefinedIdentifiers.contains(FunctionIdentifier(type: .int, name: "main", arguments: [])) {
+            throw Error.funcMainMustBeDefine
+        }
     }
     
 }

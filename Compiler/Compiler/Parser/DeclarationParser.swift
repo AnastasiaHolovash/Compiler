@@ -70,6 +70,9 @@ extension Parser {
         if .semicolon == peek().token {
             try check(token: .semicolon)
             
+            // Chacking if func was Declare, if YES - with the same args
+            try chackIfFuncWasDeclare(funcIdentifier: funcIdentifier)
+            
             // Append funcIdentifier to functionDeclaredIdentifiers with blockDepth
             var array = Parser.functionDeclaredIdentifiers[blockDepth]
             array?.append(funcIdentifier)
@@ -82,9 +85,11 @@ extension Parser {
             // Chacking if func was Define
             for item in Parser.functionDefinedIdentifiers {
                 if identifier == item.name {
-                    throw Error.invalidFunctionCall(position: getTokenPositionInCode())
+                    throw Error.functionWasDefineBefore(identifier, position: getTokenPositionInCode())
                 }
             }
+            // Chacking if func was Declare, if YES - with the same args
+            try chackIfFuncWasDeclare(funcIdentifier: funcIdentifier)
             
             let codeBlock = try codeBlockParser()
             
@@ -93,8 +98,6 @@ extension Parser {
                     throw Error.expected("return", position: getTokenPositionInCode())
                 }
             }
-            
-            
             
             // Append funcIdentifier to functionDeclaredIdentifiers with blockDepth
             var array = Parser.functionDeclaredIdentifiers[blockDepth]
@@ -107,6 +110,27 @@ extension Parser {
         }
     }
     
+    
+    /**
+     Chacking if func was Declare, if YES - with the same return type,  with the same args.
+     */
+    func chackIfFuncWasDeclare(funcIdentifier: FunctionIdentifier) throws {
+        for arr in Parser.functionDeclaredIdentifiers.values {
+            for item in arr {
+                // If func was Declare
+                if funcIdentifier.name == item.name{
+                    // with other return type
+                    guard funcIdentifier.type == item.type else {
+                        throw Error.conflictingReturnTypesFor(funcIdentifier.name, previousDeclaration: item.getDeclarString(), position: getTokenPositionInCode())
+                    }
+                    // with other args
+                    guard funcIdentifier.arguments == item.arguments else {
+                        throw Error.conflictingArgumentsTypesFor(funcIdentifier.name, previousDeclaration: item.getDeclarString(), position: getTokenPositionInCode())
+                    }
+                }
+            }
+        }
+    }
     
     // MARK: - Variable Declaration
     func variableDeclarationParser(returnType: Type, identifier: String) throws -> ASTnode {
@@ -179,6 +203,7 @@ extension Parser {
             for item in arr {
                 if name == item.name {
                     if args.count == item.arguments.count {
+                        Parser.functionCalledIdentifiers.append((item, namePosition))
                         return FunctionCall(name: name, arguments: args)
                     }
                     throw Error.invalidFunctionCall(position: getTokenPositionInCode())

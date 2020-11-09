@@ -15,12 +15,14 @@ import Foundation
 
 let code =
 """
-int main() {
+int SOME(float b, int a);
+
+int maine() {
     int b = 10;
     b = SOME(1, 5) / 5;
     return SOME(1, 1);
 }
-int SOME(float b, int a);
+
 int SOME(float b, int a) {
     int c;
     return 2;

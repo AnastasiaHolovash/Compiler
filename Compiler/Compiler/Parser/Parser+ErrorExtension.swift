@@ -28,6 +28,9 @@ extension Parser {
         case functionWasntDeclar(String, position: (line: Int, place: Int))
         case functionWasntDefine(String, position: (line: Int, place: Int))
         case functionWasDefineBefore(String, position: (line: Int, place: Int))
+        case conflictingArgumentsTypesFor(String, previousDeclaration: String, position: (line: Int, place: Int))
+        case conflictingReturnTypesFor(String, previousDeclaration: String, position: (line: Int, place: Int))
+        case funcMainMustBeDefine
         
         var errorDescription: String? {
             switch self {
@@ -95,19 +98,35 @@ extension Parser {
                        """
             case let .functionWasntDeclar(str, position: (line: line, place: place)):
                 return """
-                        Error: Function \(str) was not declar.
+                        Error: Function \'\(str)\' was not declar.
                             Line: \(line)  Place: \(place)
                        """
             case let .functionWasntDefine(str, position: (line: line, place: place)):
                 return """
-                        Error: Function \(str) was not define.
+                        Error: Function \'\(str)\' was not define.
                             Line: \(line)  Place: \(place)
                        """
             case let .functionWasDefineBefore(str, position: (line: line, place: place)):
                 return """
-                        Error: Function \(str) was define before.
+                        Error: Function \'\(str)\' was define before.
                             Line: \(line)  Place: \(place)
                        """
+            case let .conflictingArgumentsTypesFor(str, previousDeclaration, position: (line: line, place: place)):
+                return """
+                        Error: Conflicting arguments types for \'\(str)\'.
+                            Line: \(line)  Place: \(place)
+                        NOTE: previous declaration of \'\(str)\' was:
+                            \'\(previousDeclaration)\'
+                       """
+            case let .conflictingReturnTypesFor(str, previousDeclaration, position: (line: line, place: place)):
+                return """
+                        Error: Conflicting return types for \'\(str)\'.
+                            Line: \(line)  Place: \(place)
+                        NOTE: previous declaration of \'\(str)\' was:
+                            \'\(previousDeclaration)\'
+                       """
+            case .funcMainMustBeDefine:
+                return "Error: Func \'main\' must be define."
             }
         }
     }
