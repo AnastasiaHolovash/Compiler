@@ -20,7 +20,7 @@ struct Function: ASTnode {
     func generatingAsmCode() throws -> String {
 
         var code =  """
-                    \n_\(identifier):
+                    \n\n_\(identifier):
                     ; Stack frame for \(identifier)
                     push ebp
                     mov ebp, esp\n

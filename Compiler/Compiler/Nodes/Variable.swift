@@ -35,9 +35,7 @@ struct Variable: ASTnode {
         }
         
         // Writing variable value to dedicated space in the stack.
-        code += """
-                mov[ebp - \(identifier.position)], eax\n
-                """
+        code += identifier.position > 0 ? "mov[ebp + \(identifier.position)], eax\n" : "mov[ebp - \(identifier.position * -1)], eax\n"
         
         return code
     }

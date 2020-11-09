@@ -16,6 +16,6 @@ struct VariableIdentifier: ASTnode {
     let position: Int
     
     func generatingAsmCode() throws -> String {
-        return "[ebp - \(position)]"
+        return position > 0 ? "[ebp + \(position)]" : "[ebp - \(position * -1)]"
     }
 }

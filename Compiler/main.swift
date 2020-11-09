@@ -127,9 +127,7 @@ func compiler(code: String) -> String {
             int b;
             _asm {
                 call _main
-                jmp _return
-
-            \(cpp)
+                jmp _return\(cpp)
 
                 _return:
                 mov b, eax\n
