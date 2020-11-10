@@ -40,11 +40,12 @@ int simple() {
 let code1 =
 """
 int SOME(float b, int a);
+int someVAR = 44;
 int main() {
     
     int simple(int a);
     
-    int b = 100;
+    int b = someVAR;
     return simple(b);
 }
 

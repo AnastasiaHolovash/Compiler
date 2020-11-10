@@ -147,8 +147,13 @@ extension Parser {
         }
     }
     
+    
     // MARK: - Variable Declaration
     func variableDeclarationParser(returnType: Type, identifier: String) throws -> ASTnode {
+        
+        guard blockDepth > 0 else {
+            throw Error.incorrectDeclarationInGlobalScope(identifier, position: getTokenPositionInCode())
+        }
         
         // If it goes semicolon after identifier
         guard canGet, case .equal = peek().token else {
@@ -213,9 +218,7 @@ extension Parser {
             args.append(expresion)
         }
         try check(token: .parensClose)
-        
-//        let functionCall =
-        
+                
         for arr in Parser.functionDeclaredIdentifiers.values {
             for item in arr {
                 if name == item.name {

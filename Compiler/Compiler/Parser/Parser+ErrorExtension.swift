@@ -31,6 +31,7 @@ extension Parser {
         case conflictingArgumentsTypesFor(String, previousDeclaration: String, position: (line: Int, place: Int))
         case conflictingReturnTypesFor(String, previousDeclaration: String, position: (line: Int, place: Int))
         case funcMainMustBeDefine
+        case incorrectDeclarationInGlobalScope(String, position: (line: Int, place: Int))
         
         var errorDescription: String? {
             switch self {
@@ -129,6 +130,11 @@ extension Parser {
                        """
             case .funcMainMustBeDefine:
                 return "Error: Func \'main\' must be define."
+            case let .incorrectDeclarationInGlobalScope(str, position: (line: line, place: place)):
+                return """
+                        Error: Declaration \'\(str)\' in global scope.
+                            Line: \(line)  Place: \(place)
+                       """
             }
         }
     }
