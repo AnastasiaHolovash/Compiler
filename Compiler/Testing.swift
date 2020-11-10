@@ -369,3 +369,166 @@ int main() {
     return b;
 }
 """
+
+
+// MARK: - Lab5
+
+let testsLab5 = [code50, code51, code52, code53, code54, code55, code56]
+
+//Error: Function 'simple' was not declar.
+//    Line: 4  Place: 12
+let code50 =
+"""
+int SOME(float b, int a);
+
+int main() {
+        
+    int b = simple();
+    b /= 5;
+    return b;
+}
+
+int simple() {
+    return 1;
+}
+"""
+
+//Error: Function 'SOME' was not define.
+//    Line: 6  Place: 11
+let code51 =
+"""
+int SOME(float b, int a);
+
+int main() {
+    
+    int simple();
+    int b = simple();
+    return SOME(3, 4);
+}
+
+int simple() {
+    return 1;
+}
+"""
+
+//Error: Conflicting arguments types for 'SOME'.
+//    Line: 6  Place: 4
+//Note: Previous declaration of 'SOME' was:
+//    'int SOME(float b, int a);'
+
+let code52 =
+"""
+int SOME(float b, int a);
+
+int main() {
+    int b = 22 < SOME(3, 4);
+    return b;
+}
+
+int SOME() {
+    return 1;
+}
+"""
+
+//Error: Conflicting arguments types for 'SOME'.
+//    Line: 6  Place: 4
+//Note: Previous declaration of 'SOME' was:
+//    'int SOME(float b, int a);'
+let code53 =
+"""
+int SOME(float b, int a);
+
+int main() {
+    int b = 22 < SOME(10 / 2, 4);
+    return b;
+}
+
+int SOME(int some1, int some2) {
+    int newSome = some1 * some1;
+    return newSome;
+}
+"""
+
+//Error: Conflicting return types for 'SOME'.
+//    Line: 6  Place: 6
+//Note: Previous declaration of 'SOME' was:
+//    'int SOME(float b, int a);'
+let code54 =
+"""
+int SOME(float b, int a);
+
+int main() {
+    int b = 22 < SOME(10 / 2, 4);
+    return b;
+}
+
+float SOME(float some1, int some2) {
+    int newSome = some1 * some1;
+    return newSome;
+}
+"""
+
+//Error: Invalid call for function 'SOME'.
+//    Line: 3  Place: 28
+//NOTE: Declaration was:
+//    'int SOME(float b, int a);'
+let code55 =
+"""
+int SOME(float b, int a);
+
+int main() {
+    int b = 22 < SOME(10 / 2);
+    return b;
+}
+
+int SOME(float some1, int some2) {
+    int newSome = some1 * some1;
+    return newSome;
+}
+"""
+
+//Error: Function 'expression' was define before.
+//    Line: 10  Place: 3
+let code56 =
+"""
+int expression(float b, int a);
+
+int expression(float b, int a){
+    int result = -(b / -a) * 5 < 2;
+    return result;
+}
+
+int main() {
+    int b = 22 < expression(10, 2);
+    return b;
+}
+
+int expression(float some1, int some2) {
+    int newSome = some1 * some1;
+    return newSome;
+}
+"""
+
+let code60 =
+"""
+int SOME(float b, int a);
+
+int main() {
+    
+    int simple();
+    
+    int b = simple();
+    b /= 5;
+    b = SOME(6 / 3, 0) / 5;
+    return b;
+}
+
+int SOME(float b, int a) {
+    int c;
+    return 2;
+}
+
+int simple() {
+    return 1;
+}
+"""

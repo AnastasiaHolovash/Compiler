@@ -24,6 +24,7 @@ extension Parser {
         case unexpectedError
         case unknownOperation(String ,position: (line: Int, place: Int))
         case incorrectIfStatement(position: (line: Int, place: Int))
+        
         case invalidFunctionCall(String, previousDeclaration: String, position: (line: Int, place: Int))
         case functionWasntDeclar(String, position: (line: Int, place: Int))
         case functionWasntDefine(String, position: (line: Int, place: Int))
@@ -96,7 +97,7 @@ extension Parser {
                 return """
                         Error: Invalid call for function \'\(str)\'.
                             Line: \(line)  Place: \(place)
-                        NOTE: declaration was:
+                        NOTE: Declaration was:
                             \'\(previousDeclaration)\'
                        """
             case let .functionWasntDeclar(str, position: (line: line, place: place)):
@@ -118,14 +119,14 @@ extension Parser {
                 return """
                         Error: Conflicting arguments types for \'\(str)\'.
                             Line: \(line)  Place: \(place)
-                        Note: previous declaration of \'\(str)\' was:
+                        Note: Previous declaration of \'\(str)\' was:
                             \'\(previousDeclaration)\'
                        """
             case let .conflictingReturnTypesFor(str, previousDeclaration, position: (line: line, place: place)):
                 return """
                         Error: Conflicting return types for \'\(str)\'.
                             Line: \(line)  Place: \(place)
-                        Note: previous declaration of \'\(str)\' was:
+                        Note: Previous declaration of \'\(str)\' was:
                             \'\(previousDeclaration)\'
                        """
             case .funcMainMustBeDefine:

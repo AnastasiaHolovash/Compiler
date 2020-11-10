@@ -8,10 +8,15 @@
 #if DEBUG
 import Foundation
 
-//for test in testsLab1 {
-//    compiler(code: test)
-//    adres = 0
-//}
+for test in testsLab5 {
+    compiler(code: test)
+    Parser.adres = 0
+    Parser.flagsName = 0
+    Parser.functionCalledIdentifiers = []
+    Parser.functionDeclaredIdentifiers = [:]
+    Parser.functionDefinedIdentifiers = []
+    print("\n\n")
+}
 
 let code =
 """
@@ -55,7 +60,7 @@ int simple(int a) {
 }
 """
 
-_ = compiler(code: code1)
+//_ = compiler(code: code55)
 
 #endif
 
