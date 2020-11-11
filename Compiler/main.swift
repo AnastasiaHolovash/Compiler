@@ -24,6 +24,7 @@ int SOME(int a);
 
 int main() {
     if (1) SOME(3);
+    else SOME(5);
     int b = 22 < SOME(3);
     return b;
 }
