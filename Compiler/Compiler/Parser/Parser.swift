@@ -104,8 +104,14 @@ class Parser {
                 }
                 nodes.append(definition)
             case .identifier:
-                let overriding = try variableOverridingParser()
-                nodes.append(overriding)
+                var identifier: ASTnode
+                if case .parensOpen = peekThroughOne().token {
+                    identifier = try functionCallParser()
+                    try check(token: .semicolon)
+                } else {
+                    identifier = try variableOverridingParser()
+                }
+                nodes.append(identifier)
             case .if:
                 let ifStatement = try ifStatementParser()
                 nodes.append(ifStatement)

@@ -8,21 +8,22 @@
 #if DEBUG
 import Foundation
 
-for test in testsLab5 {
-    _ = compiler(code: test)
-    Parser.adres = 0
-    Parser.flagsName = 0
-    Parser.functionCalledIdentifiers = []
-    Parser.functionDeclaredIdentifiers = [:]
-    Parser.functionDefinedIdentifiers = []
-    print("\n\n")
-}
+//for test in testsLab5 {
+//    _ = compiler(code: test)
+//    Parser.adres = 0
+//    Parser.flagsName = 0
+//    Parser.functionCalledIdentifiers = []
+//    Parser.functionDeclaredIdentifiers = [:]
+//    Parser.functionDefinedIdentifiers = []
+//    print("\n\n")
+//}
 
 let code =
 """
 int SOME(int a);
 
 int main() {
+    if (1) SOME(3);
     int b = 22 < SOME(3);
     return b;
 }
@@ -33,7 +34,7 @@ int SOME(int a) {
 }
 """
 
-_ = compiler(code: code57)
+_ = compiler(code: code)
 
 #endif
 

@@ -16,14 +16,20 @@ extension Parser {
         let expression = try parseExpression()
         try check(token: .parensClose)
         
-        // TODO: - code block or expresion
+        // code block or expresion
         if canGet {
             switch peek().token {
             case .return:
                 let statement = try returningParser()
                 return IfStatement(condition: expression, ifBlock: statement, elseBlock: nil)
             case .identifier:
-                let statement = try variableOverridingParser()
+                let statement: ASTnode
+                if case .parensOpen = peekThroughOne().token {
+                    statement = try functionCallParser()
+                    try check(token: .semicolon)
+                } else {
+                    statement = try variableOverridingParser()
+                }
                 return IfStatement(condition: expression, ifBlock: statement, elseBlock: nil)
             default:
                 // if-block parsing
