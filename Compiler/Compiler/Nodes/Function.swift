@@ -97,10 +97,15 @@ struct FunctionCall: ASTnode {
     func generatingAsmCode() throws -> String {
         var code = ""
         for arg in arguments {
-            let number = try arg.generatingAsmCode()
-            code += "push \(number)\n"
+            let argumentCode = try arg.generatingAsmCode()
+            if arg is Number || arg is VariableIdentifier {
+                code += "push \(argumentCode)\n"
+            } else {
+                code += argumentCode
+                code += "push eax\n"
+            }
         }
         code += "call _\(name)\n"
-        return code + "add esp, \(arguments.count)\n"
+        return code + "add esp, \(arguments.count * 4)\n"
     }
 }

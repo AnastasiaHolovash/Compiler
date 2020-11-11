@@ -9,7 +9,7 @@
 import Foundation
 
 for test in testsLab5 {
-    compiler(code: test)
+    _ = compiler(code: test)
     Parser.adres = 0
     Parser.flagsName = 0
     Parser.functionCalledIdentifiers = []
@@ -20,47 +20,20 @@ for test in testsLab5 {
 
 let code =
 """
-int SOME(float b, int a);
+int SOME(int a);
 
 int main() {
-    
-    int simple();
-    
-    int b = simple();
-    b /= 5;
-    b = SOME(6 / 3, 0) / 5;
+    int b = 22 < SOME(3);
     return b;
 }
 
-int SOME(float b, int a) {
-    int c;
-    return 2;
-}
-
-int simple() {
+int SOME(int a) {
+    a = 22;
     return 1;
 }
 """
 
-let code1 =
-"""
-int SOME(float b, int a);
-int someVAR = 44;
-int main() {
-    
-    int simple(int a);
-    
-    int b = someVAR;
-    return simple(b);
-}
-
-int simple(int a) {
-    int b = 33;
-    return b < a;
-}
-"""
-
-//_ = compiler(code: code55)
+_ = compiler(code: code57)
 
 #endif
 
@@ -74,9 +47,9 @@ final class AppDelegate: ApplicationDelegate {
     
     func application(_ application: Application, didFinishLaunchingWithOptions launchOptions: [Application.LaunchOptionsKey: Any]?) -> Bool {
         do {
-            let code = try String(contentsOfFile: "4-05-Swift-IV-82-Holovash.txt", encoding: String.Encoding.utf8)
+            let code = try String(contentsOfFile: "5-05-Swift-IV-82-Holovash.txt", encoding: String.Encoding.utf8)
             let cppCode = compiler(code: code)
-            try cppCode.write(toFile: "4-05-Swift-IV-82-Holovash.cpp", atomically: false, encoding: String.Encoding.utf8)
+            try cppCode.write(toFile: "5-05-Swift-IV-82-Holovash.cpp", atomically: false, encoding: String.Encoding.utf8)
         } catch let error {
             print(error.localizedDescription)
         }
@@ -97,7 +70,7 @@ func compiler(code: String) -> String {
         /**
         Lexing
         */
-        let lexerResult = try Lexer(code: code)
+        let lexerResult = Lexer(code: code)
         let tokensStruct = lexerResult.tokensStruct
         
 //        print(lexerResult.tokensTable)

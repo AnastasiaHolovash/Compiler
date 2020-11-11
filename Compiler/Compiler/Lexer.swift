@@ -34,21 +34,20 @@ class Lexer: ThrowCastingError {
     func throwCastingError() throws {
         throw Parser.Error.expectedNumber(position: curentPosition)
     }
+    
     func unknownOperation(op: String) throws {
         throw Parser.Error.unknownOperation(op, position: curentPosition)
     }
     
-    init(code: String) throws {
+    
+    init(code: String) {
         
         Token.delegate = self
         var curentPlace = 0
         var curentLine = 1
         
-//        code.enumerateLines { (lineConstant, _) throws in
-        let splitedString = code.split(separator: "\n")
-        try splitedString.forEach { (subString) in
-            let lineConstant = String(subString)
-
+        code.enumerateLines { (lineConstant, _) in
+            
             var line = lineConstant
             curentPlace = line.trimWhitespace()
             
@@ -58,17 +57,20 @@ class Lexer: ThrowCastingError {
                 line = String(line[prefix.endIndex...])
                 
                 self.curentPosition = (line: curentLine, place: curentPlace)
-                
-                guard let tokenGeter = Token.tokenGeter[regex], let token = try tokenGeter(prefix) else {
-                        fatalError("")
+                do {
+                    guard let tokenGeter = Token.tokenGeter[regex], let token = try tokenGeter(prefix) else {
+                            fatalError("")
+                    }
+                    self.tokensStruct.append(TokenStruct(token: token, position: (line: curentLine, place: curentPlace)))
+                    curentPlace += line.trimWhitespace()
+                    curentPlace += prefix.count
+                    self.tokensTable += "\n\(prefix) - \(token)"
+                } catch let error {
+                    if let error = error as? Parser.Error {
+                        print(error.localizedDescription)
+                    }
                 }
-                self.tokensStruct.append(TokenStruct(token: token, position: (line: curentLine, place: curentPlace)))
-                curentPlace += line.trimWhitespace()
-                curentPlace += prefix.count
-                self.tokensTable += "\n\(prefix) - \(token)"
-                
             }
-            
             curentLine += 1
         }
         tokensTable += "\n"

@@ -509,26 +509,97 @@ int expression(float some1, int some2) {
 }
 """
 
-let code60 =
+//Error: A variable with name 'a' already exist.
+//    Line: 7  Place: 14
+let code556 =
 """
-int SOME(float b, int a);
+int SOME(int a);
 
 int main() {
-    
-    int simple();
-    
-    int b = simple();
-    b /= 5;
-    b = SOME(6 / 3, 0) / 5;
+    int b = 22 < SOME(3);
     return b;
 }
 
-int SOME(float b, int a) {
-    int c;
-    return 2;
+int SOME(int a) {
+    int a = 22;
+    return 1;
+}
+"""
+
+//int getGreater(int first, int sesond){
+//    if (first < sesond) return sesond;
+//    else return first;
+//}
+let code57 =
+"""
+int function(int bigParameter) {
+    int thousand = 1000;
+    {
+        if (thousand) thousand /= 10;
+        if (bigParameter < thousand)
+            bigParameter = - bigParameter * thousand;
+    }
+    return bigParameter;
 }
 
-int simple() {
-    return 1;
+int getGreater(int first, int sesond){
+    if (first < sesond){
+        return sesond;
+    } else {
+        return first;
+    }
+    return 0;
+}
+
+int main() {
+    int a = 100;
+    int b = 10;
+
+    return function(getGreater(a, b));
+}
+"""
+
+let code58 =
+"""
+int main() {
+    int multiply(int a, int b, int c, int d);
+
+    int a = 0x1 * 500 / 10;
+    if (a < 5) {
+        a = multiply(1, 2, 3, 0);
+    } else if (5 < a) {
+        int multiply = multiply(1, 2, 3, 4);
+        if (multiply) return multiply;
+    } else {
+        a = -multiply(1, 2, 3, 4);
+    }
+    return a;
+}
+
+int multiply(int a, int b, int c, int d) {
+    int n = a * b * d * c;
+    return n;
+}
+"""
+
+let code59 =
+"""
+int linearVelocity(float period, int radius);
+float getPi();
+
+int main() {
+    int b = 900;
+    b /= getPi();
+    int result = linearVelocity(2.5, 6 / 3) < b;
+    return result;
+}
+
+int linearVelocity(float T, int r) {
+    int n = 2 * getPi() * r / T;
+    return n;
+}
+
+float getPi() {
+    return 3.14;
 }
 """
