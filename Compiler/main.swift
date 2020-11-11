@@ -35,7 +35,7 @@ int SOME(int a) {
 }
 """
 
-_ = compiler(code: code)
+_ = compiler(code: code59)
 
 #endif
 
