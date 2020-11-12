@@ -112,7 +112,7 @@ extension Parser {
             
             Parser.functionDefinedIdentifiers.append(funcIdentifier)
             return Function(returnType: returnType, arguments: args, identifier: identifier,
-                                      block: codeBlock)
+                            block: codeBlock, stackSize: abs(Parser.adres))
         }
     }
     

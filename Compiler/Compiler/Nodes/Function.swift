@@ -26,7 +26,7 @@ struct Function: ASTnode {
                     push ebp
                     mov ebp, esp\n
                     """
-        code += Parser.adres < 0 ? "sub esp, \(Parser.adres * -1)\n\n" : "\n"
+        code += stackSize > 0 ? "sub esp, \(stackSize)\n\n" : "\n"
         _ = Parser.variablesIdentifiers
         
         code += try block.generatingAsmCode()
