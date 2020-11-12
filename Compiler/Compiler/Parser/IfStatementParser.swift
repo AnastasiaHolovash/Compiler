@@ -24,7 +24,7 @@ extension Parser {
             switch peek().token {
             case .return:
                 firstBlock = try returningParser()
-                return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: nil)
+//                return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: nil)
             case .identifier:
 //                statement: ASTnode
                 if case .parensOpen = peekThroughOne().token {

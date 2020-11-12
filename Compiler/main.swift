@@ -23,8 +23,11 @@ let code =
 int SOME(int a);
 
 int main() {
-    if (1) SOME(3);
-    else SOME(5);
+    if (1) {
+        return SOME(3);
+    } else {
+        return SOME(5);
+    }
     int b = 22 < SOME(3);
     return b;
 }
@@ -34,6 +37,7 @@ int SOME(int a) {
     return 1;
 }
 """
+
 
 _ = compiler(code: code59)
 

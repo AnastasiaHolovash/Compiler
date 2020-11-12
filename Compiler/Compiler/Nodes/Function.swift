@@ -15,6 +15,7 @@ struct Function: ASTnode {
     let arguments: [Argument]
     let identifier: String
     let block: ASTnode
+    let stackSize: Int
 
     /// Interpreter func
     func generatingAsmCode() throws -> String {
@@ -25,7 +26,8 @@ struct Function: ASTnode {
                     push ebp
                     mov ebp, esp\n
                     """
-        code += Parser.getNextAdres() > 4 ? "sub esp, \(Parser.adres)\n\n" : "\n"
+        code += Parser.adres < 0 ? "sub esp, \(Parser.adres * -1)\n\n" : "\n"
+        _ = Parser.variablesIdentifiers
         
         code += try block.generatingAsmCode()
         
@@ -93,6 +95,9 @@ struct FunctionCall: ASTnode {
     
     let name: String
     let arguments: [ASTnode]
+    
+    /// Identifier of side (Left side if true, Right side if false)
+    var sideLeft = true
     
     func generatingAsmCode() throws -> String {
         var code = ""

@@ -526,10 +526,7 @@ int SOME(int a) {
 }
 """
 
-//int getGreater(int first, int sesond){
-//    if (first < sesond) return sesond;
-//    else return first;
-//}
+// TRUE 100
 let code57 =
 """
 int function(int bigParameter) {
@@ -543,11 +540,8 @@ int function(int bigParameter) {
 }
 
 int getGreater(int first, int sesond){
-    if (first < sesond){
-        return sesond;
-    } else {
-        return first;
-    }
+    if (first < sesond) return sesond;
+    else return first;
     return 0;
 }
 
@@ -559,6 +553,7 @@ int main() {
 }
 """
 
+// TRUE 24
 let code58 =
 """
 int main() {
@@ -582,6 +577,7 @@ int multiply(int a, int b, int c, int d) {
 }
 """
 
+// TRUE 1
 let code59 =
 """
 int linearVelocity(float period, int radius);
@@ -589,13 +585,13 @@ float getPi();
 
 int main() {
     int b = 900;
-    b /= getPi();
+    b /= 3;
     int result = linearVelocity(2.5, 6 / 3) < b;
     return result;
 }
 
 int linearVelocity(float T, int r) {
-    int n = 2 * getPi() * r / T;
+    int n = getPi() * 2 * r / T;
     return n;
 }
 
