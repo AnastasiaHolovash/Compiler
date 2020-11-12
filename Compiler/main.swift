@@ -38,8 +38,29 @@ int SOME(int a) {
 }
 """
 
+let code5 =
+"""
+int linearVelocity(float period, int radius);
+float getPi();
 
-_ = compiler(code: code59)
+int main() {
+    int b = 900;
+    b /= getPi();
+    int result = linearVelocity(2.5, 6 / 3) < b;
+    return result;
+}
+
+int linearVelocity(float T, int r) {
+    int n = getPi() * 2 * r / T;
+    return n;
+}
+
+float getPi() {
+    return 3.14;
+}
+"""
+
+_ = compiler(code: code5)
 
 #endif
 

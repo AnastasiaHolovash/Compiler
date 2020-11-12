@@ -111,8 +111,7 @@ extension Parser {
             Parser.functionDeclaredIdentifiers[blockDepth] = array
             
             Parser.functionDefinedIdentifiers.append(funcIdentifier)
-            return Function(returnType: returnType, arguments: args, identifier: identifier,
-                            block: codeBlock, stackSize: abs(Parser.adres))
+            return Function(identifier: FunctionIdentifier(type: returnType, name: identifier, arguments: args), block: codeBlock, stackSize: abs(Parser.adres))
         }
     }
     

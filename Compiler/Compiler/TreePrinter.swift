@@ -60,13 +60,13 @@ extension CodeBlock {
 
 extension Function {
     var childs: [PrintableTreeNode] {
-        var result: [PrintableTreeNode] = arguments
+        var result: [PrintableTreeNode] = identifier.arguments
         result.append(block)
         return result
     }
     
     var content: String {
-        return "Defined: \(returnType) \(identifier)"
+        return "Defined: \(identifier.type) \(identifier.name)"
     }
     
 }

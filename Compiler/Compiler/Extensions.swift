@@ -51,6 +51,15 @@ extension String {
         return String(self.dropLast(sufix.count))
     }
     
+    func replaseLastEaxToEbxInFunc() -> String {
+        var new = self.split(separator: "\n")
+        var line = String(new[new.count - 2])
+        line = line.replacingOccurrences(of: "eax", with: "ebx")
+        new[new.count - 2] = String.SubSequence(line)
+        
+        return new.joined(separator: "\n")
+    }
+    
 }
 
 

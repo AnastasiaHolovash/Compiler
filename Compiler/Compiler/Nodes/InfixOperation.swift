@@ -60,6 +60,9 @@ struct InfixOperation: ASTnode {
         } else if var prefixR = rightNode as? PrefixOperation {
             prefixR.sideLeft = false
             code += try prefixR.generatingAsmCode()
+        } else if var funcR = rightNode as? FunctionCall {
+            funcR.sideLeft = false
+            code += try funcR.generatingAsmCode()
         } else {
             code += right
         }

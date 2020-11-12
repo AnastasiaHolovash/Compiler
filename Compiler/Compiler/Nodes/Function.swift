@@ -11,18 +11,22 @@ import Foundation
 // MARK: - Function struct
 
 struct Function: ASTnode {
-    let returnType: Type
-    let arguments: [Argument]
-    let identifier: String
+
+    let identifier: FunctionIdentifier
     let block: ASTnode
+    
+    /// Sise of stack frame for func
     let stackSize: Int
+    
+    /// Identifier of side (Left side if true, Right side if false)
+    var sideLeft = true
 
     /// Interpreter func
     func generatingAsmCode() throws -> String {
 
         var code =  """
-                    \n\n_\(identifier):
-                    ; Stack frame for \(identifier)
+                    \n\n_\(identifier.name):
+                    ; Stack frame for \(identifier.name)
                     push ebp
                     mov ebp, esp\n
                     """
@@ -30,13 +34,16 @@ struct Function: ASTnode {
         _ = Parser.variablesIdentifiers
         
         code += try block.generatingAsmCode()
+//        let blockCode = try block.generatingAsmCode()
+        
+//        code += sideLeft ? blockCode : blockCode.replaseLastEaxToEbxInFunc()
         
         code += """
-                \n_\(identifier)_return:
+                \n_\(identifier.name)_return:
                 """
         
         code += """
-                \n\n; Restore old EBP for \(identifier)
+                \n\n; Restore old EBP for \(identifier.name)
                 mov esp, ebp
                 pop ebp
                 ret
@@ -101,6 +108,10 @@ struct FunctionCall: ASTnode {
     
     func generatingAsmCode() throws -> String {
         var code = ""
+        
+        // Make free eax for func culculations
+        code += sideLeft ? "" : "push eax\n"
+        
         for arg in arguments {
             let argumentCode = try arg.generatingAsmCode()
             if arg is Number || arg is VariableIdentifier {
@@ -111,6 +122,14 @@ struct FunctionCall: ASTnode {
             }
         }
         code += "call _\(name)\n"
-        return code + "add esp, \(arguments.count * 4)\n"
+        code += "add esp, \(arguments.count * 4)\n"
+        
+        // Mov function return to ebx
+        code += sideLeft ? "" : "mov ebx, eax\n"
+
+        // Return push before func
+        code += sideLeft ? "" : "pop eax\n"
+        
+        return code
     }
 }
