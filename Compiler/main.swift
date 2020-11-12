@@ -51,7 +51,7 @@ int main() {
 }
 
 int linearVelocity(float T, int r) {
-    int n = getPi() * 2 * r / T;
+    int n = 2 * getPi() * r / T;
     return n;
 }
 
@@ -60,7 +60,7 @@ float getPi() {
 }
 """
 
-_ = compiler(code: code5)
+_ = compiler(code: code58)
 
 #endif
 

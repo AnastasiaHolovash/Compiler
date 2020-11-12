@@ -373,7 +373,7 @@ int main() {
 
 // MARK: - Lab5
 
-let testsLab5 = [code50, code51, code52, code53, code54, code55, code56]
+let testsLab5 = [code50, code51, code52, code53, code54, code55, code56, code556]
 
 //Error: Function 'simple' was not declar.
 //    Line: 4  Place: 12
@@ -585,13 +585,13 @@ float getPi();
 
 int main() {
     int b = 900;
-    b /= 3;
+    b /= getPi();
     int result = linearVelocity(2.5, 6 / 3) < b;
     return result;
 }
 
 int linearVelocity(float T, int r) {
-    int n = getPi() * 2 * r / T;
+    int n = 2 * getPi() * r / T;
     return n;
 }
 
