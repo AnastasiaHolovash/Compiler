@@ -15,7 +15,7 @@ struct  WhileStatement: ASTnode {
     let block: ASTnode
     
     func generatingAsmCode() throws -> String {
-        let newFlag = Parser.getNextFuncFlag()
+        let newFlag = Parser.getNextWhileFlag()
         var result = "\n_while_\(newFlag):\n"
         
         if condition is Number || condition is VariableIdentifier {
@@ -37,6 +37,8 @@ struct  WhileStatement: ASTnode {
         
         result += "_end_while_\(newFlag):\n\n"
         
+        Parser.whileFlagsCurentName -= 1
+        
         return result
     }
 }
@@ -45,7 +47,7 @@ struct  WhileStatement: ASTnode {
 struct Break: ASTnode {
     
     func generatingAsmCode() throws -> String {
-        return "jmp _end_while_\(Parser.funcFlagsName)\n"
+        return "jmp _end_while_\(Parser.whileFlagsCurentName)\n"
     }
 }
 
@@ -53,6 +55,6 @@ struct Break: ASTnode {
 struct Continue: ASTnode {
     
     func generatingAsmCode() throws -> String {
-        return "jmp _while_\(Parser.funcFlagsName)\n"
+        return "jmp _while_\(Parser.whileFlagsCurentName)\n"
     }
 }

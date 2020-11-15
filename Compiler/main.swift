@@ -24,11 +24,16 @@ int main() {
     int foo = 1;
     
     while (foo < 10) {
-        if (-foo < -5) {
-            foo /= 21 / 3 * 5;
-            continue;
+        while (0) {
+            if (-foo < -5) {
+                continue;
+            }
         }
+        if (0) { break; }
         foo = foo * 2;
+    }
+    while (100) {
+        if (1) { continue; }
     }
     return foo;
 }

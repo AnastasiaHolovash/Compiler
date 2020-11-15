@@ -36,7 +36,8 @@ class Parser {
     /// For tracking functions flags names for asm code.
     static var funcFlagsName = 0
     /// For tracking while statements flags names for asm code.
-    static var whileFlagsName = 0
+    static var whileFlagsUniqueName = 0
+    static var whileFlagsCurentName = 0
     /// For tracking variables adreses for asm code.
     static var adres: Int = 0
     
@@ -58,8 +59,9 @@ class Parser {
      Increments and returns whileFlagsName.
      */
     static func getNextWhileFlag() -> Int {
-        Parser.whileFlagsName += 1
-        return Parser.whileFlagsName
+        Parser.whileFlagsUniqueName += 1
+        Parser.whileFlagsCurentName = Parser.whileFlagsUniqueName
+        return Parser.whileFlagsUniqueName
     }
     
     /**

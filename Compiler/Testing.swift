@@ -627,3 +627,19 @@ int main() {
     return foo;
 }
 """
+
+let code62 =
+"""
+int main() {
+    int foo = 1;
+    
+    while (foo < 10) {
+        if (-foo < -5) {
+            foo /= 21 / 3 * 5;
+            continue;
+        }
+        foo = foo * 2;
+    }
+    return foo;
+}
+"""
