@@ -20,47 +20,21 @@ import Foundation
 
 let code =
 """
-int SOME(int a);
-
 int main() {
-    if (1) {
-        return SOME(3);
-    } else {
-        return SOME(5);
+    int foo = 1;
+    
+    while (foo < 10) {
+        if (-foo < -5) {
+            foo /= 21 / 3 * 5;
+            continue;
+        }
+        foo = foo * 2;
     }
-    int b = 22 < SOME(3);
-    return b;
-}
-
-int SOME(int a) {
-    a = 22;
-    return 1;
+    return foo;
 }
 """
 
-let code5 =
-"""
-int linearVelocity(float period, int radius);
-float getPi();
-
-int main() {
-    int b = 900;
-    b /= getPi();
-    int result = linearVelocity(2.5, 6 / 3) < b;
-    return result;
-}
-
-int linearVelocity(float T, int r) {
-    int n = 2 * getPi() * r / T;
-    return n;
-}
-
-float getPi() {
-    return 3.14;
-}
-"""
-
-_ = compiler(code: code58)
+_ = compiler(code: code)
 
 #endif
 

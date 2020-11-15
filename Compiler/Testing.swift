@@ -599,3 +599,31 @@ float getPi() {
     return 3.14;
 }
 """
+
+
+let code60 =
+"""
+int main() {
+    int foo = 1;
+    
+    while (foo < 10) {
+        foo = foo * 2;
+    }
+    return foo;
+}
+"""
+
+let code61 =
+"""
+int main() {
+    int foo = 1;
+    
+    while (foo < 10) {
+        foo = foo * 2;
+        if (-foo < -5) {
+            break;
+        }
+    }
+    return foo;
+}
+"""

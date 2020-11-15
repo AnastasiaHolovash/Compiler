@@ -34,6 +34,9 @@ extension Parser {
         case funcMainMustBeDefine
         case incorrectDeclarationInGlobalScope(String, position: (line: Int, place: Int))
         
+        case foundBreakOutsideTheLoop(position: (line: Int, place: Int))
+        case foundContinueOutsideTheLoop(position: (line: Int, place: Int))
+        
         var errorDescription: String? {
             switch self {
             case let .expectedNumber(position: (line: line, place: place)):
@@ -136,13 +139,27 @@ extension Parser {
                         Error: Declaration \'\(str)\' in global scope.
                             Line: \(line)  Place: \(place)
                        """
+            case let .foundBreakOutsideTheLoop(position: (line: line, place: place)):
+                return """
+                        Error: Found \'break\' outside the loop.
+                            Line: \(line)  Place: \(place)
+                        """
+            case let .foundContinueOutsideTheLoop(position: (line: line, place: place)):
+                return """
+                        Error: Found \'continue\' outside the loop.
+                            Line: \(line)  Place: \(place)
+                        """
             }
         }
     }
+    
     
     func getTokenPositionInCode() -> (line: Int, place: Int) {
         return tokensStruct[index - 1].position
     }
     
-    // TODO: - implement one more getTokenPositionInCode for [index]
+
+    func getTokenNextPositionInCode() -> (line: Int, place: Int) {
+        return tokensStruct[index].position
+    }
 }

@@ -36,7 +36,11 @@ extension Parser {
             }
             return try prefixOperationParser()
         case .identifier:
-            return .parensOpen == peekThroughOne().token ? try functionCallParser() : try variableIdentifierParser()
+            if canGetThroughOne {
+                return .parensOpen == peekThroughOne().token ? try functionCallParser() : try variableIdentifierParser()
+            } else{
+                return try variableIdentifierParser()
+            }
         default:
             let (line, place) = tokensStruct[index].position
             throw Error.expectedNumber(position:(line: line, place: place))

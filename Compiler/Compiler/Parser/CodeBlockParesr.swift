@@ -10,7 +10,11 @@ import Foundation
 extension Parser {
     
     // MARK: - Code block
-    func codeBlockParser() throws -> ASTnode {
+    
+    /**
+     - parameter canBreak: True if block can be breaked or continued, false - if not.
+     */
+    func codeBlockParser(canBreak: Bool = false) throws -> ASTnode {
         
         try check(token: .curlyOpen)
         var depth = 1
@@ -43,7 +47,8 @@ extension Parser {
             Parser.variablesIdentifiers[blockDepth + 1] = [:]
         }
         Parser.functionDeclaredIdentifiers[blockDepth + 1] = []
-        return try Parser(tokensStruct: tokens, blockDepth: blockDepth + 1).parse()
+        
+        return try Parser(tokensStruct: tokens, blockDepth: blockDepth + 1, canBreak: self.canBreak || canBreak).parse()
     }
     
 }

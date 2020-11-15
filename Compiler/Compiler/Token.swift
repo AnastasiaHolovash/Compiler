@@ -25,8 +25,6 @@ enum Token: Equatable {
     
     case numberFloat(Float)
     case numberInt(Int, NunberType)
-//    case int
-//    case float
     case type(Type)
     case identifier(String)
     case parensOpen

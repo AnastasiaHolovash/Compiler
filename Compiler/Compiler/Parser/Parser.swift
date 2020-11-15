@@ -21,16 +21,23 @@ class Parser {
     /// Value of block depth
     var blockDepth: Int
     
+    /// True if block can be breaked or continued
+    var canBreak: Bool
     
-    init(tokensStruct: [TokenStruct], blockDepth: Int = 0) {
+    init(tokensStruct: [TokenStruct], blockDepth: Int = 0, canBreak: Bool = false) {
         self.tokensStruct = tokensStruct
         self.blockDepth = blockDepth
+        self.canBreak = canBreak
     }
 
     
     // MARK:- Statics
     
-    static var flagsName = 0
+    /// For tracking functions flags names for asm code.
+    static var funcFlagsName = 0
+    /// For tracking while statements flags names for asm code.
+    static var whileFlagsName = 0
+    /// For tracking variables adreses for asm code.
     static var adres: Int = 0
     
     static var variablesIdentifiers: [Int : [String : Int]] = [:]
@@ -39,11 +46,25 @@ class Parser {
     static var functionCalledIdentifiers: [(identifier: FunctionIdentifier, position: (line: Int, place: Int))] = []
     static var currentFuncScope: String?
     
-    static func getNextFlag() -> Int {
-        Parser.flagsName += 1
-        return Parser.flagsName
+    /**
+     Increments and returns funcFlagsName.
+     */
+    static func getNextFuncFlag() -> Int {
+        Parser.funcFlagsName += 1
+        return Parser.funcFlagsName
     }
     
+    /**
+     Increments and returns whileFlagsName.
+     */
+    static func getNextWhileFlag() -> Int {
+        Parser.whileFlagsName += 1
+        return Parser.whileFlagsName
+    }
+    
+    /**
+     Calculates and returns next adres.
+     */
     static func getNextAdres() -> Int {
         Parser.adres -= 4
         return Parser.adres
@@ -52,14 +73,18 @@ class Parser {
     
     // MARK: - Instanc`s
     
-    /// Current location of the parsing phase
+    /// Current location of the parsing phase.
     var index = 0
     
-    
+    /// True if there is next token.
     var canGet: Bool {
         return index < tokensStruct.count ? true : false
     }
     
+    /// True if there is through one token.
+    var canGetThroughOne: Bool {
+        return index + 1 < tokensStruct.count ? true : false
+    }
     
     /**
      A way of checking the element at the current location without incrementing the index.
@@ -97,12 +122,14 @@ class Parser {
             case .return:
                 let returning = try returningParser()
                 nodes.append(returning)
+                
             case .type:
                 let definition = try declarationParser()
                 if definition is Function {
                     Parser.adres = 0
                 }
                 nodes.append(definition)
+                
             case .identifier:
                 var identifier: ASTnode
                 if case .parensOpen = peekThroughOne().token {
@@ -112,15 +139,32 @@ class Parser {
                     identifier = try variableOverridingParser()
                 }
                 nodes.append(identifier)
+                
             case .if:
                 let ifStatement = try ifStatementParser()
                 nodes.append(ifStatement)
+                
             case .curlyOpen:
+//                let block = canBreak ? try codeBlockParser(canBreak: true) : try codeBlockParser()
                 let block = try codeBlockParser()
+                
+                // Clear deeper block`s functions and variables declaretions
                 Parser.variablesIdentifiers[blockDepth + 1] = nil
                 Parser.functionDeclaredIdentifiers[blockDepth + 1] = nil
+                
                 nodes.append(block)
+                
             case .while:
+                let whileStatement = try whileStatementParser()
+                nodes.append(whileStatement)
+                
+            case .break:
+                let breakStatement = try breakParser()
+                nodes.append(breakStatement)
+                
+            case .continue:
+                let continueStatement = try continueParser()
+                nodes.append(continueStatement)
                 
             default:
                 throw Error.unexpectedExpresion(position: token.position)

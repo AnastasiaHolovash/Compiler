@@ -51,6 +51,4 @@ extension Parser {
         }
         throw Error.incorrectIfStatement(position: getTokenPositionInCode())
     }
-    
 }
-

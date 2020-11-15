@@ -30,9 +30,9 @@
             filePath = "Compiler/Compiler/Parser/CodeBlockParesr.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "codeBlockParser()"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "codeBlockParser(canBreak:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

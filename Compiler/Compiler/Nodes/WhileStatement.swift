@@ -14,10 +14,10 @@ struct  WhileStatement: ASTnode {
     let condition: ASTnode
     let block: ASTnode
     
-    
     func generatingAsmCode() throws -> String {
-        var result = ""
-        let newFlag = Parser.getNextFlag()
+        let newFlag = Parser.getNextFuncFlag()
+        var result = "\n_while_\(newFlag):\n"
+        
         if condition is Number || condition is VariableIdentifier {
             let number = try condition.generatingAsmCode()
             result += "mov eax, \(number)\n"
@@ -29,12 +29,30 @@ struct  WhileStatement: ASTnode {
         
         result += "cmp eax, 0\n"
         
-        result += "je _post_conditional_\(newFlag)\n"
+        result += "je _end_while_\(newFlag)\n"
         
         result += try block.generatingAsmCode()
         
-        result += "_post_conditional_\(newFlag):\n"
+        result += "jmp _while_\(newFlag)\n"
+        
+        result += "_end_while_\(newFlag):\n\n"
         
         return result
+    }
+}
+
+
+struct Break: ASTnode {
+    
+    func generatingAsmCode() throws -> String {
+        return "jmp _end_while_\(Parser.funcFlagsName)\n"
+    }
+}
+
+
+struct Continue: ASTnode {
+    
+    func generatingAsmCode() throws -> String {
+        return "jmp _while_\(Parser.funcFlagsName)\n"
     }
 }

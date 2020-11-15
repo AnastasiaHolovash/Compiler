@@ -19,7 +19,7 @@ struct IfStatement: ASTnode {
     
     func generatingAsmCode() throws -> String {
         var result = ""
-        let newFlag = Parser.getNextFlag()
+        let newFlag = Parser.getNextFuncFlag()
         if condition is Number || condition is VariableIdentifier {
             let number = try condition.generatingAsmCode()
             result += "mov eax, \(number)\n"

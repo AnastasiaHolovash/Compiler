@@ -222,6 +222,28 @@ extension FunctionCall {
     }
 }
 
+extension Break {
+    public var childs: [PrintableTreeNode] {
+        return []
+    }
+    public
+    var content: String {
+        return "Break"
+    }
+    
+}
+
+extension Continue {
+    public var childs: [PrintableTreeNode] {
+        return []
+    }
+    public
+    var content: String {
+        return "Continue"
+    }
+    
+}
+
 extension Float {
     public var childs: [PrintableTreeNode] {
         return []

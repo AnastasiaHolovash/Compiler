@@ -34,6 +34,10 @@ extension Parser {
                 sign = "\'else\'"
             case .comma:
                 sign = "\',\'"
+            case .break:
+                sign = "\'break\'"
+            case .continue:
+                sign = "\'continue\'"
             default:
                 throw Error.unexpectedError
             }
