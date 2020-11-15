@@ -120,6 +120,8 @@ class Parser {
                 Parser.variablesIdentifiers[blockDepth + 1] = nil
                 Parser.functionDeclaredIdentifiers[blockDepth + 1] = nil
                 nodes.append(block)
+            case .while:
+                
             default:
                 throw Error.unexpectedExpresion(position: token.position)
             }

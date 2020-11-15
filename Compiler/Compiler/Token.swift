@@ -45,6 +45,11 @@ enum Token: Equatable {
     case `else`
     // Lab 5 edition
     case comma
+    // Lab 6 edition
+    case `while`
+    case `break`
+    case `continue`
+
     
     static var delegate : ThrowCastingError?
     
@@ -80,6 +85,15 @@ enum Token: Equatable {
                 }
                 guard $0 != "else" else {
                     return .else
+                }
+                guard $0 != "while" else {
+                    return .while
+                }
+                guard $0 != "break" else {
+                    return .break
+                }
+                guard $0 != "continue" else {
+                    return .continue
                 }
                 return .identifier($0)
             },

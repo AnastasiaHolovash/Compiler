@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D6FB41725609B2200300FC7 /* WhileStatementParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6FB41625609B2200300FC7 /* WhileStatementParser.swift */; };
+		5D6FB41A25609F7200300FC7 /* WhileStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6FB41925609F7200300FC7 /* WhileStatement.swift */; };
 		5D8F1C67254AE19000BA90A7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8F1C66254AE19000BA90A7 /* main.swift */; };
 		5D8F1C8B254AE24D00BA90A7 /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8F1C73254AE24D00BA90A7 /* Lexer.swift */; };
 		5D8F1C8C254AE24D00BA90A7 /* TreePrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8F1C74254AE24D00BA90A7 /* TreePrinter.swift */; };
@@ -45,6 +47,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5D6FB41625609B2200300FC7 /* WhileStatementParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhileStatementParser.swift; sourceTree = "<group>"; };
+		5D6FB41925609F7200300FC7 /* WhileStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhileStatement.swift; sourceTree = "<group>"; };
 		5D8F1C63254AE19000BA90A7 /* Compiler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Compiler; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D8F1C66254AE19000BA90A7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		5D8F1C73254AE24D00BA90A7 /* Lexer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lexer.swift; sourceTree = "<group>"; };
@@ -131,6 +135,7 @@
 				5D8F1C7D254AE24D00BA90A7 /* Function.swift */,
 				5D8F1C76254AE24D00BA90A7 /* ReturnStatement.swift */,
 				5D8F1C7B254AE24D00BA90A7 /* IfStatement.swift */,
+				5D6FB41925609F7200300FC7 /* WhileStatement.swift */,
 				5D8F1C77254AE24D00BA90A7 /* InfixOperation.swift */,
 				5D8F1C7A254AE24D00BA90A7 /* PrefixOperation.swift */,
 				5D8F1C7C254AE24D00BA90A7 /* Variable.swift */,
@@ -147,6 +152,7 @@
 				5D8F1C86254AE24D00BA90A7 /* CodeBlockParesr.swift */,
 				5D8F1C83254AE24D00BA90A7 /* DeclarationParser.swift */,
 				5D8F1C82254AE24D00BA90A7 /* IfStatementParser.swift */,
+				5D6FB41625609B2200300FC7 /* WhileStatementParser.swift */,
 				5D8F1C84254AE24D00BA90A7 /* ExpressionParser.swift */,
 				5D8F1C87254AE24D00BA90A7 /* Parser+ErrorExtension.swift */,
 				5D8F1C81254AE24D00BA90A7 /* Parser+Helpers.swift */,
@@ -211,8 +217,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D6FB41725609B2200300FC7 /* WhileStatementParser.swift in Sources */,
 				5D8F1C98254AE24D00BA90A7 /* IfStatementParser.swift in Sources */,
 				5D8F1C9D254AE24D00BA90A7 /* Parser+ErrorExtension.swift in Sources */,
+				5D6FB41A25609F7200300FC7 /* WhileStatement.swift in Sources */,
 				5D8F1C8F254AE24D00BA90A7 /* CodeBlock.swift in Sources */,
 				5D8F1C90254AE24D00BA90A7 /* Number.swift in Sources */,
 				5D8F1C8E254AE24D00BA90A7 /* InfixOperation.swift in Sources */,

@@ -75,14 +75,24 @@ extension IfStatement {
     
     var childs: [PrintableTreeNode] {
         if let secondBlock = elseBlock {
-            return [ifBlock, secondBlock]
+            return [condition, ifBlock, secondBlock]
         } else {
-            return [ifBlock]
+            return [condition, ifBlock]
         }
     }
     
     var content: String {
         "Condition"
+    }
+}
+
+extension WhileStatement {
+    var childs: [PrintableTreeNode] {
+        return [condition, block]
+    }
+    
+    var content: String {
+        "While"
     }
 }
 

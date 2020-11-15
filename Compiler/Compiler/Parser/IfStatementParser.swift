@@ -16,70 +16,41 @@ extension Parser {
         let expression = try parseExpression()
         try check(token: .parensClose)
         
-        // code block or expresion
+        
         if canGet {
-            var firstBlock: ASTnode
-            var secondBlock: ASTnode
+            var firstBlock = try extensionBlockParser()
             
-            switch peek().token {
-            case .return:
-                firstBlock = try returningParser()
-//                return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: nil)
-            case .identifier:
-//                statement: ASTnode
-                if case .parensOpen = peekThroughOne().token {
-                    firstBlock = try functionCallParser()
-                    try check(token: .semicolon)
-                } else {
-                    firstBlock = try variableOverridingParser()
-                }
-//                return IfStatement(condition: expression, ifBlock: statement, elseBlock: nil)
-            default:
-                // if-block parsing
-                guard var firstBlock1 = try codeBlockParser() as? CodeBlock else {
-                    throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
-                }
-                firstBlock1.type = " if"
-                firstBlock = firstBlock1
+            if var firstBlockBlock = firstBlock as? CodeBlock {
+                firstBlockBlock.type = " if"
+                firstBlock = firstBlockBlock
             }
             
-            // if else-block exist
-            if canGet, case .else = peek().token {
-                try check(token: .else)
-                
-                // [ else if(){} ] construction converting to [ else { if(){} } ]
-                if canGet, case .if = peek().token {
-                    secondBlock = try ifStatementParser()
-                    return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: secondBlock)
-                }
-                
-                switch peek().token {
-                case .return:
-                    let secondBlock = try returningParser()
-                    return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: secondBlock)
-                case .identifier:
-                    let secondBlock: ASTnode
-                    if case .parensOpen = peekThroughOne().token {
-                        secondBlock = try functionCallParser()
-                        try check(token: .semicolon)
-                    } else {
-                        secondBlock = try variableOverridingParser()
-                    }
-                    return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: secondBlock)
-                default:
-                    guard var secondBlock = try codeBlockParser() as? CodeBlock else {
-                        throw Parser.Error.expected("Code block", position: getTokenPositionInCode())
-                    }
-                    secondBlock.type = " else"
-                    return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: secondBlock)
-                }
-                
-            } else {
+            // If else-block exist
+            guard canGet, case .else = peek().token else {
                 return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: nil)
             }
+            try check(token: .else)
+            
+            var secondBlock: ASTnode
+            
+            // [ else if(){} ] construction converting to [ else { if(){} } ]
+            if canGet, case .if = peek().token {
+                secondBlock = try ifStatementParser()
+                return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: secondBlock)
+            }
+            
+            secondBlock = try extensionBlockParser()
+            
+            if var secondBlockBlock = secondBlock as? CodeBlock {
+                secondBlockBlock.type = " else"
+                secondBlock = secondBlockBlock
+            }
+            
+            return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: secondBlock)
             
         }
         throw Error.incorrectIfStatement(position: getTokenPositionInCode())
     }
     
 }
+
