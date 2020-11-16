@@ -36,6 +36,8 @@ extension Parser {
         
         case foundBreakOutsideTheLoop(position: (line: Int, place: Int))
         case foundContinueOutsideTheLoop(position: (line: Int, place: Int))
+        case whileStatementInGlobalScope(position: (line: Int, place: Int))
+        case ifStatementInGlobalScope(position: (line: Int, place: Int))
         
         var errorDescription: String? {
             switch self {
@@ -147,6 +149,16 @@ extension Parser {
             case let .foundContinueOutsideTheLoop(position: (line: line, place: place)):
                 return """
                         Error: Found \'continue\' outside the loop.
+                            Line: \(line)  Place: \(place)
+                        """
+            case let .whileStatementInGlobalScope(position: (line: line, place: place)):
+                return """
+                        Error: While statement in global scope.
+                            Line: \(line)  Place: \(place)
+                        """
+            case let .ifStatementInGlobalScope(position: (line: line, place: place)):
+                return """
+                        Error: If statement in global scope.
                             Line: \(line)  Place: \(place)
                         """
             }

@@ -689,6 +689,9 @@ int main() {
 }
 """
 
+//Error: While statement in global scope.
+//    Line: 1  Place: 0
+
 let code65 =
 """
 while (0) {

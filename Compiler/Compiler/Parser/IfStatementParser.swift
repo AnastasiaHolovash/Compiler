@@ -11,6 +11,10 @@ extension Parser {
     
     // MARK: - If statement
     func ifStatementParser() throws -> ASTnode {
+        guard blockDepth > 0 else {
+            throw Error.ifStatementInGlobalScope(position: getTokenNextPositionInCode())
+        }
+        
         try check(token: .if)
         try check(token: .parensOpen)
         let expression = try parseExpression()
