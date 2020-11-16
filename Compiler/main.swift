@@ -30,7 +30,7 @@ int main() {
             }
         }
         if (0) { break; }
-        foo = foo * 2;
+        foo = foo % 2;
     }
     while (100) {
         if (1) { continue; }

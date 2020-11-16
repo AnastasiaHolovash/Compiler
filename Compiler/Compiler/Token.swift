@@ -96,7 +96,7 @@ enum Token: Equatable {
                 return .identifier($0)
             },
             
-            "\\/\\=|\\*|\\/|\\+|\\-|\\<": {
+            "\\/\\=|\\*|\\/|\\%|\\+|\\-|\\<": {
                 if $0 == "/" {
                     return .binaryOperation(BinaryOperator(rawValue: $0)!)
                 } else if $0 == "*" {
@@ -106,6 +106,8 @@ enum Token: Equatable {
                 } else if $0 == "-" {
                     return .unaryOperation(UnaryOperator(rawValue: $0)!)
                 } else if $0 == "/=" {
+                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                } else if $0 == "%" {
                     return .binaryOperation(BinaryOperator(rawValue: $0)!)
                 } else {
                     try delegate?.unknownOperation(op: $0)
@@ -144,17 +146,20 @@ enum BinaryOperator: String {
     case multiply = "*"
     case isLessThan = "<"
     case divideEqual = "/="
+    case remainderAfterDivision = "%"
     
     var precedence: Int {
         switch self {
         case .divide:
-            return 20
+            return 30
         case .multiply:
-            return 20
+            return 30
         case .isLessThan:
-            return 10
+            return 20
         case .divideEqual:
-            return 40
+            return 10
+        case .remainderAfterDivision:
+            return 30
         }
     }
 }
@@ -168,7 +173,7 @@ enum UnaryOperator: String {
     var precedence: Int {
         switch self {
         case .minus:
-            return 30
+            return 40
         }
     }
 }
