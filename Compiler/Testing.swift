@@ -601,23 +601,34 @@ float getPi() {
 """
 
 
+// MARK: - Lab6
+let testsLab6 = [code60, code61, code62, code63, code64, code65]
+
+//Error: Found 'break' outside the loop.
+//    Line: 6  Place: 8
+
 let code60 =
 """
 int main() {
     int foo = 1;
     
-    while (foo < 10) {
+    while (foo < 10)
         foo = foo * 2;
-    }
+        break;
+    
     return foo;
 }
 """
+
+//Error: Found 'continue' outside the loop.
+//    Line: 4  Place: 4
 
 let code61 =
 """
 int main() {
     int foo = 1;
     
+    continue;
     while (foo < 10) {
         foo = foo * 2;
         if (-foo < -5) {
@@ -628,18 +639,156 @@ int main() {
 }
 """
 
+//Error: Expected number.
+//    Line: 4  Place: 11
+
 let code62 =
 """
 int main() {
     int foo = 1;
     
-    while (foo < 10) {
-        if (-foo < -5) {
-            foo /= 21 / 3 * 5;
-            continue;
-        }
+    while (int foo < 10) {
+        foo /= 21 / 3 * 5;
+        continue;
         foo = foo * 2;
     }
     return foo;
+}
+"""
+
+//Error: Function 'getPi' was not define.
+//    Line: 6  Place: 15
+
+let code63 =
+"""
+int main() {
+    float getPi();
+    int foo = 1;
+    
+    while (foo < 10) {
+        foo /= getPi() / 3 * 5;
+        continue;
+        foo = foo * 2;
+    }
+    return foo;
+}
+"""
+
+//Error: Extected '('.
+//    Line: 4  Place: 10
+
+let code64 =
+"""
+int main() {
+    int foo = 1;
+    
+    while foo < 10 {
+        foo = foo * 2;
+    }
+    return foo;
+}
+"""
+
+let code65 =
+"""
+while (0) {
+    int foo = 20 * 2;
+}
+
+int main() {
+    int foo = 1;
+    return foo;
+}
+"""
+
+// TRUE: 3125
+
+let code66 =
+"""
+int fifthDegree(int number);
+
+int main() {
+    int foo = 1;
+    int new = 5;
+    
+    return fifthDegree(new) / fifthDegree(foo);
+}
+
+int fifthDegree(int number) {
+    int n = number;
+
+    if (9 < number) return number;
+    else {
+        int identifier = 16;
+
+        while (identifier % 2 < 1) {
+            number = number * n;
+            identifier /= 2;
+        }
+        return number;
+    }
+    return 1;
+}
+"""
+
+
+// TRUE: 257
+
+let code67 =
+"""
+int main() {
+    int foo = 1;
+    int new = 9;
+
+    while (foo < 10) {
+        int foo2 = 100;
+
+        while (3 < foo2) {
+            if (foo2 < 5) {
+                foo2 = -15;
+                continue;
+            }
+            foo2 /= 5;
+        }
+
+        foo = foo2 % 2;
+        if (foo) { break; }
+        foo = foo2 * 100;
+    }
+
+    while (new < 77) {
+        if (new < 10) {
+            new = 37;
+            continue;
+        }
+        new = new * (new % 10);
+    }
+    return new / foo;
+}
+"""
+
+// TRUE: 21
+
+let code68 =
+"""
+int main() {
+    float getPi();
+
+    int new = 33;
+    int max = 70;
+
+    while(new < max) {
+        new /= getPi();
+        if (-new < -20) return new;
+        new = new * 4;
+        continue;
+        new = new * 4;
+    }
+    
+    return max < new;
+}
+
+float getPi() {
+    return 3.14;
 }
 """

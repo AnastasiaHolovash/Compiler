@@ -8,38 +8,42 @@
 #if DEBUG
 import Foundation
 
-//for test in testsLab5 {
-//    _ = compiler(code: test)
-//    Parser.adres = 0
-//    Parser.flagsName = 0
-//    Parser.functionCalledIdentifiers = []
-//    Parser.functionDeclaredIdentifiers = [:]
-//    Parser.functionDefinedIdentifiers = []
-//    print("\n\n")
-//}
+for test in testsLab6 {
+    _ = compiler(code: test)
+    Parser.adres = 0
+    Parser.funcFlagsName = 0
+    Parser.whileFlagsCurentName = 0
+    Parser.whileFlagsUniqueName = 0
+    Parser.variablesIdentifiers = [:]
+    Parser.functionCalledIdentifiers = []
+    Parser.functionDeclaredIdentifiers = [:]
+    Parser.functionDefinedIdentifiers = []
+    print("\n\n")
+}
 
 let code =
 """
 int main() {
-    int foo = 1;
+    float getPi();
+
+    int new = 33;
+    int max = 70;
+
+    while(new < max) {
+        new /= getPi();
+        if (-new < -20) return new;
+        new = new * 4;
+    }
     
-    while (foo < 10) {
-        while (0) {
-            if (-foo < -5) {
-                continue;
-            }
-        }
-        if (0) { break; }
-        foo = foo % 2;
-    }
-    while (100) {
-        if (1) { continue; }
-    }
-    return foo;
+    return max < new;
+}
+
+float getPi() {
+    return 3.14;
 }
 """
 
-_ = compiler(code: code)
+//_ = compiler(code: code)
 
 #endif
 

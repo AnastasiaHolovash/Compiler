@@ -11,6 +11,10 @@ extension Parser {
     
     // MARK: - While statement
     func whileStatementParser() throws -> ASTnode {
+        guard blockDepth > 0 else {
+            throw Error.incorrectDeclarationInGlobalScope(identifier, position: getTokenPositionInCode())
+        }
+        
         try check(token: .while)
         try check(token: .parensOpen)
         let expression = try parseExpression()
