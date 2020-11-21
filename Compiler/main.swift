@@ -8,18 +8,18 @@
 #if DEBUG
 import Foundation
 
-for test in testsLab6 {
-    _ = compiler(code: test)
-    Parser.adres = 0
-    Parser.funcFlagsName = 0
-    Parser.whileFlagsCurentName = 0
-    Parser.whileFlagsUniqueName = 0
-    Parser.variablesIdentifiers = [:]
-    Parser.functionCalledIdentifiers = []
-    Parser.functionDeclaredIdentifiers = [:]
-    Parser.functionDefinedIdentifiers = []
-    print("\n\n")
-}
+//for test in testsLab6 {
+//    _ = compiler(code: test)
+//    Parser.adres = 0
+//    Parser.funcFlagsName = 0
+//    Parser.whileFlagsCurentName = 0
+//    Parser.whileFlagsUniqueName = 0
+//    Parser.variablesIdentifiers = [:]
+//    Parser.functionCalledIdentifiers = []
+//    Parser.functionDeclaredIdentifiers = [:]
+//    Parser.functionDefinedIdentifiers = []
+//    print("\n\n")
+//}
 
 let code =
 """
@@ -31,7 +31,7 @@ int main() {
 
     while(new < max) {
         new /= getPi();
-        if (-new < -20) return new;
+        if (-new < -20) break;
         new = new * 4;
     }
     
@@ -43,7 +43,7 @@ float getPi() {
 }
 """
 
-//_ = compiler(code: code)
+_ = compiler(code: code)
 
 #endif
 
@@ -57,9 +57,9 @@ final class AppDelegate: ApplicationDelegate {
     
     func application(_ application: Application, didFinishLaunchingWithOptions launchOptions: [Application.LaunchOptionsKey: Any]?) -> Bool {
         do {
-            let code = try String(contentsOfFile: "5-05-Swift-IV-82-Holovash.txt", encoding: String.Encoding.utf8)
+            let code = try String(contentsOfFile: "6-05-Swift-IV-82-Holovash.txt", encoding: String.Encoding.utf8)
             let cppCode = compiler(code: code)
-            try cppCode.write(toFile: "5-05-Swift-IV-82-Holovash.cpp", atomically: false, encoding: String.Encoding.utf8)
+            try cppCode.write(toFile: "6-05-Swift-IV-82-Holovash.cpp", atomically: false, encoding: String.Encoding.utf8)
         } catch let error {
             print(error.localizedDescription)
         }

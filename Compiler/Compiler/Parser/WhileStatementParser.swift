@@ -42,6 +42,10 @@ extension Parser {
         switch peek().token {
         case .return:
             return try returningParser()
+        case .break:
+            return try breakParser()
+        case .continue:
+            return try continueParser()
         case .identifier:
             if case .parensOpen = peekThroughOne().token {
                 let functionCall =  try functionCallParser()
