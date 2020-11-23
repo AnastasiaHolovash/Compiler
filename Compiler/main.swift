@@ -55,7 +55,7 @@ int sumOfFirstNMembers(int n, int b1, int bn, int q) {
 int pow(int n, int degree) {
     int result = 1;
     
-    while (1 < degree) {
+    while (0 < degree) {
         result = result * n;
         degree = degree - 1;
     }

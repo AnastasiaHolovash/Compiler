@@ -34,8 +34,7 @@ enum Token: Equatable {
     case curlyClose
     case semicolon
     // Lab 2 edition
-//    case unaryOperation(UnaryOperator)
-    case binaryOperation(Operator)
+    case operation(Operator)
     // Lab 3 edition
     case equal
     // Lab 4 edition
@@ -98,20 +97,19 @@ enum Token: Equatable {
             
             "\\/\\=|\\*|\\/|\\%|\\+|\\-|\\<": {
                 if $0 == "/" {
-                    return .binaryOperation(Operator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "*" {
-                    return .binaryOperation(Operator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "<" {
-                    return .binaryOperation(Operator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "-" {
-//                    return .unaryOperation(UnaryOperator(rawValue: $0)!)
-                    return .binaryOperation(Operator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "/=" {
-                    return .binaryOperation(Operator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "%" {
-                    return .binaryOperation(Operator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "+" {
-                    return .binaryOperation(Operator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else {
                     try delegate?.unknownOperation(op: $0)
                     throw Parser.Error.unexpectedError
@@ -170,17 +168,3 @@ enum Operator: String {
         }
     }
 }
-
-
-// MARK: - Unary Operator
-//enum UnaryOperator: String {
-//
-//    case minus = "-"
-//
-//    var precedence: Int {
-//        switch self {
-//        case .minus:
-//            return 50
-//        }
-//    }
-//}
