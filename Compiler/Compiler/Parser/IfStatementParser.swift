@@ -23,23 +23,10 @@ extension Parser {
         
         if canGet {
             var firstBlock = try extensionBlockParser()
-            
-//            if var firstBlockBlock = firstBlock as? CodeBlock {
-//                firstBlockBlock.type = " if"
-//                firstBlock = firstBlockBlock
-//            } else if var firstBlockBlock = firstBlock as? ReturnStatement {
-//                firstBlockBlock.type = " if"
-//                firstBlock = firstBlockBlock
-//            } else if var firstBlockBlock = firstBlock as? FunctionCall {
-//                firstBlockBlock.type = " if"
-//                firstBlock = firstBlockBlock
-//            } else if var firstBlockBlock = firstBlock as? Variable {
-//                firstBlockBlock.type = " if"
-//                firstBlock = firstBlockBlock
-//            }
             addMarker(block: &firstBlock, type: " if")
             
             // If else-block exist
+            chackComment()
             guard canGet, case .else = peek().token else {
                 return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: nil)
             }
@@ -54,11 +41,6 @@ extension Parser {
             }
             
             secondBlock = try extensionBlockParser()
-            
-//            if var secondBlockBlock = secondBlock as? CodeBlock {
-//                secondBlockBlock.type = " else"
-//                secondBlock = secondBlockBlock
-//            }
             addMarker(block: &secondBlock, type: " else")
             
             return IfStatement(condition: expression, ifBlock: firstBlock, elseBlock: secondBlock)
@@ -81,5 +63,10 @@ extension Parser {
             blockBlock.type = type
             block = blockBlock
         }
+    }
+    
+    func chackComment() {
+        guard canGet, case .comment = peek().token else { return }
+        _ = getNextToken()
     }
 }
