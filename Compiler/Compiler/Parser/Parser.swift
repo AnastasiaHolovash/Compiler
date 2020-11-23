@@ -147,7 +147,6 @@ class Parser {
                 nodes.append(ifStatement)
                 
             case .curlyOpen:
-//                let block = canBreak ? try codeBlockParser(canBreak: true) : try codeBlockParser()
                 let block = try codeBlockParser()
                 
                 // Clear deeper block`s functions and variables declaretions
@@ -167,6 +166,9 @@ class Parser {
             case .continue:
                 let continueStatement = try continueParser()
                 nodes.append(continueStatement)
+            
+            case .comment:
+                _ = getNextToken()
                 
             default:
                 throw Error.unexpectedExpresion(position: token.position)

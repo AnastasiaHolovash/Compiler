@@ -12,7 +12,7 @@ import Foundation
 
 struct InfixOperation: ASTnode {
     
-    let operation: BinaryOperator
+    let operation: Operator
     let leftNode: ASTnode
     let rightNode: ASTnode
     
@@ -85,7 +85,7 @@ struct InfixOperation: ASTnode {
             code += "cdq\nidiv ebx\n"
         case .multiply:
             // Multipling: eax / ebx
-            code += "cdq\nimul eax, ebx\n"
+            code += "imul eax, ebx\n"
         case .isLessThan:
             // Compare: eax & ebx
             code += "cmp eax, ebx\nsetl al\nmovzx eax, al\n"
@@ -96,6 +96,8 @@ struct InfixOperation: ASTnode {
             // Dividing: eax / ebx
             code += "cdq\nidiv ebx\n"
             code += "mov eax, edx\n"
+        case .minus:
+            code += "sub eax, ebx\n"
         }
         
         // If operation is negative

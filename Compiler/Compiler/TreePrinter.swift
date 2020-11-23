@@ -102,9 +102,12 @@ extension Variable {
     }
     
     var content: String {
-        return "Var: \"\(identifier.name)\""
+        if type == "" {
+            return "Var: \"\(identifier.name)\""
+        } else {
+            return "Block" + type + ": " + "Var: \"\(identifier.name)\""
+        }
     }
-    
 }
 
 extension ReturnStatement {
@@ -113,9 +116,12 @@ extension ReturnStatement {
     }
     
     var content: String {
-        return "ReturnStatement"
+        if type == "" {
+            return "ReturnStatement"
+        } else {
+            return "Block" + type + ": " + "ReturnStatement"
+        }
     }
-    
 }
 
 extension InfixOperation {
@@ -218,7 +224,11 @@ extension FunctionCall {
     }
     public
     var content: String {
-        return "Called: \"\(name)\""
+        if type == "" {
+            return "Called: \"\(name)\""
+        } else {
+            return "Block" + type + ": " + "Called: \"\(name)\""
+        }
     }
 }
 

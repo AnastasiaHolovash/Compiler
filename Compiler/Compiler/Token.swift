@@ -34,8 +34,7 @@ enum Token: Equatable {
     case curlyClose
     case semicolon
     // Lab 2 edition
-    case unaryOperation(UnaryOperator)
-    case binaryOperation(BinaryOperator)
+    case operation(Operator)
     // Lab 3 edition
     case equal
     // Lab 4 edition
@@ -47,6 +46,8 @@ enum Token: Equatable {
     case `while`
     case `break`
     case `continue`
+    // Cousework
+    case comment
 
     
     static var delegate : ThrowCastingError?
@@ -96,24 +97,29 @@ enum Token: Equatable {
                 return .identifier($0)
             },
             
-            "\\/\\=|\\*|\\/|\\%|\\+|\\-|\\<": {
-                if $0 == "/" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+            "(\\/\\/.*)|\\/\\=|\\*|\\/|\\%|\\+|\\-|\\<": {
+                if $0.hasPrefix("//") || ($0.hasPrefix("/*") && $0.hasSuffix("*/")) {
+                    return .comment
+                } else if $0 == "/" {
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "*" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "<" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "-" {
-                    return .unaryOperation(UnaryOperator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "/=" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "%" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .operation(Operator(rawValue: $0)!)
+                } else if $0 == "+" {
+                    return .operation(Operator(rawValue: $0)!)
                 } else {
                     try delegate?.unknownOperation(op: $0)
                     throw Parser.Error.unexpectedError
                 }
             },
+            
             "\\=": { _ in .equal },
             "\\(": { _ in .parensOpen },
             "\\)": { _ in .parensClose },
@@ -140,40 +146,29 @@ enum NunberType {
 
 
 // MARK: - Binary Operator
-enum BinaryOperator: String {
+enum Operator: String {
     
     case divide = "/"
     case multiply = "*"
     case isLessThan = "<"
     case divideEqual = "/="
     case remainderAfterDivision = "%"
+    case minus = "-"
     
     var precedence: Int {
         switch self {
         case .divide:
-            return 30
+            return 40
         case .multiply:
-            return 30
+            return 40
         case .isLessThan:
             return 20
         case .divideEqual:
             return 10
         case .remainderAfterDivision:
-            return 30
-        }
-    }
-}
-
-
-// MARK: - Unary Operator
-enum UnaryOperator: String {
-
-    case minus = "-"
-    
-    var precedence: Int {
-        switch self {
-        case .minus:
             return 40
+        case .minus:
+            return 30
         }
     }
 }

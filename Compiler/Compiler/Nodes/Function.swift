@@ -100,6 +100,7 @@ struct Argument: ASTnode, Equatable {
 
 struct FunctionCall: ASTnode {
     
+    var type = ""
     let name: String
     let arguments: [ASTnode]
     
@@ -118,6 +119,7 @@ struct FunctionCall: ASTnode {
                 code += "push \(argumentCode)\n"
             } else {
                 code += argumentCode
+                code = code.deletingSufix("push eax\n")
                 code += "push eax\n"
             }
         }

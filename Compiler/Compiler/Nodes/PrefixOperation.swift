@@ -14,7 +14,8 @@ struct PrefixOperation: ASTnode {
     
     /// Identifier of side (Left side if true, Right side if false)
     var sideLeft = true
-    let operation: UnaryOperator
+//    let operation: UnaryOperator
+    let operation: Operator
     let item: ASTnode
     
     /// Interpreter func

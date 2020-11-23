@@ -11,7 +11,6 @@ import Foundation
 // MARK: - Identifier struct
 
 struct VariableIdentifier: ASTnode {
-    
     let name: String
     let position: Int
     

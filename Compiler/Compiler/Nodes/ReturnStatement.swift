@@ -11,8 +11,10 @@ import Foundation
 // MARK: - Return Statement struct
 
 struct ReturnStatement: ASTnode {
+    var type = ""
     let node : ASTnode
     let funcIdentifier: String
+    
     /// Interpreter func
     func generatingAsmCode() throws -> String {
         

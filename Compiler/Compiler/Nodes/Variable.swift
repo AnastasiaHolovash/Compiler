@@ -10,6 +10,7 @@ import Foundation
 
 // MARK: - Variable struct
 struct Variable: ASTnode {
+    var type = ""
     let identifier: VariableIdentifier
     let value: ASTnode?
     

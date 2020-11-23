@@ -735,7 +735,7 @@ int fifthDegree(int number) {
 """
 
 
-// TRUE: 257
+// TRUE: -259
 
 let code67 =
 """
@@ -770,7 +770,7 @@ int main() {
 }
 """
 
-// TRUE: 21
+// TRUE: 1
 
 let code68 =
 """
@@ -793,5 +793,67 @@ int main() {
 
 float getPi() {
     return 3.14;
+}
+"""
+
+
+// MARK: - Coursework
+
+// 381
+let codeCW =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int pow(int number, int degree);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int firsMember = 3;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(7, firsMember, denominator);
+    int sum = sumOfFirstNMembers(7, firsMember, sevensMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * pow(q, n - 1);
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+    int S;
+
+    if (q < 2) {
+        // (q = 1) - special case
+        if (0 < q) S = b1 * n;
+        // for q = 0
+        else S = (bn * q - b1) / (q - 1);
+    } else {
+        // for q > 2
+        S = (bn * q - b1) / (q - 1);
+    }
+
+    return S;
+}
+
+int pow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
 }
 """
