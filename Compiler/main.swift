@@ -21,6 +21,7 @@ import Foundation
 //    print("\n\n")
 //}
 
+// 381
 let code =
 """
 // Functions declaration
@@ -69,10 +70,10 @@ int sumOfFirstNMembers(int n, int b1, int bn, int q) {
 
 int pow(int n, int degree) {
     int result = 1;
-    
-    while (0 < degree) {
+    int i = degree;
+    while (0 < i) {
         result = result * n;
-        degree = degree - 1;
+        i = i - 1;
     }
 
     return result;
@@ -96,7 +97,7 @@ int nMemberOfGeometricProgression(int n, int b1, int q) {
 
 """
 
-_ = compiler(code: code)
+_ = compiler(code: code66)
 
 #endif
 

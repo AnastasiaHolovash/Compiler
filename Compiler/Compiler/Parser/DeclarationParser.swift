@@ -223,8 +223,8 @@ extension Parser {
                 if name == item.name {
                     if args.count == item.arguments.count {
                         Parser.functionCalledIdentifiers.append((item, namePosition))
-//                        return FunctionCall(name: name, arguments: args.reversed() as [ASTnode])
-                        return FunctionCall(name: name, arguments: args)
+                        return FunctionCall(name: name, arguments: args.reversed() as [ASTnode])
+//                        return FunctionCall(name: name, arguments: args)
                     }
                     throw Error.invalidFunctionCall(name, previousDeclaration: item.getDeclarString(), position: getTokenPositionInCode())
                 }

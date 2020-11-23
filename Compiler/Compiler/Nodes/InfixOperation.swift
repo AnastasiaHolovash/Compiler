@@ -85,7 +85,7 @@ struct InfixOperation: ASTnode {
             code += "cdq\nidiv ebx\n"
         case .multiply:
             // Multipling: eax / ebx
-            code += "cdq\nimul eax, ebx\n"
+            code += "imul eax, ebx\n"
         case .isLessThan:
             // Compare: eax & ebx
             code += "cmp eax, ebx\nsetl al\nmovzx eax, al\n"
