@@ -166,6 +166,9 @@ class Parser {
             case .continue:
                 let continueStatement = try continueParser()
                 nodes.append(continueStatement)
+            
+            case .comment:
+                _ = getNextToken()
                 
             default:
                 throw Error.unexpectedExpresion(position: token.position)

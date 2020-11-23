@@ -46,6 +46,8 @@ enum Token: Equatable {
     case `while`
     case `break`
     case `continue`
+    // Cousework
+    case comment
 
     
     static var delegate : ThrowCastingError?
@@ -95,8 +97,10 @@ enum Token: Equatable {
                 return .identifier($0)
             },
             
-            "\\/\\=|\\*|\\/|\\%|\\+|\\-|\\<": {
-                if $0 == "/" {
+            "(\\/\\/.*)|\\/\\=|\\*|\\/|\\%|\\+|\\-|\\<": {
+                if $0.hasPrefix("//") || ($0.hasPrefix("/*") && $0.hasSuffix("*/")) {
+                    return .comment
+                } else if $0 == "/" {
                     return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "*" {
                     return .operation(Operator(rawValue: $0)!)

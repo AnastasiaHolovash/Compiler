@@ -31,7 +31,7 @@ extension Parser {
             return try parensParser()
 //        case .unaryOperation:
 //            if case .unaryOperation(_) = tokensStruct[index - 1].token {
-        case .binaryOperation:
+        case .operation:
 //            if case .binaryOperation(_) = tokensStruct[index - 1].token {
 //                let (line, place) = tokensStruct[index].position
 //                throw Error.expectedNumber(position: (line: line, place: place))
@@ -77,7 +77,7 @@ extension Parser {
         for value in stride(from: blockDepth, through: 1, by: -1) {
             if let position = Parser.variablesIdentifiers[value]?[identifier] {
                 if canGet {
-                    if case let .binaryOperation(op) = peek().token {
+                    if case let .operation(op) = peek().token {
                         guard case .divideEqual = op else {
                             throw Error.expected("\\/= operation", position: getTokenPositionInCode())
                         }
@@ -100,7 +100,7 @@ extension Parser {
     func peekPrecedence() throws -> Int {
         if canGet {
             switch peek().token {
-            case .binaryOperation(let op):
+            case .operation(let op):
                 return op.precedence
 //            case .unaryOperation(let op):
 //                return op.precedence
@@ -119,7 +119,7 @@ extension Parser {
         var precedence = try peekPrecedence()
         
         while precedence >= nodePrecedence {
-            guard case let .binaryOperation(op) = getNextToken() else {
+            guard case let .operation(op) = getNextToken() else {
                 throw Error.expected("binary operation", position: getTokenPositionInCode())
             }
             var rightNode = try valueParser()
@@ -141,7 +141,7 @@ extension Parser {
     // MARK: - Prefix Operation
     func prefixOperationParser() throws -> ASTnode {
 //        guard case let .unaryOperation(op) = getNextToken() else {
-        guard case let .binaryOperation(op) = getNextToken(), case .minus = op else {
+        guard case let .operation(op) = getNextToken(), case .minus = op else {
             throw Error.expected("-", position: getTokenPositionInCode())
         }
         let rightNode = try valueParser()
