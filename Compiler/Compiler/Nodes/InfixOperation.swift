@@ -12,7 +12,7 @@ import Foundation
 
 struct InfixOperation: ASTnode {
     
-    let operation: BinaryOperator
+    let operation: Operator
     let leftNode: ASTnode
     let rightNode: ASTnode
     

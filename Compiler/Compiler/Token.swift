@@ -35,7 +35,7 @@ enum Token: Equatable {
     case semicolon
     // Lab 2 edition
 //    case unaryOperation(UnaryOperator)
-    case binaryOperation(BinaryOperator)
+    case binaryOperation(Operator)
     // Lab 3 edition
     case equal
     // Lab 4 edition
@@ -98,20 +98,20 @@ enum Token: Equatable {
             
             "\\/\\=|\\*|\\/|\\%|\\+|\\-|\\<": {
                 if $0 == "/" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .binaryOperation(Operator(rawValue: $0)!)
                 } else if $0 == "*" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .binaryOperation(Operator(rawValue: $0)!)
                 } else if $0 == "<" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .binaryOperation(Operator(rawValue: $0)!)
                 } else if $0 == "-" {
 //                    return .unaryOperation(UnaryOperator(rawValue: $0)!)
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .binaryOperation(Operator(rawValue: $0)!)
                 } else if $0 == "/=" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .binaryOperation(Operator(rawValue: $0)!)
                 } else if $0 == "%" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .binaryOperation(Operator(rawValue: $0)!)
                 } else if $0 == "+" {
-                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                    return .binaryOperation(Operator(rawValue: $0)!)
                 } else {
                     try delegate?.unknownOperation(op: $0)
                     throw Parser.Error.unexpectedError
@@ -144,7 +144,7 @@ enum NunberType {
 
 
 // MARK: - Binary Operator
-enum BinaryOperator: String {
+enum Operator: String {
     
     case divide = "/"
     case multiply = "*"
@@ -152,7 +152,6 @@ enum BinaryOperator: String {
     case divideEqual = "/="
     case remainderAfterDivision = "%"
     case minus = "-"
-//    case plus =
     
     var precedence: Int {
         switch self {
