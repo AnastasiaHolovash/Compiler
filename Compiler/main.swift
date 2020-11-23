@@ -80,23 +80,6 @@ int pow(int n, int degree) {
 }
 """
 
-let code1 =
-"""
-int nMemberOfGeometricProgression(int n, int b1, int q);
-// ----------- rrhjknkn jknfkenlrg ------------
-int main() { //
-    int firsMember = 8 / 5; // WOW
-    int denominator = 2;
-    int sevensMember = nMemberOfGeometricProgression(7, firsMember, denominator);
-    return sevensMember;
-}
-
-int nMemberOfGeometricProgression(int n, int b1, int q) {
-    return b1 * 2;
-}
-
-"""
-
 _ = compiler(code: code66)
 
 #endif
