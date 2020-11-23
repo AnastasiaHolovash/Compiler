@@ -23,23 +23,34 @@ import Foundation
 
 let code =
 """
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+
 int main() {
-    float getPi();
-
-    int new = 33;
-    int max = 70;
-
-    while(new < max) {
-        new /= getPi();
-        if (-new < -20) break;
-        new = new * 4;
-    }
-    
-    return max < new;
+    int firsMember = 3;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(7, firsMember, denominator);
+    int sum = sumOfFirstNMembers(7, firsMember, sevensMember, denominator);
+    return = sum;
 }
 
-float getPi() {
-    return 3.14;
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * pow(q, n - 1);
+}
+
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+    return (bn * q - b1) / (b1)
+}
+
+int pow(int number, int degree) {
+    int result = 1;
+    
+    while (1 < degree) {
+        result = result * number;
+        degree = degree - 1;
+    }
+
+    return result;
 }
 """
 

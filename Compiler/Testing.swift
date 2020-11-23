@@ -735,7 +735,7 @@ int fifthDegree(int number) {
 """
 
 
-// TRUE: 257
+// TRUE: -259
 
 let code67 =
 """
@@ -770,7 +770,7 @@ int main() {
 }
 """
 
-// TRUE: 21
+// TRUE: 1
 
 let code68 =
 """
