@@ -25,13 +25,14 @@ let code =
 """
 int nMemberOfGeometricProgression(int n, int b1, int q);
 int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int pow(int number, int degree);
 
 int main() {
     int firsMember = 3;
     int denominator = 2;
     int sevensMember = nMemberOfGeometricProgression(7, firsMember, denominator);
     int sum = sumOfFirstNMembers(7, firsMember, sevensMember, denominator);
-    return = sum;
+    return sum;
 }
 
 int nMemberOfGeometricProgression(int n, int b1, int q) {
@@ -39,14 +40,23 @@ int nMemberOfGeometricProgression(int n, int b1, int q) {
 }
 
 int sumOfFirstNMembers(int n, int b1, int bn, int q) {
-    return (bn * q - b1) / (b1)
+    int S;
+
+    if (q < 2) {
+        if (0 < q) S = b1 * n;
+        else S = (bn * q - b1) / (q - 1);
+    } else {
+        S = (bn * q - b1) / (q - 1);
+    }
+
+    return S;
 }
 
-int pow(int number, int degree) {
+int pow(int n, int degree) {
     int result = 1;
     
     while (1 < degree) {
-        result = result * number;
+        result = result * n;
         degree = degree - 1;
     }
 

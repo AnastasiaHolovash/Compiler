@@ -96,6 +96,8 @@ struct InfixOperation: ASTnode {
             // Dividing: eax / ebx
             code += "cdq\nidiv ebx\n"
             code += "mov eax, edx\n"
+        case .minus:
+            code += "sub eax, ebx\n"
         }
         
         // If operation is negative

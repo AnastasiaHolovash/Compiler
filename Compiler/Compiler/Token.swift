@@ -34,7 +34,7 @@ enum Token: Equatable {
     case curlyClose
     case semicolon
     // Lab 2 edition
-    case unaryOperation(UnaryOperator)
+//    case unaryOperation(UnaryOperator)
     case binaryOperation(BinaryOperator)
     // Lab 3 edition
     case equal
@@ -104,16 +104,20 @@ enum Token: Equatable {
                 } else if $0 == "<" {
                     return .binaryOperation(BinaryOperator(rawValue: $0)!)
                 } else if $0 == "-" {
-                    return .unaryOperation(UnaryOperator(rawValue: $0)!)
+//                    return .unaryOperation(UnaryOperator(rawValue: $0)!)
+                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
                 } else if $0 == "/=" {
                     return .binaryOperation(BinaryOperator(rawValue: $0)!)
                 } else if $0 == "%" {
+                    return .binaryOperation(BinaryOperator(rawValue: $0)!)
+                } else if $0 == "+" {
                     return .binaryOperation(BinaryOperator(rawValue: $0)!)
                 } else {
                     try delegate?.unknownOperation(op: $0)
                     throw Parser.Error.unexpectedError
                 }
             },
+            
             "\\=": { _ in .equal },
             "\\(": { _ in .parensOpen },
             "\\)": { _ in .parensClose },
@@ -147,18 +151,22 @@ enum BinaryOperator: String {
     case isLessThan = "<"
     case divideEqual = "/="
     case remainderAfterDivision = "%"
+    case minus = "-"
+//    case plus =
     
     var precedence: Int {
         switch self {
         case .divide:
-            return 30
+            return 40
         case .multiply:
-            return 30
+            return 40
         case .isLessThan:
             return 20
         case .divideEqual:
             return 10
         case .remainderAfterDivision:
+            return 40
+        case .minus:
             return 30
         }
     }
@@ -166,14 +174,14 @@ enum BinaryOperator: String {
 
 
 // MARK: - Unary Operator
-enum UnaryOperator: String {
-
-    case minus = "-"
-    
-    var precedence: Int {
-        switch self {
-        case .minus:
-            return 40
-        }
-    }
-}
+//enum UnaryOperator: String {
+//
+//    case minus = "-"
+//
+//    var precedence: Int {
+//        switch self {
+//        case .minus:
+//            return 50
+//        }
+//    }
+//}

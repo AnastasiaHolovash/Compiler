@@ -13,9 +13,10 @@ extension Parser {
     enum Error: Swift.Error, LocalizedError {
         
         case expectedNumber(position: (line: Int, place: Int))
+        case expectedValue(position: (line: Int, place: Int))
         case expectedIdentifier(position: (line: Int, place: Int))
         case expectedExpression(position: (line: Int, place: Int))
-        case expectedNumberType(String ,position: (line: Int, place: Int))
+        case expectedNumberType(String, position: (line: Int, place: Int))
         case expected(String, position: (line: Int, place: Int))
         case incorrectDeclaration(position: (line: Int, place: Int))
         case noSuchIdentifier(String, position: (line: Int, place: Int))
@@ -44,6 +45,11 @@ extension Parser {
             case let .expectedNumber(position: (line: line, place: place)):
                 return """
                         Error: Expected number.
+                            Line: \(line)  Place: \(place)
+                       """
+            case let .expectedValue(position: (line: line, place: place)):
+                return """
+                        Error: Expected value.
                             Line: \(line)  Place: \(place)
                        """
             case let .expectedIdentifier(position: (line: line, place: place)):

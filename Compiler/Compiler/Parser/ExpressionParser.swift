@@ -29,11 +29,13 @@ extension Parser {
             return try floatNumberParser()
         case .parensOpen:
             return try parensParser()
-        case .unaryOperation:
-            if case .unaryOperation(_) = tokensStruct[index - 1].token {
-                let (line, place) = tokensStruct[index].position
-                throw Error.expectedNumber(position: (line: line, place: place))
-            }
+//        case .unaryOperation:
+//            if case .unaryOperation(_) = tokensStruct[index - 1].token {
+        case .binaryOperation:
+//            if case .binaryOperation(_) = tokensStruct[index - 1].token {
+//                let (line, place) = tokensStruct[index].position
+//                throw Error.expectedNumber(position: (line: line, place: place))
+//            }
             return try prefixOperationParser()
         case .identifier:
             if canGetThroughOne {
@@ -43,7 +45,7 @@ extension Parser {
             }
         default:
             let (line, place) = tokensStruct[index].position
-            throw Error.expectedNumber(position:(line: line, place: place))
+            throw Error.expectedValue(position:(line: line, place: place))
         }
     }
     
@@ -100,8 +102,8 @@ extension Parser {
             switch peek().token {
             case .binaryOperation(let op):
                 return op.precedence
-            case .unaryOperation(let op):
-                return op.precedence
+//            case .unaryOperation(let op):
+//                return op.precedence
             default:
                 return -1
             }
@@ -138,7 +140,8 @@ extension Parser {
     
     // MARK: - Prefix Operation
     func prefixOperationParser() throws -> ASTnode {
-        guard case let .unaryOperation(op) = getNextToken() else {
+//        guard case let .unaryOperation(op) = getNextToken() else {
+        guard case let .binaryOperation(op) = getNextToken(), case .minus = op else {
             throw Error.expected("-", position: getTokenPositionInCode())
         }
         let rightNode = try valueParser()

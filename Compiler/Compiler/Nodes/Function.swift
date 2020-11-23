@@ -100,6 +100,7 @@ struct Argument: ASTnode, Equatable {
 
 struct FunctionCall: ASTnode {
     
+    var type = ""
     let name: String
     let arguments: [ASTnode]
     

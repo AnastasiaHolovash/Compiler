@@ -60,6 +60,7 @@ extension Parser {
     }
     
     
+    // MARK: - Break statement
     func breakParser() throws -> ASTnode {
         guard canBreak else {
             throw Error.foundBreakOutsideTheLoop(position: getTokenNextPositionInCode())
@@ -70,6 +71,7 @@ extension Parser {
     }
 
     
+    // MARK: - Continue statement
     func continueParser() throws -> ASTnode {
         guard canBreak else {
             throw Error.foundContinueOutsideTheLoop(position: getTokenNextPositionInCode())
