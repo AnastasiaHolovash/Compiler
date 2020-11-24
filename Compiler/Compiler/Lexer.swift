@@ -76,6 +76,3 @@ class Lexer: ThrowCastingError {
         tokensTable += "\n"
     }
 }
-
-
-

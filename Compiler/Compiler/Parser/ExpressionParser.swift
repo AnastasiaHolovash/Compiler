@@ -29,13 +29,7 @@ extension Parser {
             return try floatNumberParser()
         case .parensOpen:
             return try parensParser()
-//        case .unaryOperation:
-//            if case .unaryOperation(_) = tokensStruct[index - 1].token {
         case .operation:
-//            if case .binaryOperation(_) = tokensStruct[index - 1].token {
-//                let (line, place) = tokensStruct[index].position
-//                throw Error.expectedNumber(position: (line: line, place: place))
-//            }
             return try prefixOperationParser()
         case .identifier:
             if canGetThroughOne {
@@ -140,7 +134,6 @@ extension Parser {
     
     // MARK: - Prefix Operation
     func prefixOperationParser() throws -> ASTnode {
-//        guard case let .unaryOperation(op) = getNextToken() else {
         guard case let .operation(op) = getNextToken(), case .minus = op else {
             throw Error.expected("-", position: getTokenPositionInCode())
         }
