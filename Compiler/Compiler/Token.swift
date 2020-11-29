@@ -112,8 +112,6 @@ enum Token: Equatable {
                     return .operation(Operator(rawValue: $0)!)
                 } else if $0 == "%" {
                     return .operation(Operator(rawValue: $0)!)
-                } else if $0 == "+" {
-                    return .operation(Operator(rawValue: $0)!)
                 } else {
                     try delegate?.unknownOperation(op: $0)
                     throw Parser.Error.unexpectedError

@@ -8,18 +8,18 @@
 #if DEBUG
 import Foundation
 
-//for test in testsLab6 {
-//    _ = compiler(code: test)
-//    Parser.adres = 0
-//    Parser.funcFlagsName = 0
-//    Parser.whileFlagsCurentName = 0
-//    Parser.whileFlagsUniqueName = 0
-//    Parser.variablesIdentifiers = [:]
-//    Parser.functionCalledIdentifiers = []
-//    Parser.functionDeclaredIdentifiers = [:]
-//    Parser.functionDefinedIdentifiers = []
-//    print("\n\n")
-//}
+for test in testsCW {
+    _ = compiler(code: test)
+    Parser.adres = 0
+    Parser.funcFlagsName = 0
+    Parser.whileFlagsCurentName = 0
+    Parser.whileFlagsUniqueName = 0
+    Parser.variablesIdentifiers = [:]
+    Parser.functionCalledIdentifiers = []
+    Parser.functionDeclaredIdentifiers = [:]
+    Parser.functionDefinedIdentifiers = []
+    print("\n\n")
+}
 
 // 381
 let code =
@@ -80,7 +80,18 @@ int pow(int n, int degree) {
 }
 """
 
-_ = compiler(code: code66)
+let code1 =
+"""
+int main() {
+    int firsMember = 3 + 4;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(7, firsMember, denominator);
+    int sum = sumOfFirstNMembers(7, firsMember, sevensMember, denominator);
+    return sum;
+}
+"""
+
+//_ = compiler(code: code1)
 
 #endif
 
@@ -120,7 +131,7 @@ func compiler(code: String) -> String {
         let lexerResult = Lexer(code: code)
         let tokensStruct = lexerResult.tokensStruct
         
-        print(lexerResult.tokensTable)
+//        print(lexerResult.tokensTable)
         
         /**
          Parsing

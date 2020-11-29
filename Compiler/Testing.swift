@@ -805,7 +805,7 @@ let codeCW =
 // Functions declaration
 int nMemberOfGeometricProgression(int n, int b1, int q);
 int sumOfFirstNMembers(int n, int b1, int bn, int q);
-int pow(int number, int degree);
+int myPow(int number, int degree);
 
 // Main func
 // Returns summa of first 7 members of geometric progression
@@ -822,7 +822,7 @@ int main() {
 // b1 - first member
 // q  - denominator
 int nMemberOfGeometricProgression(int n, int b1, int q) {
-    return b1 * pow(q, n - 1);
+    return b1 * myPow(q, n - 1);
 }
 
 // Returns summa of first n members of geometric progression
@@ -846,7 +846,7 @@ int sumOfFirstNMembers(int n, int b1, int bn, int q) {
     return S;
 }
 
-int pow(int n, int degree) {
+int myPow(int n, int degree) {
     int result = 1;
     int i = degree;
     while (0 < i) {
@@ -856,4 +856,569 @@ int pow(int n, int degree) {
 
     return result;
 }
+"""
+
+let testsCW = [codeCW5, codeCW6, codeCW7, codeCW8, codeCW9, codeCW10]
+
+// 381
+let codeCW1 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int myPow(int number, int degree);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 7;
+    int firsMember = 3;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, sevensMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1);
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+
+    // (q = 1) - special case
+    if (q < 2) {
+        if (0 < q) return b1 * n;
+    }
+
+    // for q != 1
+    int S = (bn * q - b1) / (q - 1);
+
+    return S;
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
+}
+"""
+
+// 66
+let codeCW2 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int myPow(int number, int degree);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 3;
+    int firsMember = 22;
+    int denominator = 1;
+    int thirdMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, thirdMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1);
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+
+    // (q = 1) - special case
+    if (q < 2) {
+        if (0 < q) return b1 * n;
+    }
+
+    // for q != 1
+    int S = (bn * q - b1) / (q - 1);
+
+    return S;
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
+}
+"""
+
+// 573
+let codeCW3 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int myPow(int number, int degree);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 1;
+    int firsMember = 573;
+    int denominator = 0;
+    int nMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, nMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1);
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+
+    // (q = 1) - special case
+    if (q < 2) {
+        if (0 < q) return b1 * n;
+    }
+
+    // for q != 1
+    int S = (bn * q - b1) / (q - 1);
+
+    return S;
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
+}
+"""
+
+// bn = 2560
+// 5115
+let codeCW4 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int myPow(int number, int degree);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 10;
+    int firsMember = 5;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, sevensMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1);
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+
+    // (q = 1) - special case
+    if (q < 2) {
+        if (0 < q) return b1 * n;
+    }
+
+    // for q != 1
+    int S = (bn * q - b1) / (q - 1);
+
+    return S;
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
+}
+"""
+
+// FALSE
+
+//Error: Expected value.
+//    Line: 9  Place: 11
+let codeCW5 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 10;
+    int firsMember = 5;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, sevensMember, denominator);
+    return = sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1)
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+
+    // (q = 1) - special case
+    if (q < 2) {
+        if (0 < q) return b1 * n;
+    }
+
+    // for q != 1
+    int S = (bn * q - b1) / (q - 1);
+
+    return S;
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
+}
+"""
+
+//Error: Function 'myPow' was not declar.
+//    Line: 15  Place: 16
+let codeCW6 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 10;
+    int firsMember = 5;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, sevensMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1)
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+
+    // (q = 1) - special case
+    if (q < 2) {
+        if (0 < q) return b1 * n;
+    }
+
+    // for q != 1
+    int S = (bn * q - b1) / (q - 1);
+
+    return S;
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
+}
+"""
+
+//Error: Extected ';'.
+//    Line: 18  Place: 30
+let codeCW7 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int myPow(int number, int degree);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 10;
+    int firsMember = 5;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, sevensMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1)
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+
+    // (q = 1) - special case
+    if (q < 2) {
+        if (0 < q) return b1 * n;
+    }
+
+    // for q != 1
+    S = (bn * q - b1) / (q - 1);
+
+    return S;
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
+}
+"""
+
+//Error: No such identifier: 'S'.
+//    Line: 41  Place: 4
+let codeCW8 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int myPow(int number, int degree);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 10;
+    int firsMember = 5;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, sevensMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1);
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+    {
+        int S;
+    }
+
+    // (q = 1) - special case
+    if (q < 2) {
+        if (0 < q) return b1 * n;
+    }
+
+    // for q != 1
+    S = (bn * q - b1) / (q - 1);
+
+    return S;
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
+}
+"""
+
+//Error: Function 'sumOfFirstNMembers' was not define.
+//    Line: 13  Place: 14
+let codeCW9 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int myPow(int number, int degree);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 10;
+    int firsMember = 5;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, sevensMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1);
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+    return result;
+}
+"""
+
+//Error: Extected 'return'.
+//    Line: 52  Place: 0
+let codeCW10 =
+"""
+// Functions declaration
+int nMemberOfGeometricProgression(int n, int b1, int q);
+int sumOfFirstNMembers(int n, int b1, int bn, int q);
+int myPow(int number, int degree);
+
+// Main func
+// Returns summa of first 7 members of geometric progression
+int main() {
+    int n = 10;
+    int firsMember = 5;
+    int denominator = 2;
+    int sevensMember = nMemberOfGeometricProgression(n, firsMember, denominator);
+    int sum = sumOfFirstNMembers(n, firsMember, sevensMember, denominator);
+    return sum;
+}
+
+// Returns nth member of geometric progression
+// n  - number of member
+// b1 - first member
+// q  - denominator
+int nMemberOfGeometricProgression(int n, int b1, int q) {
+    return b1 * myPow(q, n - 1);
+}
+
+// Returns summa of first n members of geometric progression
+// n  - number of member
+// b1 - first member
+// bn - nth member
+// q  - denominator
+int sumOfFirstNMembers(int n, int b1, int bn, int q) {
+
+    // (q = 1) - special case
+    if (q < 2) {
+        if (0 < q) return b1 * n;
+    }
+
+    // for q != 1
+    int S = (bn * q - b1) / (q - 1);
+
+    return S;
+}
+
+int myPow(int n, int degree) {
+    int result = 1;
+    int i = degree;
+    while (0 < i) {
+        result = result * n;
+        i = i - 1;
+    }
+
+//    return result;
+}
+
 """
